@@ -16,23 +16,21 @@ const Home = ({ navigation }) => {
             </TouchableOpacity>
            
             <View style={styles.containerTop}>
-                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Conciergerie')}>
+                <TouchableOpacity style={styles.button}>
                     <Image source={{uri: "https://static.thenounproject.com/png/496897-200.png"}} style={styles.img} />
                 </TouchableOpacity>            
-                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Maintenance')}>
+                <TouchableOpacity style={styles.button}>
                     <Image source={{uri: "https://static.thenounproject.com/png/41655-200.png"}} style={styles.img} />
                 </TouchableOpacity>
             </View>
             
-                <Image source={{uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUgvALeuYiz-aak81IWy2kutu92BErr0k4tQ&usqp=CAU"}} 
-                style={{width: 200, height: 200, position: "absolute", borderRadius: 100, top: 310}}
-                onPress={() => navigation.navigate('Chat')} />
+                <Image source={{uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUgvALeuYiz-aak81IWy2kutu92BErr0k4tQ&usqp=CAU"}} style={{width: 200, height: 200, position: "absolute", borderRadius: 100, top: 310}} />
             
             <View style={styles.containerBottom}>
-                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Réveil')}>
+                <TouchableOpacity style={styles.button}>
                     <Image source={{uri: "https://image.flaticon.com/icons/png/512/62/62834.png"}} style={styles.img} />
                 </TouchableOpacity>           
-                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Taxi')}>
+                <TouchableOpacity style={styles.button}>
                     <Image source={{uri: "https://cdn2.iconfinder.com/data/icons/car-11/100/taxi3-512.png"}} style={styles.img} />
                 </TouchableOpacity>
             </View>

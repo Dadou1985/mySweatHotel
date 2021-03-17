@@ -9,8 +9,8 @@ import HomeScreen from './src/screens/Home'
 import ChatScreen from './src/screens/chat'
 import HouseKeepingScreen from './src/screens/housekeeping'
 import MaintenanceScreen from './src/screens/maintenance'
-import TimerScreen from './src/screens/Timer'
-import TaxiScreen from './src/screens/Taxi'
+import Timer from './src/screens/Timer'
+import Taxi from './src/screens/Taxi'
 
 const Stack = createStackNavigator();
 
@@ -27,12 +27,11 @@ export default function App() {
         <Stack.Screen name="Connexion" component={LoginScreen} />
         <Stack.Screen name="Inscription" component={RegisterScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Chat" component={ChatScreen} />
-        <Stack.Screen name="Conciergerie" component={HouseKeepingScreen} />
-        <Stack.Screen name="Maintenance" component={MaintenanceScreen} />
-        <Stack.Screen name="Réveil" component={TimerScreen} />
-        <Stack.Screen name="Taxi" component={TaxiScreen}
-         />
+        <Stack.Screen name="Chat" component={Chat} />
+        <Stack.Screen name="Inscription" component={RegisterScreen} />
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Connexion" component={LoginScreen} />
+        <Stack.Screen name="Inscription" component={RegisterScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

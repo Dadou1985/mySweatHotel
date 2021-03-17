@@ -30,7 +30,7 @@ export default function App() {
         <Stack.Screen name="Chat" component={ChatScreen} />
         <Stack.Screen name="Conciergerie" component={HouseKeepingScreen} />
         <Stack.Screen name="Maintenance" component={MaintenanceScreen} />
-        <Stack.Screen name="Réveil" component={TimerScreen} />
+        <Stack.Screen name="Maintenance" component={MaintenanceScreen} />
         <Stack.Screen name="Taxi" component={TaxiScreen}
          />
       </Stack.Navigator>

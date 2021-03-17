@@ -29,10 +29,9 @@ export default function App() {
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="Chat" component={ChatScreen} />
         <Stack.Screen name="Conciergerie" component={HouseKeepingScreen} />
-        <Stack.Screen name="Maintenance" component={MaintenanceScreen} />
-        <Stack.Screen name="Réveil" component={TimerScreen} />
-        <Stack.Screen name="Taxi" component={TaxiScreen}
-         />
+        <Stack.Screen name="Maintenance" component={Mai} />
+        <Stack.Screen name="Connexion" component={LoginScreen} />
+        <Stack.Screen name="Inscription" component={RegisterScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

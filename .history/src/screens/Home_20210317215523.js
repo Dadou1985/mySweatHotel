@@ -29,11 +29,11 @@ const Home = ({ navigation }) => {
                 onPress={() => navigation.navigate('Chat')} />
             
             <View style={styles.containerBottom}>
-                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Réveil')}>
-                    <Image source={{uri: "https://image.flaticon.com/icons/png/512/62/62834.png"}} style={styles.img} />
+                <TouchableOpacity style={styles.button}>
+                    <Image source={{uri: "https://image.flaticon.com/icons/png/512/62/62834.png"}} style={styles.img} onPress={() => navigation.navigate('Réveil')} />
                 </TouchableOpacity>           
-                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Taxi')}>
-                    <Image source={{uri: "https://cdn2.iconfinder.com/data/icons/car-11/100/taxi3-512.png"}} style={styles.img} />
+                <TouchableOpacity style={styles.button}>
+                    <Image source={{uri: "https://cdn2.iconfinder.com/data/icons/car-11/100/taxi3-512.png"}} style={styles.img} onPress={() => navigation.navigate('Taxi')} />
                 </TouchableOpacity>
             </View>
         </KeyboardAvoidingView>

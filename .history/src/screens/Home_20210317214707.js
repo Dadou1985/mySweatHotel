@@ -3,7 +3,7 @@ import { KeyboardAvoidingView, StyleSheet, Text, View, Image, TouchableOpacity }
 import { StatusBar } from 'expo-status-bar';
 import Maid from '../img/maid.svg'
 
-const Home = ({ navigation }) => {
+const Home = () => {
     return (
         <KeyboardAvoidingView style={styles.container}>
             <StatusBar style="light" />
@@ -11,30 +11,27 @@ const Home = ({ navigation }) => {
                 <Text style={{fontSize: 20}}>Bienvenu.e à l'hôtel Mercure</Text>
             </View>
            
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Chat')}>
+            <TouchableOpacity>
                 <Image source={{uri: "https://static.thenounproject.com/png/159574-200.png"}} style={styles.img} />
             </TouchableOpacity>
            
             <View style={styles.containerTop}>
-                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Conciergerie')}>
+                <TouchableOpacity>
                     <Image source={{uri: "https://static.thenounproject.com/png/496897-200.png"}} style={styles.img} />
                 </TouchableOpacity>            
-                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Maintenance')}>
+                <TouchableOpacity>
                     <Image source={{uri: "https://static.thenounproject.com/png/41655-200.png"}} style={styles.img} />
                 </TouchableOpacity>
             </View>
             
-                <Image source={{uri: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUgvALeuYiz-aak81IWy2kutu92BErr0k4tQ&usqp=CAU"}} 
-                style={{width: 200, height: 200, position: "absolute", borderRadius: 100, top: 310}}
-                onPress={() => navigation.navigate('Chat')} />
+            <TouchableOpacity>
+                <Image source={{uri: "https://i.pinimg.com/originals/cb/59/ff/cb59ffb54f7bcca4dbbc1517a65c1f01.jpg"}} style={{width: 200, height: 200, position: "absolute", borderRadius: 100, top: 310}} />
+            </TouchableOpacity>
             
             <View style={styles.containerBottom}>
-                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Réveil')}>
-                    <Image source={{uri: "https://image.flaticon.com/icons/png/512/62/62834.png"}} style={styles.img} />
-                </TouchableOpacity>           
-                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Taxi')}>
-                    <Image source={{uri: "https://cdn2.iconfinder.com/data/icons/car-11/100/taxi3-512.png"}} style={styles.img} />
-                </TouchableOpacity>
+                <Image source={{uri: "https://image.flaticon.com/icons/png/512/62/62834.png"}} style={styles.img} />
+           
+                <Image source={{uri: "https://cdn2.iconfinder.com/data/icons/car-11/100/taxi3-512.png"}} style={styles.img} />
             </View>
         </KeyboardAvoidingView>
     )
@@ -80,8 +77,5 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
-    },
-    button: {
-
     }
 })
