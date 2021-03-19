@@ -1,0 +1,55 @@
+import 'react-native-gesture-handler';
+import React from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import LoginScreen from './src/screens/login'
+import RegisterScreen from './src/screens/Register'
+import HomeScreen from './src/screens/Home'
+import ChatScreen from './src/screens/chat'
+import HouseKeepingScreen from './src/screens/housekeeping'
+import MaintenanceScreen from './src/screens/maintenance'
+import TimerScreen from './src/screens/Timer'
+import TaxiScreen from './src/screens/Taxi'
+import {FirebaseContext, useAuth} from './src/Firebase'
+
+const Stack = createStackNavigator();
+
+const globalScreenOptions = {
+  headerStyle: {backgroundColor: "lightblue"},
+  headerTitleStyle: {color: "white"},
+  headerTintColor: "white"
+}
+
+export default function App() {
+  const { user, firebase } = useAuth()
+
+  return (
+    <FirebaseContext.Provider value={{ user, firebase }}>
+    <NavigationContainer>
+      <Stack.Navigator 
+      initialRouteName="Home"
+      screenOptions={globalScreenOptions}>
+        <Stack.Screen name="Connexion" component={LoginScreen} />
+        <Stack.Screen name="Inscription" component={RegisterScreen} />
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="Chat" component={ChatScreen} />
+        <Stack.Screen name="Conciergerie" component={HouseKeepingScreen} />
+        <Stack.Screen name="Maintenance" component={MaintenanceScreen} />
+        <Stack.Screen name="Réveil" component={TimerScreen} />
+        <Stack.Screen name="Taxi" component={TaxiScreen}
+         />
+      </Stack.Navigator>
+    </NavigationContainer>
+    </Fi
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
