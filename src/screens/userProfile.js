@@ -1,14 +1,18 @@
-import React, { useLayoutEffect, useState } from 'react'
+import React, { useLayoutEffect, useState, useContext } from 'react'
 import { KeyboardAvoidingView, StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Entypo } from '@expo/vector-icons';
 import { auth, db, storage } from "../../firebase"
 import { SimpleLineIcons } from '@expo/vector-icons';
+import { UserContext } from '../components/userContext'
+
 
 const UserProfile = () => {
     const [img, setImg] = useState(null)
     const [url, setUrl] = useState("")
     const [room, setRoom] = useState(null)
+    const [user, setUser] = useState(auth.currentUser)
+    const {userDB, setUserDB} = useContext(UserContext)
 
     let openImagePickerAsync = async () => {
         let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();

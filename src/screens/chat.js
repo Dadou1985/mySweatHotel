@@ -1,14 +1,18 @@
-import React, { useLayoutEffect, useState } from 'react'
+import React, { useLayoutEffect, useState, useContext } from 'react'
 import { StyleSheet, Text, View, SafeAreaView, ScrollView, KeyboardAvoidingView, Platform, TextInput, TouchableOpacity, Keyboard } from 'react-native'
 import { Avatar } from "react-native-elements"
 import { StatusBar } from 'expo-status-bar';
 import { FontAwesome } from '@expo/vector-icons';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import { Entypo } from '@expo/vector-icons';
+import { UserContext } from '../components/userContext'
+import { auth, db } from "../../firebase"
 
 
 const Chat = ({ navigation }) => {
     const [input, setInput] = useState("")
+    const [user, setUser] = useState(auth.currentUser)
+    const {userDB, setUserDB} = useContext(UserContext)
 
     useLayoutEffect(() => {
         navigation.setOptions({

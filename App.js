@@ -1,5 +1,5 @@
 import 'react-native-gesture-handler';
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -13,6 +13,8 @@ import TimerScreen from './src/screens/Timer'
 import TaxiScreen from './src/screens/Taxi'
 import Information from './src/screens/Information'
 
+import { UserContext } from './src/components/userContext'
+
 const Stack = createStackNavigator();
 
 const globalScreenOptions = {
@@ -22,23 +24,29 @@ const globalScreenOptions = {
 }
 
 export default function App() {
+  const [userDB, setUserDB] = useState(null)
+
+
 
   return (
+    <UserContext.Provider value={{userDB, setUserDB}}>
       <NavigationContainer>
         <Stack.Navigator 
         initialRouteName="Connexion"
         screenOptions={globalScreenOptions}>
-          <Stack.Screen name="Connexion" component={LoginScreen} />
-          <Stack.Screen name="Inscription" component={RegisterScreen} />
-          <Stack.Screen name="Home" component={HomeScreen} />
-          <Stack.Screen name="Chat" component={ChatScreen} />
-          <Stack.Screen name="Conciergerie" component={HouseKeepingScreen} />
-          <Stack.Screen name="Maintenance" component={MaintenanceScreen} />
-          <Stack.Screen name="Réveil" component={TimerScreen} />
-          <Stack.Screen name="Taxi" component={TaxiScreen}/>
-          <Stack.Screen name="Information" component={Information} />
+            <Stack.Screen name="Connexion" component={LoginScreen} />
+            <Stack.Screen name="Inscription" component={RegisterScreen} />
+            <Stack.Screen name="Home" component={HomeScreen} />
+            <Stack.Screen name="Chat" component={ChatScreen} />
+            <Stack.Screen name="Conciergerie" component={HouseKeepingScreen} />
+            <Stack.Screen name="Maintenance" component={MaintenanceScreen} />
+            <Stack.Screen name="Réveil" component={TimerScreen} />
+            <Stack.Screen name="Taxi" component={TaxiScreen}/>
+            <Stack.Screen name="Information" component={Information} />
         </Stack.Navigator>
       </NavigationContainer>
+    </UserContext.Provider>
+
   );
 }
 

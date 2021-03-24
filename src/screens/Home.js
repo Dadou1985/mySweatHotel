@@ -1,19 +1,20 @@
-import React, { useLayoutEffect, useState } from 'react'
+import React, { useLayoutEffect, useState, useContext } from 'react'
 import { KeyboardAvoidingView, StyleSheet, Text, View, Image, TouchableOpacity, Modal } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Entypo } from '@expo/vector-icons';
 import { auth, db } from "../../firebase"
 import { SimpleLineIcons } from '@expo/vector-icons';
 import { Input, Button } from 'react-native-elements';
+import { UserContext } from '../components/userContext'
 
 
 const Home = ({ navigation }) => {
     const [user, setUser] = useState(auth.currentUser)
     const [showModal, setShowModal] = useState(true)
-    const [room, setRoom] = useState(null)
+    const {userDB, setUserDB} = useContext(UserContext)
 
-    const Logout = () => {
-        auth.signOut()
+    const Logout = async () => {
+        await auth.signOut()
         .then(navigation.replace('Connexion'))
     }
 
@@ -35,6 +36,7 @@ const Home = ({ navigation }) => {
             <View style={styles.textContainer}>
                 <Text style={{fontSize: 20, fontWeight: "bold"}}>Bienvenu.e à l'hôtel Mercure</Text>
                 <Text>{user.displayName}</Text>
+                <Text>Vous occupez actuellement la chambre {userDB.room}</Text>
             </View>
            
             <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Chat')}>

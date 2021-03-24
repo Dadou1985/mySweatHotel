@@ -1,14 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { KeyboardAvoidingView, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { Button, Input, Image } from 'react-native-elements';
 import { StatusBar } from 'expo-status-bar';
 import { MaterialIcons } from '@expo/vector-icons'; 
+import { UserContext } from '../components/userContext'
+import { auth, db } from "../../firebase"
 
 
 const Maintenance = () => {
     const [type, setType] = useState("")
     const [details, setDetails] = useState("")
-    
+    const [user, setUser] = useState(auth.currentUser)
+    const {userDB, setUserDB} = useContext(UserContext)
+
     return (
         <KeyboardAvoidingView behavior="padding" style={styles.container}>
              <StatusBar style="light" />

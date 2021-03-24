@@ -1,24 +1,46 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native';
 import { Button, Input, Image } from 'react-native-elements';
 import { StatusBar } from 'expo-status-bar';
 import { auth, db } from "../../firebase"
+import { UserContext } from '../components/userContext'
 
 const Login = ({ navigation }) => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [room, setRoom] = useState(null)
+    const {userDB, setUserDB} = useContext(UserContext)
 
     useEffect(() => {
+        setEmail('') 
+        setPassword('')
+        setRoom(null)
         let unsubscribe = auth.onAuthStateChanged(function(user) {
             if (user) {
-                navigation.replace('Information')
+                db.collection("mySweatHotel")
+                .doc("country")
+                .collection("France")
+                .doc("collection")
+                .collection("customer")
+                .doc("collection")
+                .collection('users')
+                .doc(user.displayName)
+                .get()
+                .then((doc) => {
+                    if (doc.exists) {
+                    setUserDB(doc.data())
+                    } else {
+                        // doc.data() will be undefined in this case
+                        console.log("No such document!");
+                    }
+                }).then(() => navigation.navigate('Information'))
+                
             } 
           });
         return unsubscribe
     }, [])
 
-    
+    console.log("//////", userDB)
 
     const Login = () => {
         auth.signInWithEmailAndPassword(email, password)
@@ -37,6 +59,7 @@ const Login = ({ navigation }) => {
             })
         })
     }
+
 
     return (
         <KeyboardAvoidingView behavior="padding" style={styles.container}>

@@ -1,8 +1,9 @@
-import React, { useState,  } from 'react';
+import React, { useState,useContext } from 'react';
 import { KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native';
 import { Button, Input, Image } from 'react-native-elements';
 import { StatusBar } from 'expo-status-bar';
 import { auth, db } from "../../firebase"
+import { UserContext } from '../components/userContext'
 
 
 const Taxi = () => {
@@ -13,8 +14,7 @@ const Taxi = () => {
     const [adress, setAdress] = useState("")
 
     const [user, setUser] = useState(auth.currentUser)
-
-
+    const {userDB, setUserDB} = useContext(UserContext)
 
 
     return (

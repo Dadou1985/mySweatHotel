@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { KeyboardAvoidingView, StyleSheet, Text, View, TouchableOpacity, Modal, ScrollView } from 'react-native';
 import { Button, Input, Image } from 'react-native-elements';
 import { StatusBar } from 'expo-status-bar';
@@ -6,6 +6,7 @@ import { auth, db } from "../../firebase"
 import RegionDetails from '../../hotels/regionDetailsSheet.json'
 import { paris_arrondissement, ile_de_france, auvergne_rhone_alpes, bourgogne_franche_comte, bretagne, centre_val_de_loire, corse, grand_est, hauts_de_france, normandie, nouvelle_aquitaine, occitanie, pays_de_la_loire,provence_alpes_cote_d_azur } from "../../hotels"
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { UserContext } from '../components/userContext'
 
 
 const Information = ({ navigation }) => {
@@ -25,7 +26,7 @@ const Information = ({ navigation }) => {
     const [showHotelButton, setShowHotelButton] = useState(false)
     const [hideAll, setHideAll] = useState(false)
     const [user, setUser] = useState(auth.currentUser)
-    const [userDB, setUserDB] = useState([])
+    const {userDB, setUserDB} = useContext(UserContext)
 
     const deptDetails = [paris_arrondissement, ile_de_france, auvergne_rhone_alpes, bourgogne_franche_comte, bretagne, centre_val_de_loire, corse, grand_est, hauts_de_france, normandie, nouvelle_aquitaine, occitanie, pays_de_la_loire,provence_alpes_cote_d_azur]
 
@@ -69,33 +70,8 @@ const Information = ({ navigation }) => {
         });
         return unsubscribe
     }, [region, departement, arrondissement])
-
-    useEffect(() => {
-        let userDetails = () => {
-            return db.collection("mySweatHotel")
-            .doc("country")
-            .collection("France")
-            .doc("collection")
-            .collection("customer")
-            .doc("collection")
-            .collection('users')
-            .where("email", "==", user.email)}
         
-            let unsubscribe = userDetails().onSnapshot(function(snapshot) {
-                const snapInfo = []
-              snapshot.forEach(function(doc) {          
-                snapInfo.push({
-                    id: doc.id,
-                    ...doc.data()
-                  })        
-                });
-                console.log(snapInfo)
-                setUserDB(snapInfo)
-            });
-            return unsubscribe
-        
-    }, [user])                 
-
+console.log(userDB)
 
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
@@ -103,14 +79,10 @@ const Information = ({ navigation }) => {
         setDate(currentDate);
       };
 
-    console.log(userDB)
-
     return (
         <KeyboardAvoidingView style={styles.container}>
             <StatusBar style="light" />
-            {userDB.map(detail => {
-                if(detail.room !== null) {
-                   return <View style={styles.containerText}>
+            {userDB.room !== null ? <View style={styles.containerText}>
                         <Text style={styles.text}>Un besoin particulier...</Text>
                         <View style={{marginTop: 40}}>
                             <TouchableOpacity>
@@ -122,8 +94,7 @@ const Information = ({ navigation }) => {
                             </View>
                         </View>
                     </View>
-                }else{
-                   return <View style={styles.containerText}>
+                : <View style={styles.containerText}>
                         <Text style={styles.text}>Trouvez votre hôtel</Text>
                         <View style={styles.buttonView}>
                             {!hideAll &&
@@ -146,8 +117,8 @@ const Information = ({ navigation }) => {
                                 onChangeText={(text) => setRoom(text)} style={{textAlign: "center", marginBottom: 5}} />}
                         </View>
                     </View>
-                }
-            })}
+                
+            }
 
             <Modal 
             animationType="slide"
