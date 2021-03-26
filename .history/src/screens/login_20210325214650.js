@@ -8,12 +8,33 @@ import { UserContext } from '../components/userContext'
 const Login = ({ navigation }) => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+    const [room, setRoom] = useState(null)
     const {userDB, setUserDB} = useContext(UserContext)
 
     useEffect(() => {
+        setEmail('') 
+        setPassword('')
+        setRoom(null)
         let unsubscribe = auth.onAuthStateChanged(function(user) {
             if (user) {
-                navigation.navigate('Information')
+                db.collection("mySweatHotel")
+                .doc("country")
+                .collection("France")
+                .doc("collection")
+                .collection("customer")
+                .doc("collection")
+                .collection('users')
+                .doc(user.displayName)
+                .get()
+                .then((doc) => {
+                    if (doc.exists) {
+                    setUserDB(doc.data())
+                    } else {
+                        // doc.data() will be undefined in this case
+                        console.log("No such document!");
+                    }
+                }).then(() => navigation.navigate('Home'))
+                
             } 
           });
         return unsubscribe
@@ -22,9 +43,21 @@ const Login = ({ navigation }) => {
     console.log("//////", userDB)
 
     const Login = () => {
-        setEmail('') 
-        setPassword('')
         auth.signInWithEmailAndPassword(email, password)
+        .then((authUser) => {
+            return db.collection("mySweatHotel")
+            .doc("country")
+            .collection("France")
+            .doc("collection")
+            .collection("customer")
+            .doc("collection")
+            .collection('users')
+            .doc(authUser.user.displayName)
+            .update({
+              room: room,
+              lastTimeConnected: Date.now(),
+            }).then(() => navigation.navigate('Information'))
+        })
     }
 
 
@@ -41,6 +74,8 @@ const Login = ({ navigation }) => {
                 onChangeText={(text) => setEmail(text)} />
                 <Input placeholder="Mot de passe" secureTextEntry type="password" value={password} 
                 onChangeText={(text) => setPassword(text)} />
+                <Input placeholder="Numéro de chambre" type="text" value={room} 
+                onChangeText={(text) => setRoom(text)} />
             </View>
             <Button onPress={Login} containerStyle={styles.button} title="Connexion" />
             <Button onPress={() => navigation.navigate('Inscription')} containerStyle={styles.button} title="Créer un compte" type="clear" />

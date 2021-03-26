@@ -109,7 +109,7 @@ const Information = ({ navigation }) => {
                 // doc.data() will be undefined in this case
                 console.log("No such document!");
             }
-        }).then(() => navigation.replace('Home'))
+        }).then(() => navigation.replace('Information'))
     }
 
     return (
@@ -148,8 +148,6 @@ const Information = ({ navigation }) => {
                             {hideAll &&
                                 <Input placeholder="Entrer votre numéro de chambre" type="number" value={room} 
                                 onChangeText={(text) => setRoom(text)} style={{textAlign: "center", marginBottom: 5}} />}
-                            {room !== null &&
-                            <Button onPress={handleSubmit} containerStyle={styles.button} title="Accéder à la page d'accueil" />}
                         </View>
                     </View>
                 
@@ -252,7 +250,6 @@ const Information = ({ navigation }) => {
                         <TouchableOpacity>
                             <Text style={{fontSize: 15}} onPress={() => {
                                 setHotel(hotel.hotelName)
-                                setHotelId(hotel.id)
                                 setShowModalHotel(false)
                                 }}>
                                 {hotel.hotelName}

@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { KeyboardAvoidingView, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { Button, Input, Image } from 'react-native-elements';
 import { StatusBar } from 'expo-status-bar';
 import { MaterialIcons } from '@expo/vector-icons'; 
 import { auth, db, storage } from "../../firebase"
 import * as ImagePicker from 'expo-image-picker';
+import { UserContext } from '../components/userContext'
 
 
 const Register = ({ navigation }) => {
@@ -14,6 +15,7 @@ const Register = ({ navigation }) => {
     const [name, setName] = useState("")
     const [img, setImg] = useState(null)
     const [url, setUrl] = useState("")
+    const {userDB, setUserDB} = useContext(UserContext)
 
 
     const freeRegister = () => {
@@ -36,10 +38,13 @@ const Register = ({ navigation }) => {
         let unsubscribe = auth.onAuthStateChanged(function(user) {
             if (user) {
                 navigation.navigate('Information')
+                
             } 
           });
         return unsubscribe
     }, [])
+
+    console.log("//////", userDB)
     
       let openImagePickerAsync = async () => {
         let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();

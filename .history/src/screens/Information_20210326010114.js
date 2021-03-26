@@ -148,8 +148,7 @@ const Information = ({ navigation }) => {
                             {hideAll &&
                                 <Input placeholder="Entrer votre numéro de chambre" type="number" value={room} 
                                 onChangeText={(text) => setRoom(text)} style={{textAlign: "center", marginBottom: 5}} />}
-                            {room !== null &&
-                            <Button onPress={handleSubmit} containerStyle={styles.button} title="Accéder à la page d'accueil" />}
+                            {room !== null }
                         </View>
                     </View>
                 

@@ -14,14 +14,11 @@ const Home = ({ navigation }) => {
     const {userDB, setUserDB} = useContext(UserContext)
 
     const Logout = async () => {
-        if(userDB.checkoutDate === new Date) {
+        if(userDB.checkoutDate == new Date) {
             await auth.signOut()
             .then(navigation.replace('Connexion'))
             return setUserDB(null)
-        }else{
-            await auth.signOut()
-            .then(navigation.replace('Connexion'))
-        }
+        }else
     }
 
     useLayoutEffect(() => {

@@ -13,7 +13,24 @@ const Login = ({ navigation }) => {
     useEffect(() => {
         let unsubscribe = auth.onAuthStateChanged(function(user) {
             if (user) {
-                navigation.navigate('Information')
+                db.collection("mySweatHotel")
+                .doc("country")
+                .collection("France")
+                .doc("collection")
+                .collection("customer")
+                .doc("collection")
+                .collection('users')
+                .doc(user.displayName)
+                .get()
+                .then((doc) => {
+                    if (doc.exists) {
+                    setUserDB(doc.data())
+                    } else {
+                        // doc.data() will be undefined in this case
+                        console.log("No such document!");
+                    }
+                }).then(() => navigation.replace('Information'))
+                
             } 
           });
         return unsubscribe
@@ -22,8 +39,6 @@ const Login = ({ navigation }) => {
     console.log("//////", userDB)
 
     const Login = () => {
-        setEmail('') 
-        setPassword('')
         auth.signInWithEmailAndPassword(email, password)
     }
 

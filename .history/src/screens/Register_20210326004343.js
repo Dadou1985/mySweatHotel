@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { KeyboardAvoidingView, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { Button, Input, Image } from 'react-native-elements';
 import { StatusBar } from 'expo-status-bar';
 import { MaterialIcons } from '@expo/vector-icons'; 
 import { auth, db, storage } from "../../firebase"
 import * as ImagePicker from 'expo-image-picker';
+import { UserContext } from '../components/userContext'
 
 
 const Register = ({ navigation }) => {

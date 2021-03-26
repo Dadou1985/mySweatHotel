@@ -18,7 +18,6 @@ const Information = ({ navigation }) => {
     const [departement, setDepartement] = useState('Sélectionner un département')
     const [arrondissement, setArrondissement] = useState('Sélectionner un arrondissement')
     const [hotel, setHotel] = useState("Sélectionner votre hôtel")
-    const [hotelId, setHotelId] = useState(null)
     const [number, setNumber] = useState(0)
     const [showModalRegion, setShowModalRegion] = useState(false)
     const [showModalDepartement, setShowModalDepartement] = useState(false)
@@ -88,28 +87,8 @@ const Information = ({ navigation }) => {
         .collection('users')
         .doc(user.displayName)
         .update({
-            hotelId: hotelId,
-            hotelName: hotel,
-            room: room,
-            checkoutDate: date
+            hotelId: hotelId
         })
-        return db.collection("mySweatHotel")
-        .doc("country")
-        .collection("France")
-        .doc("collection")
-        .collection("customer")
-        .doc("collection")
-        .collection('users')
-        .doc(user.displayName)
-        .get()
-        .then((doc) => {
-            if (doc.exists) {
-            setUserDB(doc.data())
-            } else {
-                // doc.data() will be undefined in this case
-                console.log("No such document!");
-            }
-        }).then(() => navigation.replace('Home'))
     }
 
     return (
@@ -148,8 +127,6 @@ const Information = ({ navigation }) => {
                             {hideAll &&
                                 <Input placeholder="Entrer votre numéro de chambre" type="number" value={room} 
                                 onChangeText={(text) => setRoom(text)} style={{textAlign: "center", marginBottom: 5}} />}
-                            {room !== null &&
-                            <Button onPress={handleSubmit} containerStyle={styles.button} title="Accéder à la page d'accueil" />}
                         </View>
                     </View>
                 
@@ -252,7 +229,6 @@ const Information = ({ navigation }) => {
                         <TouchableOpacity>
                             <Text style={{fontSize: 15}} onPress={() => {
                                 setHotel(hotel.hotelName)
-                                setHotelId(hotel.id)
                                 setShowModalHotel(false)
                                 }}>
                                 {hotel.hotelName}
