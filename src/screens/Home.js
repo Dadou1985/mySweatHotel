@@ -3,10 +3,11 @@ import { KeyboardAvoidingView, StyleSheet, Text, View, Image, TouchableOpacity, 
 import { StatusBar } from 'expo-status-bar';
 import { Entypo } from '@expo/vector-icons';
 import { auth, db } from "../../firebase"
-import { SimpleLineIcons } from '@expo/vector-icons';
+import { SimpleLineIcons, MaterialIcons } from '@expo/vector-icons';
 import { Input, Button } from 'react-native-elements';
 import { UserContext } from '../components/userContext'
 import moment from 'moment'
+import { Divider } from 'react-native-elements';
 
 const Home = ({ navigation }) => {
     const [user, setUser] = useState(auth.currentUser)
@@ -50,8 +51,8 @@ const Home = ({ navigation }) => {
             </TouchableOpacity>
            
             <View style={styles.containerTop}>
-                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Conciergerie')}>
-                    <Image source={{uri: "https://static.thenounproject.com/png/496897-200.png"}} style={styles.img} />
+                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Délogement')}>
+                    <MaterialIcons name="room-preferences" size={55} color="black" />                
                 </TouchableOpacity>            
                 <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Maintenance')}>
                     <Image source={{uri: "https://static.thenounproject.com/png/41655-200.png"}} style={styles.img} />
@@ -59,7 +60,7 @@ const Home = ({ navigation }) => {
             </View>
             
                 <Image source={{uri: user.photoURL}}
-                style={{width: 150, height: 150, position: "absolute", borderRadius: 100, top: 320}}
+                style={{width: 150, height: 150, position: "absolute", borderRadius: 100, top: 240}}
                 onPress={() => navigation.navigate('Chat')} />
             
             <View style={styles.containerBottom}>
@@ -69,6 +70,38 @@ const Home = ({ navigation }) => {
                 <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Taxi')}>
                     <Image source={{uri: "https://cdn2.iconfinder.com/data/icons/car-11/100/taxi3-512.png"}} style={styles.img} />
                 </TouchableOpacity>
+            </View>
+            
+            <View style={{width: "100%", flexDirection: "column", alignItems: "center"}}>
+                <Text style={{fontSize: 20, fontWeight: "bold"}}>Click & Wait</Text>
+                <View style={styles.cncContainer}>
+                    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Délogement')}>
+                        <Image source={{uri: "https://cdn4.iconfinder.com/data/icons/everyday-objects-line-art-1/128/towels-512.png"}} style={styles.img} />    
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Délogement')}>
+                        <Image source={{uri: "https://cdn0.iconfinder.com/data/icons/beauty-and-fashion-14/512/Soap_bar-512.png"}} style={styles.img} />    
+                    </TouchableOpacity>  
+                    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Délogement')}>
+                        <Image source={{uri: "https://www.clipartmax.com/png/middle/181-1817034_toilet-trauma-youtube-toilet-paper-roll-icon.png"}} style={styles.img} />    
+                    </TouchableOpacity>  
+                    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Délogement')}>
+                        <Image source={{uri: "https://www.clipartmax.com/png/middle/177-1778082_hair-dryer-icon-hair-dryer.png"}} style={styles.img} />    
+                    </TouchableOpacity>     
+                </View>
+                <View style={styles.cncContainer}>
+                    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Délogement')}>
+                        <Image source={{uri: "https://cdn.iconscout.com/icon/premium/png-256-thumb/pillow-1427897-1207484.png"}} style={styles.img} />    
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Délogement')}>
+                        <Image source={{uri: "https://www.pinclipart.com/picdir/middle/159-1599759_weighted-blanket-blanket-clipart.png"}} style={styles.img} />    
+                    </TouchableOpacity>  
+                    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Délogement')}>
+                        <Image source={{uri: "https://secure.webtoolhub.com/static/resources/icons/set73/c814a79e.png"}} style={styles.img} />    
+                    </TouchableOpacity>  
+                    <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Délogement')}>
+                        <Image source={{uri: "https://www.pngkey.com/png/full/548-5481965_baby-bed-with-a-mobile-toy-with-hanging.png"}} style={styles.img} />    
+                    </TouchableOpacity>  
+                </View>
             </View>
             {/*<Modal
                 animationType="slide"
@@ -118,7 +151,7 @@ const styles = StyleSheet.create({
         display: "flex",
         flexDirection: "row",
         justifyContent: "space-around",
-        alignItems: "center"
+        alignItems: "center",
     },
     textContainer: {
         flexDirection: "column",
@@ -162,4 +195,10 @@ const styles = StyleSheet.create({
         shadowRadius: 3.84,
         elevation: 5,
       },
+      cncContainer: {
+          flexDirection: "row",
+          justifyContent: "space-around",
+          width: "100%",
+          marginTop: 15
+      }
 })

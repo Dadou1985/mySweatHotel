@@ -7,7 +7,7 @@ import LoginScreen from './src/screens/login'
 import RegisterScreen from './src/screens/Register'
 import HomeScreen from './src/screens/Home'
 import ChatScreen from './src/screens/chat'
-import HouseKeepingScreen from './src/screens/housekeeping'
+import RoomChangeScreen from './src/screens/RoomChange'
 import MaintenanceScreen from './src/screens/maintenance'
 import TimerScreen from './src/screens/Timer'
 import TaxiScreen from './src/screens/Taxi'
@@ -38,7 +38,7 @@ export default function App() {
             <Stack.Screen name="Inscription" component={RegisterScreen} />
             <Stack.Screen name="Home" component={HomeScreen} />
             <Stack.Screen name="Chat" component={ChatScreen} />
-            <Stack.Screen name="Conciergerie" component={HouseKeepingScreen} />
+            <Stack.Screen name="Délogement" component={RoomChangeScreen} />
             <Stack.Screen name="Maintenance" component={MaintenanceScreen} />
             <Stack.Screen name="Réveil" component={TimerScreen} />
             <Stack.Screen name="Taxi" component={TaxiScreen}/>

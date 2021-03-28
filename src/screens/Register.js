@@ -5,7 +5,7 @@ import { StatusBar } from 'expo-status-bar';
 import { MaterialIcons } from '@expo/vector-icons'; 
 import { auth, db, storage } from "../../firebase"
 import * as ImagePicker from 'expo-image-picker';
-
+import Constants from 'expo-constants'
 
 const Register = ({ navigation }) => {
     const [email, setEmail] = useState("")
@@ -40,44 +40,39 @@ const Register = ({ navigation }) => {
           });
         return unsubscribe
     }, [])
-    
-      let openImagePickerAsync = async () => {
-        let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    
-        if (permissionResult.granted === false) {
-          alert("Nous avons besoin de votre aval pour accéder aux photos, medias et fichiers de votre appareil");
-          return;
-        }
-    
-        let pickerResult = await ImagePicker.launchImageLibraryAsync();
-        
-        if (pickerResult.cancelled === true) {
-            return;
+
+    useEffect(() => {
+      (async () => {
+        if (Platform.OS !== 'web') {
+          const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+          if (status !== 'granted') {
+            alert('Sorry, we need camera roll permissions to make this work!');
           }
-
-          function dataURItoBlob(dataURI) {
-            var byteString = atob(dataURI.split(',')[1]);
-        
-            var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-        
-            var ab = new ArrayBuffer(byteString.length);
-            var ia = new Uint8Array(ab);
-            for (var i = 0; i < byteString.length; i++) {
-                ia[i] = byteString.charCodeAt(i);
-            }
-
-            return new Blob([ab], {type: mimeString});
-        
         }
-
-        let blob = dataURItoBlob(pickerResult.uri)
-      
-          setImg( blob );
+      })();
+    }, []);
+    
+    const pickImage = async () => {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+  
+      console.log(result);
+  
+      if (!result.cancelled) {
+        setImg(result.uri);
       }
+    };
 
-      const handleChangePhotoUrl = (event) => {
+      const handleChangePhotoUrl = async(event) => {
         event.preventDefault()
-        const uploadTask = storage.ref(`msh-photo-user/${name}`).put(img)
+        const response = await fetch(img)
+        const blob = await response.blob()
+        
+        const uploadTask = storage.ref(`msh-photo-user/${name}`).put(blob)
         uploadTask.on(
           "state_changed",
           snapshot => {},
@@ -122,7 +117,7 @@ const Register = ({ navigation }) => {
                 onSubmitEditing={freeRegister}  />
             </View>
             <View style={{marginBottom: 15}}>
-                <TouchableOpacity style={{flexDirection: "row", width: 300, alignItems: "center", justifyContent: "center"}} onPress={openImagePickerAsync}>
+                <TouchableOpacity style={{flexDirection: "row", width: 300, alignItems: "center", justifyContent: "center"}} onPress={pickImage}>
                 <MaterialIcons name="add-a-photo" size={24} color="grey" />                    
                 <Text style={{fontSize: 20, color: "grey", marginLeft: 10}}>Ajouter une photo de profile</Text>
                 </TouchableOpacity>
