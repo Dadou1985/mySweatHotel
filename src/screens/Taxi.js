@@ -45,7 +45,38 @@ const Taxi = () => {
         setPassenger(null)
         setType('')
         setAdress('')
-        return db.collection("mySweatHotel")
+        
+        if(userDB.hotelDept === "PARIS") {
+            return db.collection("mySweatHotel")
+        .doc("country")
+        .collection("France")
+        .doc("collection")
+        .collection('hotel')
+        .doc('region')
+        .collection(userDB.hotelRegion)
+        .doc('departement')
+        .collection(userDB.hotelDept)
+        .doc("Arrondissement")
+        .collection(userDB.hotelArrondissement)
+        .doc(`${userDB.hotelId}`)
+        .collection('cab')
+        .add({
+            author: user.displayName,
+            date: date,
+            destination: adress,
+            client: user.displayName,
+            room: userDB.room,
+            pax: passenger,
+            model: type,
+            markup: Date.now(),
+            hour: hour  
+        }).then(function(docRef){
+            console.log(docRef.id)
+          }).catch(function(error) {
+            console.error(error)
+          })
+        }else{
+            return db.collection("mySweatHotel")
         .doc("country")
         .collection("France")
         .doc("collection")
@@ -71,6 +102,7 @@ const Taxi = () => {
           }).catch(function(error) {
             console.error(error)
           })
+        }
     }
 
       

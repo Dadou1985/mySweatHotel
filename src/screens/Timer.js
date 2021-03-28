@@ -38,7 +38,34 @@ const Timer = () => {
     }
 
     const handleSubmit = () => {
-        return db.collection("mySweatHotel")
+        if(userDB.hotelDept === "PARIS") {
+            return db.collection("mySweatHotel")
+        .doc("country")
+        .collection("France")
+        .doc("collection")
+        .collection('hotel')
+        .doc('region')
+        .collection(userDB.hotelRegion)
+        .doc('departement')
+        .collection(userDB.hotelDept)
+        .doc("Arrondissement")
+        .collection(userDB.hotelArrondissement)
+        .doc(`${userDB.hotelId}`)
+        .collection('clock')
+        .add({
+            author: user.displayName,
+            date: date,
+            client: user.displayName,
+            room: userDB.room,
+            markup: Date.now(),
+            hour: hour  
+        }).then(function(docRef){
+            console.log(docRef.id)
+          }).catch(function(error) {
+            console.error(error)
+          })
+        }else{
+            return db.collection("mySweatHotel")
         .doc("country")
         .collection("France")
         .doc("collection")
@@ -61,6 +88,7 @@ const Timer = () => {
           }).catch(function(error) {
             console.error(error)
           })
+        }
     }
 
       

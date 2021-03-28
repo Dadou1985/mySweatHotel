@@ -62,7 +62,37 @@ const Maintenance = () => {
                 const uploadTask = () => {
                     setType('')
                     setDetails('')
-                    return db.collection("mySweatHotel")
+                    
+                    if(userDB.hotelDept === "PARIS") {
+                      return db.collection("mySweatHotel")
+                    .doc("country")
+                    .collection("France")
+                    .doc("collection")
+                    .collection('hotel')
+                    .doc('region')
+                    .collection(userDB.hotelRegion)
+                    .doc('departement')
+                    .collection(userDB.hotelDept)
+                    .doc("Arrondissement")
+                    .collection(userDB.hotelArrondissement)
+                    .doc(`${userDB.hotelId}`)
+                    .collection('maintenance')
+                    .add({
+                        author: user.displayName,
+                        date: new Date(),
+                        client: user.displayName,
+                        room: userDB.room,
+                        type: type,
+                        details: details,
+                        markup: Date.now(),
+                        img: url,
+                    }).then(function(docRef){
+                        console.log(docRef.id)
+                    }).catch(function(error) {
+                        console.error(error)
+                    })
+                    }else{
+                      return db.collection("mySweatHotel")
                     .doc("country")
                     .collection("France")
                     .doc("collection")
@@ -87,6 +117,7 @@ const Maintenance = () => {
                     }).catch(function(error) {
                         console.error(error)
                     })
+                    }
                 }
                   return setUrl(url, uploadTask())})
           }
