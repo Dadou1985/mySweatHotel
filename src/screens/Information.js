@@ -78,25 +78,8 @@ const Information = ({ navigation }) => {
         setShowDate(Platform.OS === 'ios');
         setDate(currentDate);
       };
-
-    const handleSubmit = async () => {
-        await db.collection("mySweatHotel")
-        .doc("country")
-        .collection("France")
-        .doc("collection")
-        .collection("customer")
-        .doc("collection")
-        .collection('users')
-        .doc(user.displayName)
-        .update({
-            hotelId: hotelId,
-            hotelName: hotel,
-            hotelRegion: region,
-            hotelDept: departement,
-            hotelArrondissement: arrondissement,
-            room: room,
-            checkoutDate: moment(date).format('L')
-        })
+    
+    const handleLoadUserDB = () => {
         return db.collection("mySweatHotel")
         .doc("country")
         .collection("France")
@@ -116,6 +99,35 @@ const Information = ({ navigation }) => {
         }).then(() => navigation.replace('Home'))
     }
 
+    const handleSubmit = async () => {
+        await db.collection("mySweatHotel")
+        .doc("country")
+        .collection("France")
+        .doc("collection")
+        .collection("customer")
+        .doc("collection")
+        .collection('users')
+        .doc(user.displayName)
+        .update({
+            hotelId: hotelId,
+            hotelName: hotel,
+            hotelRegion: region,
+            hotelDept: departement,
+            hotelArrondissement: arrondissement,
+            room: room,
+            checkoutDate: moment(date).format('L'),
+            towel: true,
+            soap: true,
+            toiletPaper: true,
+            hairDryer: true,
+            pillow: true,
+            blanket: true,
+            iron: true,
+            babyBed: true
+        })
+        return handleLoadUserDB()
+    }
+
     return (
         <KeyboardAvoidingView style={styles.container}>
             <StatusBar style="light" />
@@ -127,7 +139,7 @@ const Information = ({ navigation }) => {
                             </TouchableOpacity>
                             <View style={{marginTop: 15}}>
                                 <Button title='Oui' type="clear" />
-                                <Button title='Non, merci' onPress={() => navigation.replace('Home')} />
+                                <Button title='Non, merci' onPress={handleLoadUserDB} />
                             </View>
                         </View>
                     </View>
