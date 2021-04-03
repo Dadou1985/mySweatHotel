@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native';
-import { Button, Input, Image } from 'react-native-elements';
-import { StatusBar } from 'expo-status-bar';
+import React, { useState, useEffect, useContext } from 'react'
+import { KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native'
+import { Button, Input } from 'react-native-elements'
+import { StatusBar } from 'expo-status-bar'
 import { auth, db } from "../../firebase"
 import { UserContext } from '../components/userContext'
-import { showMessage, hideMessage } from "react-native-flash-message";
+import { showMessage } from "react-native-flash-message"
 
 const Login = ({ navigation }) => {
     const [email, setEmail] = useState("")
@@ -30,7 +30,7 @@ const Login = ({ navigation }) => {
     console.log("//////", userDB)
 
     const Login = () => {
-        auth.signInWithEmailAndPassword(email, password)
+        auth.signInWithEmailAndPassword(email.trim(), password)
         .then(() => {
             setEmail('') 
             setPassword('')

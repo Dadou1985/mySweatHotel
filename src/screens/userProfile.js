@@ -27,14 +27,8 @@ const UserProfile = ({navigation}) => {
     const [showDate, setShowDate] = useState(false)
 
     const Logout = async () => {
-      if(userDB.checkoutDate === moment(new Date()).format('L')) {
-          await auth.signOut()
-          .then(navigation.replace('Connexion'))
-          return setUserDB(null)
-      }else{
-          await auth.signOut()
-          .then(navigation.replace('Connexion'))
-      }
+      await auth.signOut()
+      .then(navigation.replace('Connexion'))
   }
 
   useLayoutEffect(() => {
@@ -96,7 +90,7 @@ const UserProfile = ({navigation}) => {
     };
 
     const handleLoadUserDB = () => {
-      return db.collection("mySweatHotel")
+      return db.collection("mySweetHotel")
       .doc("country")
       .collection("France")
       .doc("collection")
@@ -130,7 +124,7 @@ const UserProfile = ({navigation}) => {
     const handleSubmit = async() => {
       await handleChangeEmail()
       
-      await db.collection("mySweatHotel")
+      await db.collection("mySweetHotel")
         .doc("country")
         .collection("France")
         .doc("collection")
@@ -178,7 +172,7 @@ const UserProfile = ({navigation}) => {
       
 
     const handleCheckoutDateChange = async() => {
-      await db.collection("mySweatHotel")
+      await db.collection("mySweetHotel")
       .doc("country")
       .collection("France")
       .doc("collection")
@@ -187,7 +181,7 @@ const UserProfile = ({navigation}) => {
       .collection('users')
       .doc(user.displayName)
       .update({
-        checkoutDate: moment(date).format('L')
+        checkoutDate: date
       })
 
       await showMessage({

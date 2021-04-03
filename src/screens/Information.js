@@ -36,7 +36,7 @@ const Information = ({ navigation }) => {
     useEffect(() => {
         const getHotel = () => {
             if(departement === 'PARIS') {
-                return db.collection("mySweatHotel")
+                return db.collection("mySweetHotel")
                     .doc('country')
                     .collection('France')
                     .doc('collection')
@@ -48,7 +48,7 @@ const Information = ({ navigation }) => {
                     .doc("arrondissement")
                     .collection(arrondissement)
             }else{
-                return db.collection("mySweatHotel")
+                return db.collection("mySweetHotel")
                     .doc('country')
                     .collection('France')
                     .doc('collection')
@@ -87,7 +87,7 @@ const Information = ({ navigation }) => {
       };
     
     const handleLoadUserDB = () => {
-        return db.collection("mySweatHotel")
+        return db.collection("mySweetHotel")
         .doc("country")
         .collection("France")
         .doc("collection")
@@ -107,7 +107,7 @@ const Information = ({ navigation }) => {
     }
 
     const handleSubmit = async () => {
-        await db.collection("mySweatHotel")
+        await db.collection("mySweetHotel")
         .doc("country")
         .collection("France")
         .doc("collection")
@@ -122,7 +122,7 @@ const Information = ({ navigation }) => {
             hotelDept: departement,
             hotelArrondissement: arrondissement,
             room: room,
-            checkoutDate: moment(date).format('L'),
+            checkoutDate: date,
             towel: true,
             soap: true,
             toiletPaper: true,
@@ -138,7 +138,7 @@ const Information = ({ navigation }) => {
     return (
         <KeyboardAvoidingView style={styles.container}>
             <StatusBar style="light" />
-            {userDB !== null ? <View style={styles.containerText}>
+            {userDB !== null && moment(userDB.checkoutDate).format('L') !== moment(new Date()).format('L') && new Date().getHours() < 13 ? <View style={styles.containerText}>
                         <Text style={styles.text}>Un besoin particulier...</Text>
                         <View style={{marginTop: 40}}>
                             <TouchableOpacity>

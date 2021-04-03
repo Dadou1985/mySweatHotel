@@ -18,7 +18,7 @@ const Register = ({ navigation }) => {
 
 
     const freeRegister = () => {
-        return db.collection("mySweatHotel")
+        return db.collection("mySweetHotel")
         .doc("country")
         .collection("France")
         .doc("collection")

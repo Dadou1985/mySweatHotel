@@ -44,7 +44,7 @@ const Chat = ({ navigation }) => {
     useEffect(() => {
         const getMessages = () => {
             if(userDB.dept === 'PARIS') {
-                return db.collection("mySweatHotel")
+                return db.collection("mySweetHotel")
                 .doc("country")
                 .collection("France")
                 .doc("collection")
@@ -61,7 +61,7 @@ const Chat = ({ navigation }) => {
                 .collection("chatRoom")
                 .orderBy("markup", "desc")
             }else{
-                return db.collection("mySweatHotel")
+                return db.collection("mySweetHotel")
                 .doc("country")
                 .collection("France")
                 .doc("collection")
@@ -97,7 +97,7 @@ const Chat = ({ navigation }) => {
         setInput("")
 
         if(userDB.hotelDept === "PARIS") {
-            return db.collection("mySweatHotel")
+            return db.collection("mySweetHotel")
         .doc("country")
         .collection("France")
         .doc("collection")
@@ -126,7 +126,7 @@ const Chat = ({ navigation }) => {
             console.error(error)
           })
         }else{
-            return db.collection("mySweatHotel")
+            return db.collection("mySweetHotel")
         .doc("country")
         .collection("France")
         .doc("collection")

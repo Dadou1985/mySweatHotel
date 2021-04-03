@@ -40,7 +40,7 @@ const Timer = () => {
 
     const handleSubmit = () => {
         if(userDB.hotelDept === "PARIS") {
-            return db.collection("mySweatHotel")
+            return db.collection("mySweetHotel")
         .doc("country")
         .collection("France")
         .doc("collection")
@@ -66,7 +66,7 @@ const Timer = () => {
             console.error(error)
           })
         }else{
-            return db.collection("mySweatHotel")
+            return db.collection("mySweetHotel")
         .doc("country")
         .collection("France")
         .doc("collection")

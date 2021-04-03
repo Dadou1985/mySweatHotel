@@ -11,7 +11,7 @@ const ClickNwaitDrawer = ({fadeAnim, fadeOut}) => {
 
     const handleClickAndWait = (item) => {
         if(userDB.hotelDept === 'PARIS') {
-            return db.collection("mySweatHotel")
+            return db.collection("mySweetHotel")
         .doc("country")
         .collection("France")
         .doc("collection")
@@ -38,7 +38,7 @@ const ClickNwaitDrawer = ({fadeAnim, fadeOut}) => {
             console.error(error)
           })
         }else{
-            return db.collection("mySweatHotel")
+            return db.collection("mySweetHotel")
         .doc("country")
         .collection("France")
         .doc("collection")
@@ -66,7 +66,7 @@ const ClickNwaitDrawer = ({fadeAnim, fadeOut}) => {
     }
 
     const handleDeleteItemChoosen = async(item) => {
-        await db.collection("mySweatHotel")
+        await db.collection("mySweetHotel")
         .doc("country")
         .collection("France")
         .doc("collection")
@@ -77,7 +77,7 @@ const ClickNwaitDrawer = ({fadeAnim, fadeOut}) => {
         .update(
             item
         )
-        db.collection("mySweatHotel")
+        db.collection("mySweetHotel")
         .doc("country")
         .collection("France")
         .doc("collection")

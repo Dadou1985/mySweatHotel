@@ -1,13 +1,14 @@
 import React from 'react'
 import { db } from "../../firebase"
-import hotel from '../../hotels/Ile-de-France/val_de_marne.json'
+import hotel from '../../hotels/PROVENCE-ALPES-COTE_D_AZUR/vaucluse.json'
+import { KeyboardAvoidingView, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 
 export default function HotelRegitrator() {
 
-    //let panameHotel = hotel.filter(hostel => hostel.fields.code_postal === "75020")
+    let panameHotel = hotel.filter(hostel => hostel.fields.code_postal === "75020")
 
     const hotelRegistrator = ({hotelId, arrondissement, hotelName, classement, adresse, room, phone, mail, website, region, departement, code_postal, city, lat, lng}) => {
-        return db.collection("mySweatHotel")
+        return db.collection("mySweetHotel")
         .doc("country")
         .collection("France")
         .doc("collection")
@@ -16,6 +17,8 @@ export default function HotelRegitrator() {
         .collection(region)
         .doc("departement")
         .collection(departement)
+        //.doc('arrondissement')
+        //.collection(arrondissement)
         .doc(`${hotelId}`)
         .set({
           hotelName: hotelName,
@@ -36,7 +39,7 @@ export default function HotelRegitrator() {
     }
         
     return (
-        <div>
+        <View>
             
             {/*hotel.forEach( doc => (
                 hotelRegistrator({
@@ -59,6 +62,6 @@ export default function HotelRegitrator() {
                 
                 ))*/}
                 
-        </div>
+        </View>
     )
 }
