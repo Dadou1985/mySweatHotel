@@ -92,6 +92,27 @@ const Chat = ({ navigation }) => {
         return unsubscribe
     }, [messages])
 
+    const handleRoomnameSubmit = (event) => {
+        event.preventDefault()
+        return db.collection('mySweetHotel')
+          .doc('country')
+          .collection('France')
+          .doc('collection')
+          .collection('hotel')
+          .doc('region')
+          .collection(userDB.hotelRegion)
+          .doc('departement')
+          .collection(userDB.hotelDept)
+          .doc(`${userDB.hotelId}`)
+          .collection('chat')
+          .doc(user.displayName)
+          .update({
+            status: true,
+            markup: Date.now()
+        })      
+      .then(handleClose())
+      }
+
     const sendMessage = () => {
         Keyboard.dismiss()
         setInput("")

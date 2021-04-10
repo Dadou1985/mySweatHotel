@@ -55,7 +55,7 @@ const ClickNwaitDrawer = ({fadeAnim, fadeOut}) => {
             client: user.displayName,
             room: userDB.room,
             checkoutDate: userDB.checkoutDate
-,            createdAt: new Date(),
+,           createdAt: new Date(),
             markup: Date.now(),
         }).then(function(docRef){
             console.log(docRef.id)

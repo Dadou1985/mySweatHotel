@@ -12,7 +12,7 @@ import TimerScreen from './src/screens/Timer'
 import TaxiScreen from './src/screens/Taxi'
 import Information from './src/screens/Information'
 import UserProfileScreen from './src/screens/userProfile'
-import FlashMessage from "react-native-flash-message";
+import FlashMessage from "react-native-flash-message"
 
 import { UserContext } from './src/components/userContext'
 
