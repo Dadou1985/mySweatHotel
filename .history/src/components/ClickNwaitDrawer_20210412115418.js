@@ -76,7 +76,7 @@ const ClickNwaitDrawer = ({fadeAnim, fadeOut}) => {
         .doc('departement')
         .collection(userDB.hotelDept)
         .doc(`${userDB.hotelId}`)
-        .collection('guest')
+        .collection('housekeeping')
         .doc(user.displayName)
         .update(
             item

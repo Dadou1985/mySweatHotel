@@ -70,13 +70,9 @@ const ClickNwaitDrawer = ({fadeAnim, fadeOut}) => {
         .doc("country")
         .collection("France")
         .doc("collection")
-        .collection('hotel')
-        .doc('region')
-        .collection(userDB.hotelRegion)
-        .doc('departement')
-        .collection(userDB.hotelDept)
-        .doc(`${userDB.hotelId}`)
-        .collection('guest')
+        .collection("customer")
+        .doc("collection")
+        .collection('users')
         .doc(user.displayName)
         .update(
             item
@@ -91,7 +87,7 @@ const ClickNwaitDrawer = ({fadeAnim, fadeOut}) => {
         .doc('departement')
         .collection(userDB.hotelDept)
         .doc(`${userDB.hotelId}`)
-        .collection('guest')
+        .collection('gu')
         .doc(user.displayName)
         .get()
         .then((doc) => {

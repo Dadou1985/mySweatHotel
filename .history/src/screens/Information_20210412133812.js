@@ -91,6 +91,8 @@ const Information = ({ navigation }) => {
         .doc("country")
         .collection("France")
         .doc("collection")
+        .collection("customer")
+        .doc("collection")
         .collection('hotel')
         .doc("region")
         .collection(region)

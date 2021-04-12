@@ -91,6 +91,8 @@ const Information = ({ navigation }) => {
         .doc("country")
         .collection("France")
         .doc("collection")
+        .collection("customer")
+        .doc("collection")
         .collection('hotel')
         .doc("region")
         .collection(region)
@@ -115,6 +117,8 @@ const Information = ({ navigation }) => {
         .doc("country")
         .collection("France")
         .doc("collection")
+        .collection("customer")
+        .doc("collection")
         .collection('hotel')
         .doc("region")
         .collection(region)
@@ -123,7 +127,7 @@ const Information = ({ navigation }) => {
         .doc(`${hotelId}`)
         .collection('guest')
         .doc(user.displayName)
-        .set({
+        .update({
             hotelId: hotelId,
             hotelName: hotel,
             hotelRegion: region,
