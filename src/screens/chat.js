@@ -8,6 +8,7 @@ import { Entypo } from '@expo/vector-icons';
 import { UserContext } from '../components/userContext'
 import { auth, db } from "../../firebase"
 import moment from 'moment'
+
 import { getPendingResultAsync } from 'expo-image-picker';
 import { YellowBox } from 'react-native';
 import _ from 'lodash';
@@ -25,7 +26,8 @@ const Chat = ({ navigation }) => {
     const [user, setUser] = useState(auth.currentUser)
     const {userDB, setUserDB} = useContext(UserContext)
     const [messages, setMessages] = useState([])
-    
+    const [chatRoom, setChatRoom] = useState(null)
+
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -90,10 +92,56 @@ const Chat = ({ navigation }) => {
             setMessages(snapInfo)
         });
         return unsubscribe
-    }, [messages])
+    }, [])
 
-    const handleRoomnameSubmit = (event) => {
-        event.preventDefault()
+    const getChatRoom = () => {
+        return db.collection('mySweetHotel')
+        .doc('country')
+        .collection('France')
+        .doc('collection')
+        .collection('hotel')
+        .doc('region')
+        .collection(userDB.hotelRegion)
+        .doc('departement')
+        .collection(userDB.hotelDept)
+        .doc(`${userDB.hotelId}`)
+        .collection('chat')
+        .doc(user.displayName)
+        .get()
+        .then((doc) => {
+            if (doc.exists) {
+            setChatRoom(doc.data())
+            } else {
+                // doc.data() will be undefined in this case
+                console.log("No such document!");
+            }
+        })
+    }
+
+
+    const createRoomnameSubmit = () => {
+        return db.collection('mySweetHotel')
+          .doc('country')
+          .collection('France')
+          .doc('collection')
+          .collection('hotel')
+          .doc('region')
+          .collection(userDB.hotelRegion)
+          .doc('departement')
+          .collection(userDB.hotelDept)
+          .doc(`${userDB.hotelId}`)
+          .collection('chat')
+          .doc(user.displayName)
+          .set({
+            title: user.displayName,
+            room: userDB.room,
+            user: user.uid,
+            markup: Date.now(),
+            status: true
+        })      
+      }
+
+    const updateRoomnameSubmit = () => {
         return db.collection('mySweetHotel')
           .doc('country')
           .collection('France')
@@ -110,7 +158,6 @@ const Chat = ({ navigation }) => {
             status: true,
             markup: Date.now()
         })      
-      .then(handleClose())
       }
 
     const sendMessage = () => {
@@ -176,7 +223,7 @@ const Chat = ({ navigation }) => {
         }
     }
 
-
+    console.log(chatRoom)
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: "white"}}>
@@ -292,7 +339,16 @@ const Chat = ({ navigation }) => {
                     />
                     <TouchableOpacity
                     activeOpacity={0.5}
-                    onPress={sendMessage}>
+                    onPress={async() => {
+                        await getChatRoom()
+                        if(chatRoom !== null) {
+                            return updateRoomnameSubmit()
+                            .then(sendMessage())
+                        }else{
+                            return createRoomnameSubmit()
+                            .then(sendMessage())
+                        }
+                        }}>
                         <FontAwesome name="send" size={24} color="black" />
                     </TouchableOpacity>
 

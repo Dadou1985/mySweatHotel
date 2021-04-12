@@ -30,7 +30,6 @@ const Information = ({ navigation }) => {
     const [hideAll, setHideAll] = useState(false)
     const [user, setUser] = useState(auth.currentUser)
     const {userDB, setUserDB} = useContext(UserContext)
-    const [chatRoom, setChatRoom] = useState([])
 
     const deptDetails = [paris_arrondissement, ile_de_france, auvergne_rhone_alpes, bourgogne_franche_comte, bretagne, centre_val_de_loire, corse, grand_est, hauts_de_france, normandie, nouvelle_aquitaine, occitanie, pays_de_la_loire,provence_alpes_cote_d_azur]
 
@@ -74,58 +73,6 @@ const Information = ({ navigation }) => {
         });
         return unsubscribe
     }, [region, departement, arrondissement])
-
-    useEffect(() => {
-        const getChatRoom = () => {
-            return db.collection('mySweetHotel')
-            .doc('country')
-            .collection('France')
-            .doc('collection')
-            .collection('hotel')
-            .doc('region')
-            .collection(userDB.hotelRegion)
-            .doc('departement')
-            .collection(userDB.hotelDept)
-            .doc(`${userDB.hotelId}`)
-            .collection('chat')
-            .where("title", "==", user.displayName)
-        }
-
-        let unsubscribe = getChatRoom().onSnapshot(function(snapshot) {
-            const snapInfo = []
-          snapshot.forEach(function(doc) {          
-            snapInfo.push({
-                id: doc.id,
-                ...doc.data()
-              })        
-            });
-            console.log(snapInfo)
-            setChatRoom(snapInfo)
-        });
-        return unsubscribe
-    }, [])
-
-    const handleRoomnameSubmit = () => {
-        return db.collection('mySweetHotel')
-          .doc('country')
-          .collection('France')
-          .doc('collection')
-          .collection('hotel')
-          .doc('region')
-          .collection(userDB.hotelRegion)
-          .doc('departement')
-          .collection(userDB.hotelDept)
-          .doc(`${userDB.hotelId}`)
-          .collection('chat')
-          .doc(user.displayName)
-          .set({
-            title: user.displayName,
-            user: user.uid,
-            markup: Date.now(),
-            status: false
-        })      
-      .then(handleClose())
-      }
         
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
@@ -235,9 +182,6 @@ const Information = ({ navigation }) => {
                             {room !== null &&
                             <Button onPress={() => {
                                 handleSubmit()
-                                if(chatRoom !== []) {
-                                    return handleRoomnameSubmit()
-                                }
                                 setTimeout(() => {
                                     showMessage({
                                         message: `Nous sommes heureux de vous revoir, ${user.displayName}`,
