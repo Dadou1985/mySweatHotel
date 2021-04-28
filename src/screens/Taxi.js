@@ -1,11 +1,12 @@
 import React, { useState,useContext } from 'react';
 import { KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native';
-import { Button, Input, Image } from 'react-native-elements';
+import { Button, Input, Image, ButtonGroup } from 'react-native-elements';
 import { StatusBar } from 'expo-status-bar';
 import { auth, db } from "../../firebase"
 import { UserContext } from '../components/userContext'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment'
+import 'moment/locale/fr';
 import { showMessage, hideMessage } from "react-native-flash-message";
 
 
@@ -13,9 +14,9 @@ const Taxi = () => {
     const [date, setDate] = useState(new Date())
     const [hour, setHour] = useState(new Date())
     const [passenger, setPassenger] = useState(null)
-    const [type, setType] = useState("")
+    const [type, setType] = useState("Berline")
     const [adress, setAdress] = useState("")
-
+    const [selectedIndex, setSelectedIndex] = useState(0)
     const [user, setUser] = useState(auth.currentUser)
     const {userDB, setUserDB} = useContext(UserContext)
 
@@ -63,15 +64,16 @@ const Taxi = () => {
         .collection('cab')
         .add({
             author: user.displayName,
-            date: date,
             destination: adress,
             client: user.displayName,
             room: userDB.room,
             pax: passenger,
             model: type,
             markup: Date.now(),
-            hour: hour  
-        }).then(function(docRef){
+            hour: moment(hour).format('LT'),
+            date: moment(date).format('L'),
+            status: true
+          }).then(function(docRef){
             console.log(docRef.id)
           }).catch(function(error) {
             console.error(error)
@@ -90,15 +92,16 @@ const Taxi = () => {
         .collection('cab')
         .add({
             author: user.displayName,
-            date: date,
             destination: adress,
             client: user.displayName,
             room: userDB.room,
             pax: passenger,
             model: type,
             markup: Date.now(),
-            hour: hour  
-        }).then(function(docRef){
+            hour: moment(hour).format('LT'),
+            date: moment(date).format('L'),
+            status: true
+          }).then(function(docRef){
             console.log(docRef.id)
           }).catch(function(error) {
             console.error(error)
@@ -106,6 +109,7 @@ const Taxi = () => {
         }
     }
 
+    const cabType = ["Berline", "Van"]
       
     moment.locale('fr')
 
@@ -117,18 +121,41 @@ const Taxi = () => {
                 <Text style={styles.text}>Réserver un taxi</Text>
             </View>
             <View style={styles.inputContainer}>
-                <Button type="clear" title={moment(date).format('L')} 
-                onPress={handleShowDate} />
-                <Button type="clear" title={moment(hour).format('LT')} 
-                onPress={handleShowHour} />
+            <View style={{flexDirection: "row", justifyContent: "space-around"}}>
+                <View style={{marginBottom: 20, flexDirection: "column", alignItems: "center"}}>
+                    <Text>Jour</Text>
+                    <Button type="clear" title={moment(date).format('L')} 
+                    onPress={handleShowDate} />
+                </View>
+                <View style={{marginBottom: 20, flexDirection: "column", alignItems: "center"}}>
+                    <Text>Heure</Text>
+                    <Button type="clear" title={moment(hour).format('LT')} 
+                        onPress={handleShowHour} />
+                </View>   
+            </View> 
+            <View style={{marginBottom: 20, flexDirection: "column", alignItems: "center"}}>
+                    <Text>Type de véhicule</Text>
+                    <ButtonGroup
+                        onPress={() => {
+                            setSelectedIndex(selectedIndex)
+                            if(selectedIndex === 1) {
+                                setType('Van')
+                            }else{
+                                setType('Berline')
+                            }
+                        }}
+                        selectedIndex={selectedIndex}
+                        buttons={cabType}
+                        containerStyle={{height: 40}}
+                        selectedButtonStyle={{backgroundColor: "gray"}}
+                    />
+                </View>
                 <Input placeholder="Nombre de passager(s)" type="number" value={passenger} 
                 onChangeText={(text) => setPassenger(text)} />
-                <Input placeholder="Type de véhicule" type="text" value={type} 
-                onChangeText={(text) => setType(text)} />
                 <Input placeholder="Adresse de la destination"  type="text" value={adress} 
                 onChangeText={(text) => setAdress(text)} />
             </View>
-            <Button onPress={() => {
+            <Button raised={true} onPress={() => {
                 handleSubmit()
                 showMessage({
                     message: "Votre demande de réservation d'un taxi a été transmise à la réception !",

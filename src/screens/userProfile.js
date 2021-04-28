@@ -5,6 +5,7 @@ import { Entypo, MaterialIcons, SimpleLineIcons, Ionicons } from '@expo/vector-i
 import { auth, db, storage } from "../../firebase"
 import { UserContext } from '../components/userContext'
 import moment from 'moment'
+import 'moment/locale/fr';
 import { Button, Input, Overlay } from 'react-native-elements';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as ImagePicker from 'expo-image-picker';
@@ -22,7 +23,7 @@ const UserProfile = ({navigation}) => {
     const [updatePhoto, setUpdatePhoto] = useState(false)
     const [updateCheckout, setUpdateCheckout] = useState(false)
     const [email, setEmail] = useState('')
-    const [date, setDate] = useState(new Date(Date.now()))
+    const [date, setDate] = useState(new Date())
     const [room, setRoom] = useState(null)
     const [showDate, setShowDate] = useState(false)
 
@@ -193,7 +194,7 @@ const UserProfile = ({navigation}) => {
       .collection('guest')
       .doc(user.displayName)
       .update({
-        checkoutDate: date
+        checkoutDate: moment(date).format('LL')
       })
 
       await showMessage({
@@ -219,6 +220,8 @@ const UserProfile = ({navigation}) => {
         duration: 1000,
       }).start();
     };
+
+    console.log(userDB.checkoutDate)
     
     return (
         <KeyboardAvoidingView style={styles.container}>
@@ -240,7 +243,7 @@ const UserProfile = ({navigation}) => {
                 </TouchableOpacity>
               </View>
               <View style={{flexDirection: "row", justifyContent: "space-around", width: "80%"}}>
-                <Text style={{fontSize: 14, marginBottom: 20}}>Check-out prévu pour le {moment(userDB.checkoutDate).format('LL')}</Text>
+                <Text style={{fontSize: 14, marginBottom: 20}}>Check-out prévu pour le {userDB.checkoutDate}</Text>
                 <TouchableOpacity activeOpacity={0.5} onPress={() => {setShowDate(true)}}>
                   <Ionicons name="pencil-outline" size={24} color="black" />
                 </TouchableOpacity>

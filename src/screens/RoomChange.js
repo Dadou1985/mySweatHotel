@@ -86,11 +86,12 @@ const RoomChange = () => {
                         author: user.displayName,
                         date: new Date(),
                         client: user.displayName,
-                        room: userDB.room,
-                        type: type,
+                        fromRoom: userDB.room,
+                        reason: type,
                         details: details,
                         markup: Date.now(),
                         img: url,
+                        status: true
                     }).then(function(docRef){
                         console.log(docRef.id)
                     }).catch(function(error) {
@@ -113,10 +114,11 @@ const RoomChange = () => {
                         date: new Date(),
                         client: user.displayName,
                         room: userDB.room,
-                        type: type,
+                        reason: type,
                         details: details,
                         markup: Date.now(),
                         img: url,
+                        status: true
                     }).then(function(docRef){
                         console.log(docRef.id)
                     }).catch(function(error) {

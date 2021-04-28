@@ -91,6 +91,7 @@ const Maintenance = () => {
                         details: details,
                         markup: Date.now(),
                         img: url,
+                        status: true
                     }).then(function(docRef){
                         console.log(docRef.id)
                     }).catch(function(error) {
@@ -117,6 +118,7 @@ const Maintenance = () => {
                         details: details,
                         markup: Date.now(),
                         img: url,
+                        status: true
                     }).then(function(docRef){
                         console.log(docRef.id)
                     }).catch(function(error) {

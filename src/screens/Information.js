@@ -8,13 +8,14 @@ import { paris_arrondissement, ile_de_france, auvergne_rhone_alpes, bourgogne_fr
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { UserContext } from '../components/userContext'
 import moment from 'moment'
+import 'moment/locale/fr';
 import { showMessage, hideMessage } from "react-native-flash-message";
 
 
 const Information = ({ navigation }) => {
     const [info, setInfo] = useState([])
     const [room, setRoom] = useState(null)
-    const [date, setDate] = useState(new Date(Date.now()))
+    const [date, setDate] = useState(new Date())
     const [showDate, setShowDate] = useState(false)
     const [region, setRegion] = useState('Sélectionner une région')
     const [departement, setDepartement] = useState('Sélectionner un département')
@@ -47,6 +48,7 @@ const Information = ({ navigation }) => {
                     .collection(departement)
                     .doc("arrondissement")
                     .collection(arrondissement)
+                    .where("partnership", "==", true)
             }else{
                 return db.collection("mySweetHotel")
                     .doc('country')
@@ -57,6 +59,7 @@ const Information = ({ navigation }) => {
                     .collection(region)
                     .doc('departement')
                     .collection(departement)
+                    .where("partnership", "==", true)
             }
                 }
 
@@ -130,7 +133,7 @@ const Information = ({ navigation }) => {
             hotelDept: departement,
             hotelArrondissement: arrondissement,
             room: room,
-            checkoutDate: date,
+            checkoutDate: moment(date).format('LL'),
             towel: true,
             soap: true,
             toiletPaper: true,
@@ -142,6 +145,13 @@ const Information = ({ navigation }) => {
         })
         return handleLoadUserDB()
     }
+
+    const Logout = async () => {
+        await auth.signOut()
+        .then(navigation.replace('Connexion'))
+    }
+
+console.log(date)
 
     return (
         <KeyboardAvoidingView style={styles.container}>
@@ -290,7 +300,7 @@ const Information = ({ navigation }) => {
             visible={showModalHotel} 
             style={styles.centeredView}>
                 <ScrollView contentContainerStyle={styles.modalView}>
-                {info.map(hotel =>(
+                {info.length > 0 ? info.map(hotel =>(
                     <View style={{padding: 15, 
                     marginBottom: 30, 
                     borderBottomWidth: 1, 
@@ -306,7 +316,17 @@ const Information = ({ navigation }) => {
                             </Text>
                         </TouchableOpacity>
                     </View>
-                    ))}
+                    )) :
+                    <View style={styles.container}>
+                        <Text style={{fontSize: 25, textAlign: "center", marginBottom: 20}}>Nous n'avons pas encore d'hôtel partenaire dans ce secteur</Text>
+                        <Text style={{fontSize: 15, textAlign: "center", marginBottom: 20}}>L'équipe de MySweetHotel met tout en oeuvre pour étendre son réseau afin de vous offrir une expérience hôtelière de qualité.</Text>
+                        <Text style={{fontSize: 10, textAlign: "center", marginBottom: 20}}>N'hésitez pas à parler de notre solution auprès de votre réception, vous leur rendrez un fier service!</Text>
+                        <Text style={{fontSize: 10, textAlign: "center", marginBottom: 20, fontWeight: "bold"}}>Nous vous souhaitons un excellent séjour au sein de votre établissement.</Text>
+                        <View>
+                            <Button onPress={() => setShowModalHotel(false)} containerStyle={styles.button} type="outlined" title="Revenir à la recherche" />
+                            <Button onPress={() => Logout()} containerStyle={styles.button} title="Se déconnecter" />
+                        </View>
+                    </View>}
                 </ScrollView>
             </Modal>
 

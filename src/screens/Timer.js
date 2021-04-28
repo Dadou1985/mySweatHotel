@@ -6,6 +6,7 @@ import { UserContext } from '../components/userContext'
 import { auth, db } from "../../firebase"
 import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment'
+import 'moment/locale/fr';
 import { showMessage, hideMessage } from "react-native-flash-message";
 
 
@@ -55,12 +56,13 @@ const Timer = () => {
         .collection('clock')
         .add({
             author: user.displayName,
-            date: date,
             client: user.displayName,
             room: userDB.room,
             markup: Date.now(),
-            hour: hour  
-        }).then(function(docRef){
+            hour: moment(hour).format('LT'),
+            date: moment(date).format('L'),
+            status: true
+          }).then(function(docRef){
             console.log(docRef.id)
           }).catch(function(error) {
             console.error(error)
@@ -79,12 +81,13 @@ const Timer = () => {
         .collection('clock')
         .add({
             author: user.displayName,
-            date: date,
             client: user.displayName,
             room: userDB.room,
             markup: Date.now(),
-            hour: hour  
-        }).then(function(docRef){
+            hour: moment(hour).format('LT'),
+            date: moment(date).format('L'),
+            status: true
+          }).then(function(docRef){
             console.log(docRef.id)
           }).catch(function(error) {
             console.error(error)
@@ -102,12 +105,18 @@ const Timer = () => {
             <View style={styles.containerText}>
                 <Text style={styles.text}>Réveil</Text>
             </View>
-            <View style={styles.inputContainer}>
-            <Button type="clear" title={moment(date).format('L')} 
-                onPress={handleShowDate} />
-            <Button type="clear" title={moment(hour).format('LT')} 
-                onPress={handleShowHour} />
-            </View>        
+            <View style={{flexDirection: "row", justifyContent: "space-around", width: 300}}>
+                <View style={{marginBottom: 20, flexDirection: "column", alignItems: "center"}}>
+                    <Text>Choisir un jour</Text>
+                    <Button type="clear" title={moment(date).format('L')} 
+                    onPress={handleShowDate} />
+                </View>
+                <View style={{marginBottom: 20, flexDirection: "column", alignItems: "center"}}>
+                    <Text>Choisir une heure</Text>
+                    <Button type="clear" title={moment(hour).format('LT')} 
+                        onPress={handleShowHour} />
+                </View>   
+            </View> 
             <Button onPress={() => {
                 handleSubmit()
                 showMessage({
@@ -160,7 +169,7 @@ const styles = StyleSheet.create({
     },
     button: {
         width: 250,
-        marginTop: 10, 
+        marginTop: 30, 
         borderColor: "white" 
     },
     img: {

@@ -8,6 +8,7 @@ import { Entypo } from '@expo/vector-icons';
 import { UserContext } from '../components/userContext'
 import { auth, db } from "../../firebase"
 import moment from 'moment'
+import 'moment/locale/fr';
 
 import { getPendingResultAsync } from 'expo-image-picker';
 import { YellowBox } from 'react-native';
@@ -239,7 +240,7 @@ const Chat = ({ navigation }) => {
                 <ScrollView contentContainerStyle={{ padding: 20 }}>
                     {messages.map(message => {
                         if(message.author === user.displayName){
-                            if(moment(messages.date).format('L') === moment(new Date()).format('L')) {
+                            if(moment(message.markup).format('L') === moment(new Date()).format('L')) {
                                return <View style={{
                                     padding: 15,
                                     color: "white",
@@ -259,6 +260,8 @@ const Chat = ({ navigation }) => {
                                     size={30}
                                     source={{ uri: message.photo}} />
                                     <Text>{message.text}</Text>
+                                    <Text style={styles.time}>{moment(message.markup).startOf('hour').fromNow()}</Text>
+
                                 </View>
                             }else{
                                 return <View style={{
@@ -280,10 +283,12 @@ const Chat = ({ navigation }) => {
                                     size={30}
                                     source={{ uri: message.photo}} />
                                     <Text>{message.text}</Text>
+                                    <Text style={styles.time}>{moment(message.markup).startOf('hour').fromNow()}</Text>
+
                                 </View>
                             }
                         }else{
-                            if(moment(messages.date).format('L') === moment(new Date()).format('L')) {
+                            if(moment(message.markup).format('L') === moment(new Date()).format('L')) {
                                 return <View style={{
                                     padding: 15,
                                     color: "white",
@@ -303,6 +308,8 @@ const Chat = ({ navigation }) => {
                                     size={30}
                                     source={{ uri: "https://cdn.wallpapersafari.com/73/48/aVIBA4.jpg"}} />
                                     <Text>{message.text}</Text>
+                                    <Text style={styles.time}>{moment(message.markup).startOf('hour').fromNow()}</Text>
+
                                 </View>
                             }else{
                                 return <View style={{
@@ -324,6 +331,8 @@ const Chat = ({ navigation }) => {
                                     size={30}
                                     source={{ uri: "https://cdn.wallpapersafari.com/73/48/aVIBA4.jpg"}} />
                                     <Text>{message.text}</Text>
+                                    <Text style={styles.time}>{moment(message.markup).startOf('hour').fromNow()}</Text>
+
                                 </View>
                             }
                         }
@@ -382,6 +391,12 @@ const styles = StyleSheet.create({
         alignItems: "center",
         width: "100%",
         padding: 15
+    },
+    time: {
+        color: "black",
+        fontSize: 10,
+        flexDirection: "row",
+        justifyContent: "flex-end"
     }
 })
 
