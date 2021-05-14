@@ -9,7 +9,7 @@ import { UserContext } from '../components/userContext'
 import { auth, db } from "../../firebase"
 import moment from 'moment'
 import 'moment/locale/fr';
-
+import ChatMessage from '../components/chatMessage'
 import { getPendingResultAsync } from 'expo-image-picker';
 import { YellowBox } from 'react-native';
 import _ from 'lodash';
@@ -34,11 +34,11 @@ const Chat = ({ navigation }) => {
         navigation.setOptions({
             title: "Chat",
             headerBackTitleVisible: false,
-            headerTitleAlign: "left",
+            headerTitleAlign: "right",
             headerTitle: () =>(
                 <View style={{flexDirection: "row", alignItems: "center"}}>
                     <Entypo name="chat" size={24} color="black" />            
-                    <Text style={{ color: "white", marginLeft: 10, fontWeight : "bold"}}>Chat Réception</Text>
+                    <Text style={{ color: "black", marginLeft: 10, fontWeight : "bold", fontSize: 20}}>Chat Réception</Text>
                 </View>
             )
         })
@@ -46,39 +46,12 @@ const Chat = ({ navigation }) => {
 
     useEffect(() => {
         const getMessages = () => {
-            if(userDB.dept === 'PARIS') {
-                return db.collection("mySweetHotel")
-                .doc("country")
-                .collection("France")
-                .doc("collection")
-                .collection('hotel')
-                .doc('region')
-                .collection(userDB.hotelRegion)
-                .doc('departement')
-                .collection(userDB.hotelDept)
-                .doc("Arrondissement")
-                .collection(userDB.hotelArrondissement)
-                .doc(`${userDB.hotelId}`)
+                return db.collection("hotels")
+                .doc(userDB.hotelId)
                 .collection('chat')
                 .doc(user.displayName)
                 .collection("chatRoom")
                 .orderBy("markup", "desc")
-            }else{
-                return db.collection("mySweetHotel")
-                .doc("country")
-                .collection("France")
-                .doc("collection")
-                .collection('hotel')
-                .doc('region')
-                .collection(userDB.hotelRegion)
-                .doc('departement')
-                .collection(userDB.hotelDept)
-                .doc(`${userDB.hotelId}`)
-                .collection('chat')
-                .doc(user.displayName)
-                .collection("chatRoom")
-                .orderBy("markup", "desc")
-            }
                 }
 
         let unsubscribe = getMessages().onSnapshot(function(snapshot) {
@@ -96,16 +69,8 @@ const Chat = ({ navigation }) => {
     }, [])
 
     const getChatRoom = () => {
-        return db.collection('mySweetHotel')
-        .doc('country')
-        .collection('France')
-        .doc('collection')
-        .collection('hotel')
-        .doc('region')
-        .collection(userDB.hotelRegion)
-        .doc('departement')
-        .collection(userDB.hotelDept)
-        .doc(`${userDB.hotelId}`)
+        return db.collection('hotels')
+        .doc(userDB.hotelId)
         .collection('chat')
         .doc(user.displayName)
         .get()
@@ -121,16 +86,8 @@ const Chat = ({ navigation }) => {
 
 
     const createRoomnameSubmit = () => {
-        return db.collection('mySweetHotel')
-          .doc('country')
-          .collection('France')
-          .doc('collection')
-          .collection('hotel')
-          .doc('region')
-          .collection(userDB.hotelRegion)
-          .doc('departement')
-          .collection(userDB.hotelDept)
-          .doc(`${userDB.hotelId}`)
+        return db.collection('hotels')
+          .doc(userDB.hotelId)
           .collection('chat')
           .doc(user.displayName)
           .set({
@@ -143,16 +100,8 @@ const Chat = ({ navigation }) => {
       }
 
     const updateRoomnameSubmit = () => {
-        return db.collection('mySweetHotel')
-          .doc('country')
-          .collection('France')
-          .doc('collection')
-          .collection('hotel')
-          .doc('region')
-          .collection(userDB.hotelRegion)
-          .doc('departement')
-          .collection(userDB.hotelDept)
-          .doc(`${userDB.hotelId}`)
+        return db.collection('hotels')
+          .doc(userDB.hotelId)
           .collection('chat')
           .doc(user.displayName)
           .update({
@@ -165,19 +114,8 @@ const Chat = ({ navigation }) => {
         Keyboard.dismiss()
         setInput("")
 
-        if(userDB.hotelDept === "PARIS") {
-            return db.collection("mySweetHotel")
-        .doc("country")
-        .collection("France")
-        .doc("collection")
-        .collection('hotel')
-        .doc('region')
-        .collection(userDB.hotelRegion)
-        .doc('departement')
-        .collection(userDB.hotelDept)
-        .doc("Arrondissement")
-        .collection(userDB.hotelArrondissement)
-        .doc(`${userDB.hotelId}`)
+        return db.collection("hotels")
+        .doc(userDB.hotelId)
         .collection('chat')
         .doc(user.displayName)
         .collection("chatRoom")
@@ -194,34 +132,6 @@ const Chat = ({ navigation }) => {
           }).catch(function(error) {
             console.error(error)
           })
-        }else{
-            return db.collection("mySweetHotel")
-        .doc("country")
-        .collection("France")
-        .doc("collection")
-        .collection('hotel')
-        .doc('region')
-        .collection(userDB.hotelRegion)
-        .doc('departement')
-        .collection(userDB.hotelDept)
-        .doc(`${userDB.hotelId}`)
-        .collection('chat')
-        .doc(user.displayName)
-        .collection("chatRoom")
-        .add({           
-            author: user.displayName,
-            date: new Date(),
-            room: userDB.room,
-            email: user.email,
-            photo: user.photoURL,
-            text: input,
-            markup: Date.now(),
-        }).then(function(docRef){
-            console.log(docRef.id)
-          }).catch(function(error) {
-            console.error(error)
-          })
-        }
     }
 
     console.log(chatRoom)
@@ -239,103 +149,111 @@ const Chat = ({ navigation }) => {
                  <>
                 <ScrollView contentContainerStyle={{ padding: 20 }}>
                     {messages.map(message => {
-                        if(message.author === user.displayName){
-                            if(moment(message.markup).format('L') === moment(new Date()).format('L')) {
-                               return <View style={{
-                                    padding: 15,
-                                    color: "white",
-                                    backgroundColor: "lightblue",
-                                    alignSelf: 'flex-end',
-                                    borderRadius: 20,
-                                    marginRight: 15,
-                                    marginBottom: 20,
-                                    maxWidth: "80%",
-                                    position: "relative"
-                                }}>
-                                    <Avatar
-                                    position="absolute"
-                                    rounded
-                                    bottom={-15}
-                                    right={-5}
-                                    size={30}
-                                    source={{ uri: message.photo}} />
-                                    <Text>{message.text}</Text>
-                                    <Text style={styles.time}>{moment(message.markup).startOf('hour').fromNow()}</Text>
-
-                                </View>
-                            }else{
-                                return <View style={{
-                                    padding: 15,
-                                    backgroundColor: "#ECECEC",
-                                    color: "gray",
-                                    alignSelf: 'flex-end',
-                                    borderRadius: 20,
-                                    marginRight: 15,
-                                    marginBottom: 20,
-                                    maxWidth: "80%",
-                                    position: "relative"
-                                }}>
-                                    <Avatar
-                                    position="absolute"
-                                    rounded
-                                    bottom={-15}
-                                    right={-5}
-                                    size={30}
-                                    source={{ uri: message.photo}} />
-                                    <Text>{message.text}</Text>
-                                    <Text style={styles.time}>{moment(message.markup).startOf('hour').fromNow()}</Text>
-
-                                </View>
-                            }
-                        }else{
-                            if(moment(message.markup).format('L') === moment(new Date()).format('L')) {
-                                return <View style={{
-                                    padding: 15,
-                                    color: "white",
-                                    backgroundColor: "purple",
-                                    alignSelf: 'flex-start',
-                                    borderRadius: 20,
-                                    marginLeft: 15,
-                                    marginBottom: 20,
-                                    maxWidth: "80%",
-                                    position: "relative"
-                                }}>
-                                    <Avatar
-                                    position="absolute"
-                                    rounded
-                                    bottom={-15}
-                                    left={-5}
-                                    size={30}
-                                    source={{ uri: "https://cdn.wallpapersafari.com/73/48/aVIBA4.jpg"}} />
-                                    <Text>{message.text}</Text>
-                                    <Text style={styles.time}>{moment(message.markup).startOf('hour').fromNow()}</Text>
-
-                                </View>
-                            }else{
-                                return <View style={{
-                                    padding: 15,
-                                    backgroundColor: "gray",
-                                    color: "black",
-                                    alignSelf: 'flex-start',
-                                    borderRadius: 20,
-                                    marginLeft: 15,
-                                    marginBottom: 20,
-                                    maxWidth: "80%",
-                                    position: "relative",
-                                }}>
-                                    <Avatar
-                                    position="absolute"
-                                    rounded
-                                    bottom={-15}
-                                    left={-5}
-                                    size={30}
-                                    source={{ uri: "https://cdn.wallpapersafari.com/73/48/aVIBA4.jpg"}} />
-                                    <Text>{message.text}</Text>
-                                    <Text style={styles.time}>{moment(message.markup).startOf('hour').fromNow()}</Text>
-
-                                </View>
+                        let language = userDB.language
+                        const renderSwitch = () => {
+                            switch(language) {
+                                case 'en':
+                                    return <ChatMessage 
+                                        author={message.author}
+                                        photo={message.photo}
+                                        text={message.text}
+                                        translation={message.translated.en}
+                                        markup={message.markup}
+                                    />
+                                case 'ar':
+                                    return <ChatMessage 
+                                        author={message.author}
+                                        photo={message.photo}
+                                        text={message.text}
+                                        translation={message.translated.ar}
+                                        markup={message.markup}
+                                    />
+                                    case 'it':
+                                return <ChatMessage 
+                                    author={message.author}
+                                    photo={message.photo}
+                                    text={message.text}
+                                    translation={message.translated.it}
+                                    markup={message.markup}
+                                />
+                                case 'pt':
+                                return <ChatMessage 
+                                    author={message.author}
+                                    photo={message.photo}
+                                    text={message.text}
+                                    translation={message.translated.pt}
+                                    markup={message.markup}
+                                />
+                                case 'hi':
+                                return <ChatMessage 
+                                    author={message.author}
+                                    photo={message.photo}
+                                    text={message.text}
+                                    translation={message.translated.hi}
+                                    markup={message.markup}
+                                />
+                                case 'ur':
+                                return <ChatMessage 
+                                    author={message.author}
+                                    photo={message.photo}
+                                    text={message.text}
+                                    translation={message.translated.ur}
+                                    markup={message.markup}
+                                />
+                                case 'zh':
+                                return <ChatMessage 
+                                    author={message.author}
+                                    photo={message.photo}
+                                    text={message.text}
+                                    translation={message.translated.zh}
+                                    markup={message.markup}
+                                />
+                                case 'es':
+                                return <ChatMessage 
+                                    author={message.author}
+                                    photo={message.photo}
+                                    text={message.text}
+                                    translation={message.translated.es}
+                                    markup={message.markup}
+                                />
+                                case 'ko':
+                                return <ChatMessage 
+                                    author={message.author}
+                                    photo={message.photo}
+                                    text={message.text}
+                                    translation={message.translated.ko}
+                                    markup={message.markup}
+                                />
+                                case 'ja':
+                                return <ChatMessage 
+                                    author={message.author}
+                                    photo={message.photo}
+                                    text={message.text}
+                                    translation={message.translated.ja}
+                                    markup={message.markup}
+                                />
+                                case 'fr':
+                                return <ChatMessage 
+                                    author={message.author}
+                                    photo={message.photo}
+                                    text={message.text}
+                                    translation={message.translated.fr}
+                                    markup={message.markup}
+                                />
+                                default:
+                                return <ChatMessage 
+                                    author={message.author}
+                                    photo={message.photo}
+                                    text={message.text}
+                                    translation={message.translated.fr}
+                                    markup={message.markup}
+                                />
                             }
                         }
+
+                        if(message.translated){
+                            return renderSwitch()
+                         }
                     })}
                 </ScrollView>
                 <View style={styles.footer}>
@@ -391,12 +309,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         width: "100%",
         padding: 15
-    },
-    time: {
-        color: "black",
-        fontSize: 10,
-        flexDirection: "row",
-        justifyContent: "flex-end"
     }
 })
 

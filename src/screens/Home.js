@@ -48,81 +48,32 @@ const Home = ({ navigation }) => {
 
 
     const handleClickAndWait = (item) => {
-        if(userDB.hotelDept === 'PARIS') {
-            return db.collection("mySweatHotel")
-        .doc("country")
-        .collection("France")
-        .doc("collection")
-        .collection('hotel')
-        .doc('region')
-        .collection(userDB.hotelRegion)
-        .doc('departement')
-        .collection("PARIS")
-        .doc("Arrondissement")
-        .collection(userDB.hotelArrondissement)
-        .doc(`${userDB.hotelId}`)
-        .collection('housekeeping')
-        .doc("item")
-        .collection(item)
-        .add({
-            client: user.displayName,
-            room: userDB.room,
-            checkoutDate: userDB.checkoutDate
-,            createdAt: new Date(),
-            markup: Date.now(),
-        }).then(function(docRef){
-            console.log(docRef.id)
-          }).catch(function(error) {
-            console.error(error)
-          })
-        }else{
-            return db.collection("mySweatHotel")
-        .doc("country")
-        .collection("France")
-        .doc("collection")
-        .collection('hotel')
-        .doc('region')
-        .collection(userDB.hotelRegion)
-        .doc('departement')
-        .collection(userDB.hotelDept)
-        .doc(`${userDB.hotelId}`)
-        .collection('housekeeping')
-        .doc("item")
-        .collection(item)
-        .add({
-            client: user.displayName,
-            room: userDB.room,
-            checkoutDate: userDB.checkoutDate
-,            createdAt: new Date(),
-            markup: Date.now(),
-        }).then(function(docRef){
-            console.log(docRef.id)
-          }).catch(function(error) {
-            console.error(error)
-          })
-        }
+        return db.collection("hotels")
+            .doc(userDB.hotelId)
+            .collection('housekeeping')
+            .doc("item")
+            .collection(item)
+            .add({
+                client: user.displayName,
+                room: userDB.room,
+                checkoutDate: userDB.checkoutDate,
+                createdAt: new Date(),
+                markup: Date.now(),
+            }).then(function(docRef){
+                console.log(docRef.id)
+            }).catch(function(error) {
+                console.error(error)
+            })
     }
 
     const handleDeleteItemChoosen = async(item) => {
-        await db.collection("mySweatHotel")
-        .doc("country")
-        .collection("France")
-        .doc("collection")
-        .collection("customer")
-        .doc("collection")
-        .collection('users')
-        .doc(user.displayName)
+        await db.collection('guestUsers')
+        .doc(user.uid)
         .update(
             item
         )
-        db.collection("mySweatHotel")
-        .doc("country")
-        .collection("France")
-        .doc("collection")
-        .collection("customer")
-        .doc("collection")
-        .collection('users')
-        .doc(user.displayName)
+        db.collection('guestUsers')
+        .doc(user.uid)
         .get()
         .then((doc) => {
             if (doc.exists) {
@@ -140,12 +91,12 @@ const Home = ({ navigation }) => {
         <KeyboardAvoidingView style={styles.container}>
             <StatusBar style="light" />
             <View style={styles.textContainer}>
-    <Text style={{fontSize: 20, fontWeight: "bold"}}>{userDB.hotelName}</Text>
+                <Text style={{fontSize: 20, fontWeight: "bold"}}>{userDB.hotelName}</Text>
                 <Text>{user.displayName}</Text>
             </View>
            
-            <TouchableOpacity activeOpacity={0.5}  style={styles.button} onPress={() => navigation.navigate('Chat')}>
-                <Entypo name="chat" size={50} color="black" />            
+            <TouchableOpacity activeOpacity={0.5} onPress={() => navigation.navigate('Chat')}>
+                <Entypo name="chat" size={50} />  
             </TouchableOpacity>
            
             <View style={styles.containerTop}>

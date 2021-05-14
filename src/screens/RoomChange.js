@@ -1,5 +1,5 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { KeyboardAvoidingView, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import React, { useState, useContext, useEffect, useLayoutEffect } from 'react';
+import { KeyboardAvoidingView, StyleSheet, Text, View, TouchableOpacity, ImageBackground } from 'react-native';
 import { Button, Input, Image } from 'react-native-elements';
 import { StatusBar } from 'expo-status-bar';
 import { MaterialIcons } from '@expo/vector-icons'; 
@@ -9,13 +9,27 @@ import * as ImagePicker from 'expo-image-picker';
 import { showMessage, hideMessage } from "react-native-flash-message";
 
 
-const RoomChange = () => {
+const RoomChange = ({ navigation }) => {
     const [type, setType] = useState("")
     const [details, setDetails] = useState("")
     const [user, setUser] = useState(auth.currentUser)
     const {userDB, setUserDB} = useContext(UserContext)
     const [img, setImg] = useState(null)
     const [url, setUrl] = useState("")
+
+    useLayoutEffect(() => {
+      navigation.setOptions({
+          title: "RoomChange",
+          headerBackTitleVisible: false,
+          headerTitleAlign: "right",
+          headerTitle: () =>(
+              <View style={{flexDirection: "row", alignItems: "center"}}>
+                  <MaterialIcons name="room-preferences" size={24} color="black" />                
+                  <Text style={{ color: "black", fontWeight : "bold", fontSize: 20, marginLeft: 5}}>Délogement</Text>
+              </View>
+          )
+      })
+  }, [navigation])
 
     useEffect(() => {
         (async () => {
@@ -68,19 +82,8 @@ const RoomChange = () => {
                     setType('')
                     setDetails('')
 
-                    if(userDB.hotelDept === "PARIS") {
-                      return db.collection("mySweetHotel")
-                    .doc("country")
-                    .collection("France")
-                    .doc("collection")
-                    .collection('hotel')
-                    .doc('region')
-                    .collection(userDB.hotelRegion)
-                    .doc('departement')
-                    .collection(userDB.hotelDept)
-                    .doc("Arrondissement")
-                    .collection(userDB.hotelArrondissement)
-                    .doc(`${userDB.hotelId}`)
+                   return db.collection("hotels")
+                    .doc(userDB.hotelId)
                     .collection('roomChange')
                     .add({
                         author: user.displayName,
@@ -97,34 +100,6 @@ const RoomChange = () => {
                     }).catch(function(error) {
                         console.error(error)
                     })
-                    }else{
-                      return db.collection("mySweetHotel")
-                    .doc("country")
-                    .collection("France")
-                    .doc("collection")
-                    .collection('hotel')
-                    .doc('region')
-                    .collection(userDB.hotelRegion)
-                    .doc('departement')
-                    .collection(userDB.hotelDept)
-                    .doc(`${userDB.hotelId}`)
-                    .collection('roomChange')
-                    .add({
-                        author: user.displayName,
-                        date: new Date(),
-                        client: user.displayName,
-                        room: userDB.room,
-                        reason: type,
-                        details: details,
-                        markup: Date.now(),
-                        img: url,
-                        status: true
-                    }).then(function(docRef){
-                        console.log(docRef.id)
-                    }).catch(function(error) {
-                        console.error(error)
-                    })
-                    }
                 }
                   return setUrl(url, uploadTask())})
           }
@@ -134,9 +109,13 @@ const RoomChange = () => {
     return (
         <KeyboardAvoidingView behavior="padding" style={styles.container}>
              <StatusBar style="light" />
-             <MaterialIcons name="room-preferences" size={65} color="black" />                
             <View style={styles.containerText}>
-                <Text style={styles.text}>Délogement</Text>
+            <ImageBackground source={ require('../../img/pic_roomChange.png') } style={{
+                flex: 1,
+                resizeMode: "contain",
+                justifyContent: "center",
+                width: 500}}>
+                </ImageBackground>
             </View>
             <View style={styles.inputContainer}>
                 <Input placeholder="Motif de la demande" type="text" value={type} 
@@ -167,22 +146,25 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: "center",
-        justifyContent: "center",
-        padding: 10
+        justifyContent: "space-between",
     },
     containerText: {
-        marginBottom: 50
+      flex: 2,
     },
     text: {
         fontSize: 30,
-        textAlign: "center"
+        textAlign: "center",
+        color: "white"
     },
     inputContainer: {
-        width: 300
+        width: 300,
+        marginTop: 30, 
+
     },
     button: {
         width: 200,
         marginTop: 10, 
+        marginBottom: 90,
         borderColor: "white" 
     },
     img: {

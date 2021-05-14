@@ -1,5 +1,5 @@
-import React, { useState, useContext } from 'react';
-import { KeyboardAvoidingView, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import React, { useState, useContext, useLayoutEffect } from 'react';
+import { KeyboardAvoidingView, StyleSheet, Text, View, TouchableOpacity, ImageBackground } from 'react-native';
 import { Button, Input, Image } from 'react-native-elements';
 import { StatusBar } from 'expo-status-bar';
 import { UserContext } from '../components/userContext'
@@ -10,7 +10,7 @@ import 'moment/locale/fr';
 import { showMessage, hideMessage } from "react-native-flash-message";
 
 
-const Timer = () => {
+const Timer = ({navigation}) => {
     const [date, setDate] = useState(new Date())
     const [hour, setHour] = useState(new Date())
     const [user, setUser] = useState(auth.currentUser)
@@ -18,6 +18,20 @@ const Timer = () => {
 
     const [showDate, setShowDate] = useState(false)
     const [showHour, setShowHour] = useState(false)
+
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            title: "Timer",
+            headerBackTitleVisible: false,
+            headerTitleAlign: "right",
+            headerTitle: () =>(
+                <View style={{flexDirection: "row", alignItems: "center"}}>
+                    <Image source={{uri: "https://image.flaticon.com/icons/png/512/62/62834.png"}} style={styles.img} />
+                    <Text style={{ color: "black", fontWeight : "bold", fontSize: 20}}>Programmer un réveil</Text>
+                </View>
+            )
+        })
+    }, [navigation])
 
     const onDateChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
@@ -40,19 +54,8 @@ const Timer = () => {
     }
 
     const handleSubmit = () => {
-        if(userDB.hotelDept === "PARIS") {
-            return db.collection("mySweetHotel")
-        .doc("country")
-        .collection("France")
-        .doc("collection")
-        .collection('hotel')
-        .doc('region')
-        .collection(userDB.hotelRegion)
-        .doc('departement')
-        .collection(userDB.hotelDept)
-        .doc("Arrondissement")
-        .collection(userDB.hotelArrondissement)
-        .doc(`${userDB.hotelId}`)
+        return db.collection("hotels")
+        .doc(userDB.hotelId)
         .collection('clock')
         .add({
             author: user.displayName,
@@ -67,32 +70,6 @@ const Timer = () => {
           }).catch(function(error) {
             console.error(error)
           })
-        }else{
-            return db.collection("mySweetHotel")
-        .doc("country")
-        .collection("France")
-        .doc("collection")
-        .collection('hotel')
-        .doc('region')
-        .collection(userDB.hotelRegion)
-        .doc('departement')
-        .collection(userDB.hotelDept)
-        .doc(`${userDB.hotelId}`)
-        .collection('clock')
-        .add({
-            author: user.displayName,
-            client: user.displayName,
-            room: userDB.room,
-            markup: Date.now(),
-            hour: moment(hour).format('LT'),
-            date: moment(date).format('L'),
-            status: true
-          }).then(function(docRef){
-            console.log(docRef.id)
-          }).catch(function(error) {
-            console.error(error)
-          })
-        }
     }
 
       
@@ -101,18 +78,22 @@ const Timer = () => {
     return (
         <KeyboardAvoidingView behavior="padding" style={styles.container}>
             <StatusBar style="light" />
-            <Image source={{uri: "https://image.flaticon.com/icons/png/512/62/62834.png"}} style={styles.img} />
             <View style={styles.containerText}>
-                <Text style={styles.text}>Réveil</Text>
+            <ImageBackground source={ require('../../img/pic_timer.png') } style={{
+                flex: 1,
+                resizeMode: "contain",
+                justifyContent: "center",
+                width: 500}}>
+                </ImageBackground>
             </View>
-            <View style={{flexDirection: "row", justifyContent: "space-around", width: 300}}>
+            <View style={{flexDirection: "column", justifyContent: "space-around", width: 300, marginTop: 60}}>
                 <View style={{marginBottom: 20, flexDirection: "column", alignItems: "center"}}>
-                    <Text>Choisir un jour</Text>
+                    <Text style={{fontSize: 20}}>Choisir un jour</Text>
                     <Button type="clear" title={moment(date).format('L')} 
                     onPress={handleShowDate} />
                 </View>
                 <View style={{marginBottom: 20, flexDirection: "column", alignItems: "center"}}>
-                    <Text>Choisir une heure</Text>
+                    <Text style={{fontSize: 20}}>Choisir une heure</Text>
                     <Button type="clear" title={moment(hour).format('LT')} 
                         onPress={handleShowHour} />
                 </View>   
@@ -154,27 +135,30 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: "center",
-        justifyContent: "center",
-        padding: 10
+        justifyContent: "space-between",
     },
     containerText: {
-        marginBottom: 50
+        flex: 2,
     },
     text: {
         fontSize: 30,
-        textAlign: "center"
+        color: "white", 
+        marginLeft: 100
     },
     inputContainer: {
-        width: 300
+        width: 300,
+        marginTop: 30, 
+
     },
     button: {
         width: 250,
-        marginTop: 30, 
+        marginTop: 50, 
+        marginBottom: 90,
         borderColor: "white" 
     },
     img: {
-        width: 70,
-        height: 70,
+        width: 24,
+        height: 24,
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -182,5 +166,6 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
+        marginRight: 5
     }
 })

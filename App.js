@@ -19,15 +19,12 @@ import { UserContext } from './src/components/userContext'
 const Stack = createStackNavigator();
 
 const globalScreenOptions = {
-  headerStyle: {backgroundColor: "lightblue"},
-  headerTitleStyle: {color: "white"},
-  headerTintColor: "white"
+  headerTitleStyle: {color: "black"},
+  headerTintColor: "black"
 }
 
 export default function App() {
   const [userDB, setUserDB] = useState(null)
-
-
 
   return (
     <>

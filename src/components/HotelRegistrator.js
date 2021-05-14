@@ -1,24 +1,14 @@
 import React from 'react'
 import { db } from "../../firebase"
 import hotel from '../../hotels/PROVENCE-ALPES-COTE_D_AZUR/vaucluse.json'
-import { KeyboardAvoidingView, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { View } from 'react-native';
 
 export default function HotelRegitrator() {
 
     let panameHotel = hotel.filter(hostel => hostel.fields.code_postal === "75020")
 
-    const hotelRegistrator = ({hotelId, arrondissement, hotelName, classement, adresse, room, phone, mail, website, region, departement, code_postal, city, lat, lng}) => {
-        return db.collection("mySweetHotel")
-        .doc("country")
-        .collection("France")
-        .doc("collection")
-        .collection("hotel")
-        .doc("region")
-        .collection(region)
-        .doc("departement")
-        .collection(departement)
-        //.doc('arrondissement')
-        //.collection(arrondissement)
+    const hotelRegistrator = ({hotelId, hotelName, classement, adresse, room, phone, mail, website, region, departement, code_postal, city, lat, lng}) => {
+        return db.collection("hotels")
         .doc(`${hotelId}`)
         .set({
           hotelName: hotelName,
@@ -34,6 +24,8 @@ export default function HotelRegitrator() {
           city: city,
           lat: lat,
           lng: lng,
+          partnership: false,
+          country: "FRANCE",
           markup: Date.now()
         })
     }

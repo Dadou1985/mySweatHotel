@@ -13,23 +13,36 @@ const Register = ({ navigation }) => {
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
     const [name, setName] = useState("")
+    const [userId, setUserId] = useState("")
     const [img, setImg] = useState(null)
     const [url, setUrl] = useState("")
-
+    const [internationalization, setInternationalization] = useState(
+      [
+        {language: "fr", fullLanguage: ""},
+        {language: "ar", fullLanguage: ""},
+        {language: "de", fullLanguage: ""},
+        {language: "en", fullLanguage: ""},
+        {language: "es", fullLanguage: ""},
+        {language: "hi", fullLanguage: ""},
+        {language: "it", fullLanguage: ""},
+        {language: "ja", fullLanguage: ""},
+        {language: "ja", fullLanguage: ""},
+        {language: "ko", fullLanguage: ""},
+        {language: "pt", fullLanguage: ""},
+        {language: "ur", fullLanguage: ""},
+        {language: "zh", fullLanguage: ""},
+      ]
+    )
 
     const freeRegister = () => {
-        return db.collection("mySweetHotel")
-        .doc("country")
-        .collection("France")
-        .doc("collection")
-        .collection("customer")
-        .doc("collection")
-        .collection('users')
-        .doc(name)
+        return db.collection('guestUsers')
+        .doc(userId)
         .set({
+          username: name,
           email: email,
           password: password,
-          lastTimeConnected: Date.now(),
+          
+          lastTimeConnected: Date.now()
         })  
       }
 
@@ -131,8 +144,8 @@ const Register = ({ navigation }) => {
             </View>
             <Button onPress={() => navigation.navigate('Connexion')} containerStyle={styles.button} title="Connexion" type="clear" />
             <Button containerStyle={styles.button} title="Créer un compte" onPress={(event) => {
-                freeRegister()
                 handleChangePhotoUrl(event)
+                .then(freeRegister())
                 }} />
         </KeyboardAvoidingView>
     )

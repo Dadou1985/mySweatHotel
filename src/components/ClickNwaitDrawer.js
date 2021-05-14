@@ -10,19 +10,8 @@ const ClickNwaitDrawer = ({fadeAnim, fadeOut}) => {
     const {userDB, setUserDB} = useContext(UserContext)
 
     const handleClickAndWait = (item) => {
-        if(userDB.hotelDept === 'PARIS') {
-            return db.collection("mySweetHotel")
-        .doc("country")
-        .collection("France")
-        .doc("collection")
-        .collection('hotel')
-        .doc('region')
-        .collection(userDB.hotelRegion)
-        .doc('departement')
-        .collection("PARIS")
-        .doc("Arrondissement")
-        .collection(userDB.hotelArrondissement)
-        .doc(`${userDB.hotelId}`)
+        return db.collection("hotels")
+        .doc(userDB.hotelId)
         .collection('housekeeping')
         .doc("item")
         .collection(item)
@@ -37,62 +26,16 @@ const ClickNwaitDrawer = ({fadeAnim, fadeOut}) => {
           }).catch(function(error) {
             console.error(error)
           })
-        }else{
-            return db.collection("mySweetHotel")
-        .doc("country")
-        .collection("France")
-        .doc("collection")
-        .collection('hotel')
-        .doc('region')
-        .collection(userDB.hotelRegion)
-        .doc('departement')
-        .collection(userDB.hotelDept)
-        .doc(`${userDB.hotelId}`)
-        .collection('housekeeping')
-        .doc("item")
-        .collection(item)
-        .add({
-            client: user.displayName,
-            room: userDB.room,
-            checkoutDate: userDB.checkoutDate
-,           createdAt: new Date(),
-            markup: Date.now(),
-        }).then(function(docRef){
-            console.log(docRef.id)
-          }).catch(function(error) {
-            console.error(error)
-          })
-        }
     }
 
     const handleDeleteItemChoosen = async(item) => {
-        await db.collection("mySweetHotel")
-        .doc("country")
-        .collection("France")
-        .doc("collection")
-        .collection('hotel')
-        .doc('region')
-        .collection(userDB.hotelRegion)
-        .doc('departement')
-        .collection(userDB.hotelDept)
-        .doc(`${userDB.hotelId}`)
-        .collection('guest')
-        .doc(user.displayName)
+        await db.collection('guestUsers')
+        .doc(user.uid)
         .update(
             item
         )
-        db.collection("mySweetHotel")
-        .doc("country")
-        .collection("France")
-        .doc("collection")
-        .collection('hotel')
-        .doc('region')
-        .collection(userDB.hotelRegion)
-        .doc('departement')
-        .collection(userDB.hotelDept)
-        .doc(`${userDB.hotelId}`)
-        .collection('guest')
-        .doc(user.displayName)
+        return db.collection('guestUsers')
+        .doc(user.uid)
         .get()
         .then((doc) => {
             if (doc.exists) {
@@ -137,7 +80,7 @@ const ClickNwaitDrawer = ({fadeAnim, fadeOut}) => {
                     </TouchableOpacity> }
                     {userDB.toiletPaper &&
                         <TouchableOpacity activeOpacity={0.5} style={styles.button} onPress={() => {
-                        handleClickAndWait("toilet-paper")
+                        handleClickAndWait("toiletPaper")
                         handleDeleteItemChoosen({toiletPaper: false})
                         showMessage({
                             message: "Votre demande a été transmise à la réception !",
@@ -148,7 +91,7 @@ const ClickNwaitDrawer = ({fadeAnim, fadeOut}) => {
                     </TouchableOpacity>}  
                     {userDB.hairDryer &&
                         <TouchableOpacity activeOpacity={0.5} style={styles.button} onPress={() => {
-                        handleClickAndWait("hair-dryer")
+                        handleClickAndWait("hairDryer")
                         handleDeleteItemChoosen({hairDryer: false})
                         showMessage({
                             message: "Votre demande a été transmise à la réception !",
@@ -194,7 +137,7 @@ const ClickNwaitDrawer = ({fadeAnim, fadeOut}) => {
                     </TouchableOpacity>}  
                     {userDB.babyBed &&
                         <TouchableOpacity activeOpacity={0.5} style={styles.button} onPress={() => {
-                        handleClickAndWait("baby-bed")
+                        handleClickAndWait("babyBed")
                         handleDeleteItemChoosen({babyBed: false})
                         showMessage({
                             message: "Votre demande a été transmise à la réception !",

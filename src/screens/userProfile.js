@@ -13,32 +13,41 @@ import { showMessage } from "react-native-flash-message";
 import ClickNwaitDrawer from '../components/ClickNwaitDrawer';
 
 
-
 const UserProfile = ({navigation}) => {
     const [img, setImg] = useState(null)
     const [url, setUrl] = useState("")
     const [user, setUser] = useState(auth.currentUser)
     const {userDB, setUserDB} = useContext(UserContext)
-    const [updateProfile, setUpdateProfile] = useState(false)
+    const [updateRoom, setUpdateRoom] = useState(false)
+    const [updateMail, setUpdateMail] = useState(false)
     const [updatePhoto, setUpdatePhoto] = useState(false)
     const [updateCheckout, setUpdateCheckout] = useState(false)
     const [email, setEmail] = useState('')
     const [date, setDate] = useState(new Date())
     const [room, setRoom] = useState(null)
     const [showDate, setShowDate] = useState(false)
+    const [chatResponse, setChatResponse] = useState([])
 
-    const Logout = async () => {
+    const Logout = async() => {
       await auth.signOut()
       .then(navigation.replace('Connexion'))
   }
 
   useLayoutEffect(() => {
       navigation.setOptions({
+          title: "My Sweet Hotel",
+          headerBackTitleVisible: false,
+          headerTitleAlign: "right",
+          headerTitle: () =>(
+              <View style={{flexDirection: "row", alignItems: "center"}}>
+                  <Text style={{ color: "black", fontWeight : "bold", fontSize: 20, marginLeft: 5}}>My Sweet Hotel</Text>
+              </View>
+          ),
           headerRight: () => (
           <SimpleLineIcons 
           name="logout" 
           size={24} 
-          color="white" 
+          color="black" 
           style={{marginRight: 20}}
           onPress={() => {
               Logout()
@@ -91,18 +100,8 @@ const UserProfile = ({navigation}) => {
     };
 
     const handleLoadUserDB = () => {
-      return db.collection("mySweetHotel")
-      .doc("country")
-      .collection("France")
-      .doc("collection")
-      .collection('hotel')
-      .doc('region')
-      .collection(userDB.hotelRegion)
-      .doc('departement')
-      .collection(userDB.hotelDept)
-      .doc(`${userDB.hotelId}`)
-      .collection('guest')
-      .doc(user.displayName)
+      return db.collection('guestUsers')
+      .doc(user.uid)
       .get()
       .then((doc) => {
           if (doc.exists) {
@@ -111,48 +110,50 @@ const UserProfile = ({navigation}) => {
               // doc.data() will be undefined in this case
               console.log("No such document!");
           }
-      }).then(() => {
-        setRoom(userDB.room)
-        setEmail(user.email)
-        setUpdateProfile(false)
       })
   }
 
-  const handleChangeEmail = () => {
-    auth
-    .signInWithEmailAndPassword(user.email, userDB.password)
-    .then(function(userCredential) {
+  const handleChangeEmail = async() => {
+    await auth.signInWithEmailAndPassword(user.email, userDB.password)
+        .then(function(userCredential) {
         userCredential.user.updateEmail(email)
     })
-  }
 
-    const handleSubmit = async() => {
-      await handleChangeEmail()
-      
-      await db.collection("mySweetHotel")
-        .doc("country")
-        .collection("France")
-        .doc("collection")
-        .collection('hotel')
-        .doc('region')
-        .collection(userDB.hotelRegion)
-        .doc('departement')
-        .collection(userDB.hotelDept)
-        .doc(`${userDB.hotelId}`)
-        .collection('guest')
-        .doc(user.displayName)
+    await db.collection('guestUsers')
+        .doc(user.uid)
         .update({
           email: email,
-          room: room,
         })
 
       await showMessage({
-        messsage: "Votre profil a été actualisé avec succès !",
+        messsage: "Votre email a été actualisé avec succès !",
         type: "success"
       })
 
       return handleLoadUserDB()
+      .then(() => {
+        setEmail(user.email)
+        setUpdateMail(false)
+      })
+  }
 
+    const handleSubmit = async() => {
+      await db.collection('guestUsers')
+        .doc(user.uid)
+        .update({
+          room: room,
+        })
+
+      await showMessage({
+        messsage: "Votre numéro de chambre a été actualisé avec succès !",
+        type: "success"
+      })
+
+      return handleLoadUserDB()
+      .then(() => {
+        setRoom(userDB.room)
+        setUpdateRoom(false)
+      })
     }
 
     const handleChangePhotoUrl = async() => {
@@ -172,7 +173,7 @@ const UserProfile = ({navigation}) => {
               .then(url => {
                 const uploadTask = () => {
                   user.updateProfile({photoURL: url})
-                  .then(() => navigation.replace('Home'))
+                  .then(() => navigation.replace('My Sweet Hotel'))
                 }
                   return setUrl(url, uploadTask())})
           }
@@ -181,18 +182,8 @@ const UserProfile = ({navigation}) => {
       
 
     const handleCheckoutDateChange = async() => {
-      await db.collection("mySweetHotel")
-      .doc("country")
-      .collection("France")
-      .doc("collection")
-      .collection('hotel')
-      .doc('region')
-      .collection(userDB.hotelRegion)
-      .doc('departement')
-      .collection(userDB.hotelDept)
-      .doc(`${userDB.hotelId}`)
-      .collection('guest')
-      .doc(user.displayName)
+      await db.collection('guestUsers')
+      .doc(user.uid)
       .update({
         checkoutDate: moment(date).format('LL')
       })
@@ -221,7 +212,39 @@ const UserProfile = ({navigation}) => {
       }).start();
     };
 
-    console.log(userDB.checkoutDate)
+    useEffect(() => {
+      const toolOnAir = () => {
+        return db.collection('hotels')
+          .doc(userDB.hotelId)
+          .collection("chat")
+          .where("title", "==", user.displayName)
+      }
+
+      let unsubscribe = toolOnAir().onSnapshot(function(snapshot) {
+                  const snapInfo = []
+                snapshot.forEach(function(doc) {          
+                  snapInfo.push({
+                      id: doc.id,
+                      ...doc.data()
+                    })        
+                  });
+                  console.log(snapInfo)
+                  setChatResponse(snapInfo)
+              });
+              return unsubscribe
+   },[])
+
+   const updateAdminSpeakStatus = () => {
+    return db.collection('hotels')
+          .doc(userDB.hotelId)
+          .collection('chat')
+          .doc(user.displayName)
+          .update({
+              hotelResponding: false,
+          })      
+  }
+
+    console.log(user.password)
     
     return (
         <KeyboardAvoidingView style={styles.container}>
@@ -233,12 +256,18 @@ const UserProfile = ({navigation}) => {
                   </TouchableOpacity>
               </ImageBackground>
             </View>
-            <View style={{flex: 2, flexDirection: "column", width: "100%", padding: 10, alignItems: "center"}}>
-              <Text style={{fontSize: 30, fontWeight: "bold", marginBottom: 20}}>{user.displayName}</Text>
+            <View style={{flexDirection: "column", width: "100%", padding: 10, alignItems: "center"}}>
+              <Text style={{fontSize: 30, fontWeight: "bold"}}>{user.displayName}</Text>
+              <View style={{flexDirection: "row", justifyContent: "space-around", width: "55%", marginBottom: 20}}>
+                <Text style={{fontSize: 15, fontWeight: "bold"}}>{userDB.email}</Text>
+                <TouchableOpacity activeOpacity={0.5} onPress={() => setUpdateMail(true)}>
+                  <Ionicons name="pencil-outline" size={24} color="black" />
+                </TouchableOpacity>
+              </View>
               <Text style={{fontSize: 20, marginBottom: 20}}>{userDB.hotelName}</Text>
               <View style={{flexDirection: "row", justifyContent: "space-around", width: "70%"}}>
               <Text style={{fontSize: 15, marginBottom: 10}}>Vous occupez la chambre {userDB.room}</Text>
-                <TouchableOpacity activeOpacity={0.5} onPress={() => setUpdateProfile(true)}>
+                <TouchableOpacity activeOpacity={0.5} onPress={() => setUpdateRoom(true)}>
                   <Ionicons name="pencil-outline" size={24} color="black" />
                 </TouchableOpacity>
               </View>
@@ -249,8 +278,13 @@ const UserProfile = ({navigation}) => {
                 </TouchableOpacity>
               </View>
               <View style={{flexDirection: "row", justifyContent: "space-around", width: "100%", marginTop: 25, marginBottom: 25}}>
-                <TouchableOpacity activeOpacity={0.5} onPress={() => navigation.navigate('Chat')}>
-                  <Entypo name="chat" size={40} color="black" />            
+                <TouchableOpacity style={{flexDirection: "row"}} activeOpacity={0.5} onPress={() => {
+                  navigation.navigate('Chat')
+                  updateAdminSpeakStatus()}}>
+                  <Entypo name="chat" size={40} color="black" /> 
+                  {chatResponse.map(response => {
+                    if(response.hotelResponding) {return <Text style={{fontWeight: "bold", color: "red", marginLeft: 5, fontSize: 20}}>!</Text>}
+                  })}                   
               </TouchableOpacity>
               <TouchableOpacity activeOpacity={0.5}  onPress={() => navigation.navigate('Délogement')}>
                     <MaterialIcons name="room-preferences" size={45} color="black" />                
@@ -269,13 +303,22 @@ const UserProfile = ({navigation}) => {
               <ClickNwaitDrawer fadeAnim={fadeAnim} fadeOut={fadeOut} />
             </View>
 
-            <Overlay isVisible={updateProfile} onBackdropPress={() => setUpdateProfile(false)}>
+            <Overlay isVisible={updateMail} onBackdropPress={() => setUpdateMail(false)}>
               <View style={{width: "100%", flexDirection: "column", alignItems: "center", padding: 10}}>
-                <Text style={{fontSize: 30, fontWeight: "bold", marginBottom: 20}}>Actualisation du profil</Text>
+                <Text style={{fontSize: 20, fontWeight: "bold", marginBottom: 20}}>Actualisation de votre e-mail</Text>
                 <View style={styles.inputContainer}>
                   <Text>Email</Text>
                   <Input placeholder="Email" type="email" value={email} 
                   onChangeText={(text) => setEmail(text)} />
+                </View>
+                <Button title="Actualiser maintenant" containerStyle={styles.button} onPress={handleChangeEmail} />
+              </View>
+            </Overlay>
+
+            <Overlay isVisible={updateRoom} onBackdropPress={() => setUpdateRoom(false)}>
+              <View style={{width: "100%", flexDirection: "column", alignItems: "center", padding: 10}}>
+                <Text style={{fontSize: 20, fontWeight: "bold", marginBottom: 20}}>Actualisation de votre chambre</Text>
+                <View style={styles.inputContainer}>
                   <Text>Numéro de chambre</Text>
                   <Input placeholder="Numéro de chambre" type="number" value={room} 
                   onChangeText={(text) => setRoom(text)} />

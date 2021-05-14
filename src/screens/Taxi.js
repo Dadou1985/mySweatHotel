@@ -1,5 +1,5 @@
-import React, { useState,useContext } from 'react';
-import { KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native';
+import React, { useState,useContext, useLayoutEffect } from 'react';
+import { KeyboardAvoidingView, StyleSheet, Text, View, ImageBackground } from 'react-native';
 import { Button, Input, Image, ButtonGroup } from 'react-native-elements';
 import { StatusBar } from 'expo-status-bar';
 import { auth, db } from "../../firebase"
@@ -10,7 +10,7 @@ import 'moment/locale/fr';
 import { showMessage, hideMessage } from "react-native-flash-message";
 
 
-const Taxi = () => {
+const Taxi = ({ navigation }) => {
     const [date, setDate] = useState(new Date())
     const [hour, setHour] = useState(new Date())
     const [passenger, setPassenger] = useState(null)
@@ -22,6 +22,20 @@ const Taxi = () => {
 
     const [showDate, setShowDate] = useState(false)
     const [showHour, setShowHour] = useState(false)
+
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            title: "Taxi",
+            headerBackTitleVisible: false,
+            headerTitleAlign: "right",
+            headerTitle: () =>(
+                <View style={{flexDirection: "row", alignItems: "center"}}>
+                    <Image source={{uri: "https://cdn2.iconfinder.com/data/icons/car-11/100/taxi3-512.png"}} style={styles.img} />
+                    <Text style={{ color: "black", fontWeight : "bold", fontSize: 20}}>Réserver un taxi</Text>
+                </View>
+            )
+        })
+    }, [navigation])
 
     const onDateChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
@@ -48,19 +62,8 @@ const Taxi = () => {
         setType('')
         setAdress('')
         
-        if(userDB.hotelDept === "PARIS") {
-            return db.collection("mySweetHotel")
-        .doc("country")
-        .collection("France")
-        .doc("collection")
-        .collection('hotel')
-        .doc('region')
-        .collection(userDB.hotelRegion)
-        .doc('departement')
-        .collection(userDB.hotelDept)
-        .doc("Arrondissement")
-        .collection(userDB.hotelArrondissement)
-        .doc(`${userDB.hotelId}`)
+        return db.collection("hotels")
+        .doc(userDB.hotelId)
         .collection('cab')
         .add({
             author: user.displayName,
@@ -78,35 +81,6 @@ const Taxi = () => {
           }).catch(function(error) {
             console.error(error)
           })
-        }else{
-            return db.collection("mySweetHotel")
-        .doc("country")
-        .collection("France")
-        .doc("collection")
-        .collection('hotel')
-        .doc('region')
-        .collection(userDB.hotelRegion)
-        .doc('departement')
-        .collection(userDB.hotelDept)
-        .doc(`${userDB.hotelId}`)
-        .collection('cab')
-        .add({
-            author: user.displayName,
-            destination: adress,
-            client: user.displayName,
-            room: userDB.room,
-            pax: passenger,
-            model: type,
-            markup: Date.now(),
-            hour: moment(hour).format('LT'),
-            date: moment(date).format('L'),
-            status: true
-          }).then(function(docRef){
-            console.log(docRef.id)
-          }).catch(function(error) {
-            console.error(error)
-          })
-        }
     }
 
     const cabType = ["Berline", "Van"]
@@ -116,9 +90,13 @@ const Taxi = () => {
     return (
         <KeyboardAvoidingView behavior="padding" style={styles.container}>
             <StatusBar style="light" />
-            <Image source={{uri: "https://cdn2.iconfinder.com/data/icons/car-11/100/taxi3-512.png"}} style={styles.img} />
             <View style={styles.containerText}>
-                <Text style={styles.text}>Réserver un taxi</Text>
+            <ImageBackground source={ require('../../img/pic_taxi2.png') } style={{
+                flex: 1,
+                resizeMode: "contain",
+                justifyContent: "center",
+                width: 500}}>
+                </ImageBackground>
             </View>
             <View style={styles.inputContainer}>
             <View style={{flexDirection: "row", justifyContent: "space-around"}}>
@@ -192,27 +170,33 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: "center",
-        justifyContent: "center",
-        padding: 10
+        justifyContent: "space-between",
+
     },
     containerText: {
-        marginBottom: 50
+        flex: 2,
     },
     text: {
         fontSize: 30,
-        textAlign: "center"
+        textAlign: "center",
+        color:"white",
+        marginBottom: 50, 
+
     },
     inputContainer: {
-        width: 300
+        width: 300,
+        marginTop: 20, 
+
     },
     button: {
         width: 200,
-        marginTop: 10, 
+        marginTop: 10,
+        marginBottom: 50, 
         borderColor: "white" 
     },
     img: {
-        width: 70,
-        height: 70,
+        width: 24,
+        height: 24,
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -220,5 +204,6 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
+        marginRight: 5
     }
 })

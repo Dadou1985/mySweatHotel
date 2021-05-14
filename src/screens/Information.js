@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { KeyboardAvoidingView, StyleSheet, Text, View, TouchableOpacity, Modal, ScrollView } from 'react-native';
+import React, { useState, useEffect, useContext, useLayoutEffect } from 'react';
+import { KeyboardAvoidingView, StyleSheet, Text, View, TouchableOpacity, Modal, ScrollView, ImageBackground } from 'react-native';
 import { Button, Input, Image } from 'react-native-elements';
 import { StatusBar } from 'expo-status-bar';
 import { auth, db } from "../../firebase"
@@ -14,54 +14,44 @@ import { showMessage, hideMessage } from "react-native-flash-message";
 
 const Information = ({ navigation }) => {
     const [info, setInfo] = useState([])
-    const [room, setRoom] = useState(null)
+    const [currentRoom, setCurrentRoom] = useState(null)
     const [date, setDate] = useState(new Date())
     const [showDate, setShowDate] = useState(false)
-    const [region, setRegion] = useState('Sélectionner une région')
-    const [departement, setDepartement] = useState('Sélectionner un département')
-    const [arrondissement, setArrondissement] = useState('Sélectionner un arrondissement')
-    const [hotel, setHotel] = useState("Sélectionner votre hôtel")
-    const [hotelId, setHotelId] = useState(null)
-    const [number, setNumber] = useState(0)
-    const [showModalRegion, setShowModalRegion] = useState(false)
-    const [showModalDepartement, setShowModalDepartement] = useState(false)
-    const [showModalArrondissement, setShowModalArrondissement] = useState(false)
-    const [showModalHotel, setShowModalHotel] = useState(false)
-    const [showHotelButton, setShowHotelButton] = useState(false)
+    const [formValue, setFormValue] = useState({username: "", email: "", region: "", departement: "", city: "", standing: "", phone: "", room: 0, code_postal: "", adress: "", website: "", mail: "", hotelId: "", hotelName: "", country: "", classement: ""})
+    const [filter, setFilter] = useState("")
+    const [initialFilter, setInitialFilter] = useState("")
+    const [hotelName, setHotelName] = useState("Lancer la recherche")
     const [hideAll, setHideAll] = useState(false)
     const [user, setUser] = useState(auth.currentUser)
     const {userDB, setUserDB} = useContext(UserContext)
+    const [showModalHotel, setShowModalHotel] = useState(false)
+    const [inputSearch, setInputSearch] = useState(true)
+    const [searchButton, setSearchButton] = useState(false)
+    const [checkoutButton, setCheckoutButton] = useState(false)
+    const [inputRoom, setInputRoom] = useState(false)
+
 
     const deptDetails = [paris_arrondissement, ile_de_france, auvergne_rhone_alpes, bourgogne_franche_comte, bretagne, centre_val_de_loire, corse, grand_est, hauts_de_france, normandie, nouvelle_aquitaine, occitanie, pays_de_la_loire,provence_alpes_cote_d_azur]
 
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            title: "RoomChange",
+            headerBackTitleVisible: false,
+            headerTitleAlign: "right",
+            headerTitle: () =>(
+                <View style={{flexDirection: "row", alignItems: "center"}}>
+                    {userDB !== null && moment(userDB.checkoutDate).format('L') !== moment(new Date()).format('L') && new Date().getHours() < 13 ? 
+                     <Text style={{ color: "black", fontWeight : "bold", fontSize: 20, marginLeft: 5}}>Réservez votre prochain séjour</Text> : <Text style={{ color: "black", fontWeight : "bold", fontSize: 20, marginLeft: 5}}>Trouvez votre hôtel</Text>}
+                </View>
+            )
+        })
+    }, [navigation])
+
     useEffect(() => {
         const getHotel = () => {
-            if(departement === 'PARIS') {
-                return db.collection("mySweetHotel")
-                    .doc('country')
-                    .collection('France')
-                    .doc('collection')
-                    .collection('hotel')
-                    .doc("region")
-                    .collection(region)
-                    .doc('departement')
-                    .collection(departement)
-                    .doc("arrondissement")
-                    .collection(arrondissement)
-                    .where("partnership", "==", true)
-            }else{
-                return db.collection("mySweetHotel")
-                    .doc('country')
-                    .collection('France')
-                    .doc('collection')
-                    .collection('hotel')
-                    .doc("region")
-                    .collection(region)
-                    .doc('departement')
-                    .collection(departement)
-                    .where("partnership", "==", true)
+            return db.collection("hotels")
+                .where("code_postal", "==", filter)
             }
-                }
 
         let unsubscribe = getHotel().onSnapshot(function(snapshot) {
             const snapInfo = []
@@ -75,12 +65,13 @@ const Information = ({ navigation }) => {
             setInfo(snapInfo)
         });
         return unsubscribe
-    }, [region, departement, arrondissement])
+    }, [filter])
         
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
         setShowDate(Platform.OS === 'ios');
         setDate(currentDate);
+        setInputRoom(true)
         setTimeout(() => {
             showMessage({
                 message: "La date de votre check-out a bien été enregistrée !",
@@ -90,18 +81,8 @@ const Information = ({ navigation }) => {
       };
     
     const handleLoadUserDB = () => {
-        return db.collection("mySweetHotel")
-        .doc("country")
-        .collection("France")
-        .doc("collection")
-        .collection('hotel')
-        .doc("region")
-        .collection(region)
-        .doc('departement')
-        .collection(departement)
-        .doc(`${hotelId}`)
-        .collection('guest')
-        .doc(user.displayName)
+        return db.collection('guestUsers')
+        .doc(user.uid)
         .get()
         .then((doc) => {
             if (doc.exists) {
@@ -114,26 +95,15 @@ const Information = ({ navigation }) => {
     }
 
     const handleSubmit = async () => {
-        await db.collection("mySweetHotel")
-        .doc("country")
-        .collection("France")
-        .doc("collection")
-        .collection('hotel')
-        .doc("region")
-        .collection(region)
-        .doc('departement')
-        .collection(departement)
-        .doc(`${hotelId}`)
-        .collection('guest')
-        .doc(user.displayName)
-        .set({
-            hotelId: hotelId,
-            hotelName: hotel,
-            hotelRegion: region,
-            hotelDept: departement,
-            hotelArrondissement: arrondissement,
-            room: room,
-            checkoutDate: moment(date).format('LL'),
+        await db.collection('guestUsers')
+        .doc(user.uid)
+        .update({
+            hotelId: formValue.hotelId,
+            hotelName: hotelName,
+            hotelRegion: formValue.region,
+            hotelDept: formValue.departement,
+            room: currentRoom,
+            checkoutDate: moment(date.getTime()).format('LL'),
             towel: true,
             soap: true,
             toiletPaper: true,
@@ -151,7 +121,7 @@ const Information = ({ navigation }) => {
         .then(navigation.replace('Connexion'))
     }
 
-console.log(date)
+console.log(user)
 
     return (
         <KeyboardAvoidingView style={styles.container}>
@@ -177,27 +147,30 @@ console.log(date)
                         </View>
                     </View>
                 : <View style={styles.containerText}>
-                        <Text style={styles.text}>Trouvez votre hôtel</Text>
+                    <View style={styles.containerImg}>
+                        <ImageBackground source={ require('../../img/pic_hotels.png') } style={{
+                            flex: 1,
+                            resizeMode: "contain",
+                            justifyContent: "center",
+                            width: 500}}>
+                        </ImageBackground>
+                    </View>
                         <View style={styles.buttonView}>
-                            {!hideAll &&
-                                    <Button onPress={() => setShowModalRegion(true)} containerStyle={styles.button} title={region} />}
-                            {!hideAll && region !== "Sélectionner une région" ?
-                                <Button onPress={() => setShowModalDepartement(true)} containerStyle={styles.button} title={departement} /> : <></>}
-                            {!hideAll && departement === "PARIS" && departement !== "Sélectionner une département" ?
-                                <Button onPress={() => setShowModalArrondissement(true)} containerStyle={styles.button} title={arrondissement} /> : <></>}
-                            {showHotelButton &&
-                                <Button onPress={() => setShowModalHotel(true)} containerStyle={styles.button} title={hotel} />}    
-                            {!hideAll && hotel !== "Sélectionner votre hôtel" &&
-                                <Button onPress={() => {
+                            {inputSearch && <Input placeholder="Entrer le code postal de votre hôtel" type="text" value={initialFilter} 
+                                onChangeText={(text) => setInitialFilter(text)} style={{marginBottom: 5, textAlign: "center"}} />}
+                            {initialFilter.charAt(4) !== "" && <Button onPress={() => {
+                                setShowModalHotel(true)
+                                setFilter(initialFilter)
+                                }} containerStyle={styles.button} title={hotelName} type="outlined" />}   
+                                {checkoutButton && <Button onPress={() => {
                                     setShowDate(true)
                                     setHideAll(true)
-                                    }} containerStyle={styles.button} title="Date de fin de séjour" />}    
+                                    }} containerStyle={styles.button} title="Date de fin de séjour" type="outlined" />}
                         </View>
                         <View style={{width: 350, marginTop: 20}}>
-                            {hideAll &&
-                                <Input placeholder="Entrer votre numéro de chambre" type="number" value={room} 
-                                onChangeText={(text) => setRoom(text)} style={{textAlign: "center", marginBottom: 5}} />}
-                            {room !== null &&
+                            {inputRoom && <Input placeholder="Entrer votre numéro de chambre" type="number" value={currentRoom} 
+                            onChangeText={(text) => setCurrentRoom(text)} style={{textAlign: "center", marginBottom: 5}} />}
+                            {currentRoom !== null &&
                             <Button onPress={() => {
                                 handleSubmit()
                                 setTimeout(() => {
@@ -206,7 +179,7 @@ console.log(date)
                                         type: "info",
                                       })
                                 }, 3000);
-                            }} containerStyle={styles.button} title="Accéder à la page d'accueil" />}
+                            }} style={{width: 300, marginTop: 10, borderRadius: 30}} title="Accéder à la page d'accueil" />}
                         </View>
                     </View>
                 
@@ -215,107 +188,36 @@ console.log(date)
             <Modal 
             animationType="slide"
             transparent={true}
-            visible={showModalRegion} 
-            style={styles.centeredView}>
-                <ScrollView contentContainerStyle={styles.modalView}>
-                {RegionDetails.map(region =>(
-                    <View style={{padding: 15, 
-                    marginBottom: 30, 
-                    borderBottomWidth: 1, 
-                    borderBottomColor: "lightgrey", 
-                    width: "100%"}}>
-                        <TouchableOpacity onPress={() => {
-                                setRegion(region.region)
-                                setNumber(region.number)
-                                setShowModalRegion(false)
-                                }}>
-                            <Text style={{fontSize: 15}}>
-                                {region.region}
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-                    ))}
-                </ScrollView>
-            </Modal>
-
-            <Modal 
-            animationType="slide"
-            transparent={true}
-            visible={showModalDepartement} 
-            style={styles.centeredView}>
-                <ScrollView contentContainerStyle={styles.modalView}>
-                {deptDetails[number].map(dept =>(
-                    <View style={{padding: 15, 
-                    marginBottom: 30, 
-                    borderBottomWidth: 1, 
-                    borderBottomColor: "lightgrey", 
-                    width: "100%"}}>
-                        <TouchableOpacity>
-                            <Text style={{fontSize: 15}} onPress={() => {
-                                if(departement === "PARIS") {
-                                    setDepartement(dept.nom)
-                                    setShowModalDepartement(false)
-                                }else{
-                                    setDepartement(dept.nom)
-                                    setShowHotelButton(true) 
-                                    setShowModalDepartement(false)
-                                }
-                                }}>
-                                {dept.nom}
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-                    ))}
-                </ScrollView>
-            </Modal>
-
-            <Modal 
-            animationType="slide"
-            transparent={true}
-            visible={showModalArrondissement} 
-            style={styles.centeredView}>
-                <ScrollView contentContainerStyle={styles.modalView}>
-                {deptDetails[0].map(dept =>(
-                    <View style={{padding: 15, 
-                    marginBottom: 30, 
-                    borderBottomWidth: 1, 
-                    borderBottomColor: "lightgrey", 
-                    width: "100%"}}>
-                        <TouchableOpacity>
-                            <Text style={{fontSize: 15}} onPress={() => {
-                                setArrondissement(dept.nom)
-                                setShowModalArrondissement(false)
-                                }}>
-                                {dept.nom}
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-                    ))}
-                </ScrollView>
-            </Modal>
-
-            <Modal 
-            animationType="slide"
-            transparent={true}
             visible={showModalHotel} 
             style={styles.centeredView}>
                 <ScrollView contentContainerStyle={styles.modalView}>
                 {info.length > 0 ? info.map(hotel =>(
+                <TouchableOpacity>
                     <View style={{padding: 15, 
                     marginBottom: 30, 
                     borderBottomWidth: 1, 
                     borderBottomColor: "lightgrey", 
                     width: "100%"}}>
-                        <TouchableOpacity>
                             <Text style={{fontSize: 15}} onPress={() => {
-                                setHotel(hotel.hotelName)
-                                setHotelId(hotel.id)
+                                setFormValue({
+                                    hotelId: hotel.id,
+                                    departement: hotel.departement,
+                                    region: hotel.region,
+                                    classement: hotel.classement,
+                                    city: hotel.city,
+                                    code_postal: hotel.code_postal,
+                                    country: hotel.country,
+                                    room: hotel.room
+                                })
+                                setHotelName(hotel.hotelName)
                                 setShowModalHotel(false)
+                                setCheckoutButton(true)
                                 }}>
                                 {hotel.hotelName}
                             </Text>
-                        </TouchableOpacity>
-                    </View>
+                        </View>
+                    </TouchableOpacity>
+
                     )) :
                     <View style={styles.container}>
                         <Text style={{fontSize: 25, textAlign: "center", marginBottom: 20}}>Nous n'avons pas encore d'hôtel partenaire dans ce secteur</Text>
@@ -352,13 +254,18 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: "center",
         justifyContent: "center",
-        padding: 10
     },
     containerText: {
         flexDirection: "column",
         alignItems: "center",
         marginBottom: 30
     },
+    containerImg: {
+        flex: 2,
+      },
+      containerInput: {
+        flex: 3,
+      },
     text: {
         fontSize: 30,
         textAlign: "center"
@@ -367,7 +274,6 @@ const styles = StyleSheet.create({
         width: 300,
         marginTop: 10,
         borderRadius: 30
-
     },
     centeredView: {
         flex: 1,
@@ -394,7 +300,9 @@ const styles = StyleSheet.create({
       buttonView: {
           flexDirection: "column",
           alignItems: "center",
-          marginTop: 30
+          marginTop: 30,
+          width: 350,
+
       },
       img: {marginLeft: 25,
         width: 50,

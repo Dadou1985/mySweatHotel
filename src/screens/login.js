@@ -10,18 +10,44 @@ const Login = ({ navigation }) => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const {userDB, setUserDB} = useContext(UserContext)
+    const [internationalization, setInternationalization] = useState(
+        [
+          {language: "fr", fullLanguage: ""},
+          {language: "ar", fullLanguage: ""},
+          {language: "de", fullLanguage: ""},
+          {language: "en", fullLanguage: ""},
+          {language: "es", fullLanguage: ""},
+          {language: "hi", fullLanguage: ""},
+          {language: "it", fullLanguage: ""},
+          {language: "ja", fullLanguage: ""},
+          {language: "ja", fullLanguage: ""},
+          {language: "ko", fullLanguage: ""},
+          {language: "pt", fullLanguage: ""},
+          {language: "ur", fullLanguage: ""},
+          {language: "zh", fullLanguage: ""},
+        ]
+      )
+
+    const handleGuestRegistration = () => {
+        return db.collection('guestUsers')
+        .doc(userId)
+        .update({language: "fr"
+        })
+    }
+//Dans mysweethotelpro => function deleteGuest -> effacer les champs spécifiques et non le document
 
     useEffect(() => {
         
         let unsubscribe = auth.onAuthStateChanged(function(user) {
             if (user) {
+                //handleGuestRegistration()
                 navigation.navigate('Information')
                 setTimeout(() => {
                     showMessage({
                         message: "Vous êtes connecté !",
                         type: "info",
-                      })
-                    }, 3000);
+                    })
+                }, 3000);
             } 
           });
         return unsubscribe
