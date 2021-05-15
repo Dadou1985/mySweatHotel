@@ -10,14 +10,14 @@ import { UserContext } from '../components/userContext'
 import moment from 'moment'
 import 'moment/locale/fr';
 import { showMessage, hideMessage } from "react-native-flash-message";
-
+import * as Linking from 'expo-linking';
 
 const Information = ({ navigation }) => {
     const [info, setInfo] = useState([])
     const [currentRoom, setCurrentRoom] = useState(null)
     const [date, setDate] = useState(new Date())
     const [showDate, setShowDate] = useState(false)
-    const [formValue, setFormValue] = useState({username: "", email: "", region: "", departement: "", city: "", standing: "", phone: "", room: 0, code_postal: "", adress: "", website: "", mail: "", hotelId: "", hotelName: "", country: "", classement: ""})
+    const [formValue, setFormValue] = useState({username: "", email: "", region: "", departement: "", city: "", standing: "", phone: "", room: 0, code_postal: "", adress: "", website: "", mail: "", hotelId: "", hotelName: "", country: ""})
     const [filter, setFilter] = useState("")
     const [initialFilter, setInitialFilter] = useState("")
     const [hotelName, setHotelName] = useState("Lancer la recherche")
@@ -29,7 +29,7 @@ const Information = ({ navigation }) => {
     const [searchButton, setSearchButton] = useState(false)
     const [checkoutButton, setCheckoutButton] = useState(false)
     const [inputRoom, setInputRoom] = useState(false)
-
+    const [url, setUrl] = useState("")
 
     const deptDetails = [paris_arrondissement, ile_de_france, auvergne_rhone_alpes, bourgogne_franche_comte, bretagne, centre_val_de_loire, corse, grand_est, hauts_de_france, normandie, nouvelle_aquitaine, occitanie, pays_de_la_loire,provence_alpes_cote_d_azur]
 
@@ -40,7 +40,7 @@ const Information = ({ navigation }) => {
             headerTitleAlign: "right",
             headerTitle: () =>(
                 <View style={{flexDirection: "row", alignItems: "center"}}>
-                    {userDB !== null && moment(userDB.checkoutDate).format('L') !== moment(new Date()).format('L') && new Date().getHours() < 13 ? 
+                    {userDB !== null && userDB.checkoutDate !== moment(new Date()).format('LL') ? 
                      <Text style={{ color: "black", fontWeight : "bold", fontSize: 20, marginLeft: 5}}>Réservez votre prochain séjour</Text> : <Text style={{ color: "black", fontWeight : "bold", fontSize: 20, marginLeft: 5}}>Trouvez votre hôtel</Text>}
                 </View>
             )
@@ -102,6 +102,8 @@ const Information = ({ navigation }) => {
             hotelName: hotelName,
             hotelRegion: formValue.region,
             hotelDept: formValue.departement,
+            city: formValue.city,
+            classement: formValue.standing,            
             room: currentRoom,
             checkoutDate: moment(date.getTime()).format('LL'),
             towel: true,
@@ -111,8 +113,10 @@ const Information = ({ navigation }) => {
             pillow: true,
             blanket: true,
             iron: true,
-            babyBed: true
-        })
+            babyBed: true, 
+            website: formValue.website,
+            phone: formValue.phone
+            })
         return handleLoadUserDB()
     }
 
@@ -121,27 +125,33 @@ const Information = ({ navigation }) => {
         .then(navigation.replace('Connexion'))
     }
 
-console.log(user)
+    const handleLinkWebsite = async() => {
+        return Linking.openURL(userDB.website)
+    }
+
+console.log(userDB)
 
     return (
         <KeyboardAvoidingView style={styles.container}>
             <StatusBar style="light" />
-            {userDB !== null && moment(userDB.checkoutDate).format('L') !== moment(new Date()).format('L') && new Date().getHours() < 13 ? <View style={styles.containerText}>
-                        <Text style={styles.text}>Un besoin particulier...</Text>
-                        <View style={{marginTop: 40}}>
-                            <TouchableOpacity>
-                                <Image source={{uri: "https://cdn4.iconfinder.com/data/icons/everyday-objects-line-art-1/128/towels-512.png"}} style={styles.img} />    
-                            </TouchableOpacity>
-                            <View style={{marginTop: 15}}>
-                                <Button title='Oui' type="clear" />
-                                <Button title='Non, merci' onPress={() => {
+            {userDB !== null && userDB.checkoutDate !== moment(new Date()).format('LL') ? <View style={styles.containerText}>
+                        <View style={styles.containerImg}>
+                        <ImageBackground source={ require('../../img/pic_booking2.png') } style={{
+                            flex: 1,
+                            resizeMode: "contain",
+                            justifyContent: "center",
+                            width: 500}}>
+                        </ImageBackground>
+                            <View style={{marginBottom: 0, marginTop: 0}}>
+                                <Button title='Oui' type="clear" onPress={handleLinkWebsite} />
+                                <Button style={{width: 300}} title='Non, merci' onPress={() => {
                                     handleLoadUserDB()
                                     setTimeout(() => {
                                         showMessage({
                                             message: `Nous sommes heureux de vous revoir, ${user.displayName}`,
                                             type: "info",
                                           })
-                                    }, 3000);
+                                    }, 2000);
                                 }} />
                             </View>
                         </View>
@@ -207,9 +217,14 @@ console.log(user)
                                     city: hotel.city,
                                     code_postal: hotel.code_postal,
                                     country: hotel.country,
-                                    room: hotel.room
+                                    room: hotel.room,
+                                    city: hotel.city,
+                                    standing: hotel.classement,
+                                    website: hotel.website,
+                                    phone: hotel.phone
                                 })
                                 setHotelName(hotel.hotelName)
+                                setUrl(hotel.website)
                                 setShowModalHotel(false)
                                 setCheckoutButton(true)
                                 }}>

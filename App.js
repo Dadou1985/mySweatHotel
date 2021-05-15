@@ -1,7 +1,7 @@
 import 'react-native-gesture-handler';
 import React, { useState } from 'react';
 import { StyleSheet} from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, NavigationAction } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from './src/screens/login'
 import RegisterScreen from './src/screens/Register'
@@ -32,8 +32,9 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator 
         initialRouteName="Connexion"
-        screenOptions={globalScreenOptions}>
-            <Stack.Screen name="Connexion" component={LoginScreen} />
+        screenOptions={globalScreenOptions}
+        >
+            <Stack.Screen name="Connexion" component={LoginScreen} options={{headerLeft: null}} />
             <Stack.Screen name="Inscription" component={RegisterScreen} />
             <Stack.Screen name="Chat" component={ChatScreen} />
             <Stack.Screen name="Délogement" component={RoomChangeScreen} />

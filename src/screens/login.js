@@ -10,44 +10,27 @@ const Login = ({ navigation }) => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const {userDB, setUserDB} = useContext(UserContext)
-    const [internationalization, setInternationalization] = useState(
-        [
-          {language: "fr", fullLanguage: ""},
-          {language: "ar", fullLanguage: ""},
-          {language: "de", fullLanguage: ""},
-          {language: "en", fullLanguage: ""},
-          {language: "es", fullLanguage: ""},
-          {language: "hi", fullLanguage: ""},
-          {language: "it", fullLanguage: ""},
-          {language: "ja", fullLanguage: ""},
-          {language: "ja", fullLanguage: ""},
-          {language: "ko", fullLanguage: ""},
-          {language: "pt", fullLanguage: ""},
-          {language: "ur", fullLanguage: ""},
-          {language: "zh", fullLanguage: ""},
-        ]
-      )
+    const [language, setLanguage] = useState("fr")
+    const [fullLanguage, setFullLanguage] = useState("")
 
-    const handleGuestRegistration = () => {
+    const handleGuestRegistration = (userId) => {
         return db.collection('guestUsers')
         .doc(userId)
-        .update({language: "fr"
-        })
+        .update({language: language})
     }
-//Dans mysweethotelpro => function deleteGuest -> effacer les champs spécifiques et non le document
 
     useEffect(() => {
         
         let unsubscribe = auth.onAuthStateChanged(function(user) {
             if (user) {
-                //handleGuestRegistration()
+                handleGuestRegistration(user.uid)
                 navigation.navigate('Information')
                 setTimeout(() => {
                     showMessage({
                         message: "Vous êtes connecté !",
                         type: "info",
                     })
-                }, 3000);
+                }, 1000);
             } 
           });
         return unsubscribe
@@ -62,6 +45,22 @@ const Login = ({ navigation }) => {
             setPassword('')
         })
     }
+
+    const internationalization = [
+        {language: "fr", fullLanguage: ""},
+        {language: "ar", fullLanguage: ""},
+        {language: "de", fullLanguage: ""},
+        {language: "en", fullLanguage: ""},
+        {language: "es", fullLanguage: ""},
+        {language: "hi", fullLanguage: ""},
+        {language: "it", fullLanguage: ""},
+        {language: "ja", fullLanguage: ""},
+        {language: "ja", fullLanguage: ""},
+        {language: "ko", fullLanguage: ""},
+        {language: "pt", fullLanguage: ""},
+        {language: "ur", fullLanguage: ""},
+        {language: "zh", fullLanguage: ""},
+      ]
 
 
     return (

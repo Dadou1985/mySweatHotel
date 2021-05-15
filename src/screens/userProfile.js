@@ -29,8 +29,8 @@ const UserProfile = ({navigation}) => {
     const [chatResponse, setChatResponse] = useState([])
 
     const Logout = async() => {
-      await auth.signOut()
-      .then(navigation.replace('Connexion'))
+      await navigation.replace('Connexion')
+      return auth.signOut()
   }
 
   useLayoutEffect(() => {
@@ -43,6 +43,7 @@ const UserProfile = ({navigation}) => {
                   <Text style={{ color: "black", fontWeight : "bold", fontSize: 20, marginLeft: 5}}>My Sweet Hotel</Text>
               </View>
           ),
+          headerLeft: null,
           headerRight: () => (
           <SimpleLineIcons 
           name="logout" 
@@ -244,7 +245,7 @@ const UserProfile = ({navigation}) => {
           })      
   }
 
-    console.log(user.password)
+    console.log(userDB)
     
     return (
         <KeyboardAvoidingView style={styles.container}>
