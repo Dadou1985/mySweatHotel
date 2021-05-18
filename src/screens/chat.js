@@ -68,6 +68,7 @@ const Chat = ({ navigation }) => {
         return unsubscribe
     }, [])
 
+
     const getChatRoom = () => {
         return db.collection('hotels')
         .doc(userDB.hotelId)
@@ -84,7 +85,6 @@ const Chat = ({ navigation }) => {
         })
     }
 
-
     const createRoomnameSubmit = () => {
         return db.collection('hotels')
           .doc(userDB.hotelId)
@@ -93,9 +93,10 @@ const Chat = ({ navigation }) => {
           .set({
             title: user.displayName,
             room: userDB.room,
-            user: user.uid,
+            userId: user.uid,
             markup: Date.now(),
-            status: true
+            status: true, 
+            guestLanguage: userDB.language
         })      
       }
 
@@ -156,7 +157,6 @@ const Chat = ({ navigation }) => {
                                     return <ChatMessage 
                                         author={message.author}
                                         photo={message.photo}
-                                        text={message.text}
                                         translation={message.translated.en}
                                         markup={message.markup}
                                     />
@@ -164,7 +164,6 @@ const Chat = ({ navigation }) => {
                                     return <ChatMessage 
                                         author={message.author}
                                         photo={message.photo}
-                                        text={message.text}
                                         translation={message.translated.ar}
                                         markup={message.markup}
                                     />
@@ -172,7 +171,6 @@ const Chat = ({ navigation }) => {
                                 return <ChatMessage 
                                     author={message.author}
                                     photo={message.photo}
-                                    text={message.text}
                                     translation={message.translated.it}
                                     markup={message.markup}
                                 />
@@ -180,7 +178,6 @@ const Chat = ({ navigation }) => {
                                 return <ChatMessage 
                                     author={message.author}
                                     photo={message.photo}
-                                    text={message.text}
                                     translation={message.translated.pt}
                                     markup={message.markup}
                                 />
@@ -188,7 +185,6 @@ const Chat = ({ navigation }) => {
                                 return <ChatMessage 
                                     author={message.author}
                                     photo={message.photo}
-                                    text={message.text}
                                     translation={message.translated.hi}
                                     markup={message.markup}
                                 />
@@ -196,7 +192,6 @@ const Chat = ({ navigation }) => {
                                 return <ChatMessage 
                                     author={message.author}
                                     photo={message.photo}
-                                    text={message.text}
                                     translation={message.translated.ur}
                                     markup={message.markup}
                                 />
@@ -204,7 +199,6 @@ const Chat = ({ navigation }) => {
                                 return <ChatMessage 
                                     author={message.author}
                                     photo={message.photo}
-                                    text={message.text}
                                     translation={message.translated.zh}
                                     markup={message.markup}
                                 />
@@ -212,7 +206,6 @@ const Chat = ({ navigation }) => {
                                 return <ChatMessage 
                                     author={message.author}
                                     photo={message.photo}
-                                    text={message.text}
                                     translation={message.translated.es}
                                     markup={message.markup}
                                 />
@@ -220,7 +213,6 @@ const Chat = ({ navigation }) => {
                                 return <ChatMessage 
                                     author={message.author}
                                     photo={message.photo}
-                                    text={message.text}
                                     translation={message.translated.ko}
                                     markup={message.markup}
                                 />
@@ -228,7 +220,6 @@ const Chat = ({ navigation }) => {
                                 return <ChatMessage 
                                     author={message.author}
                                     photo={message.photo}
-                                    text={message.text}
                                     translation={message.translated.ja}
                                     markup={message.markup}
                                 />
@@ -236,7 +227,6 @@ const Chat = ({ navigation }) => {
                                 return <ChatMessage 
                                     author={message.author}
                                     photo={message.photo}
-                                    text={message.text}
                                     translation={message.translated.fr}
                                     markup={message.markup}
                                 />
@@ -244,16 +234,25 @@ const Chat = ({ navigation }) => {
                                 return <ChatMessage 
                                     author={message.author}
                                     photo={message.photo}
-                                    text={message.text}
                                     translation={message.translated.fr}
                                     markup={message.markup}
                                 />
                             }
                         }
 
+                        if(userDB.localLanguage === userDB.language) {
+                            return <ChatMessage 
+                                    author={message.author}
+                                    photo={message.photo}
+                                    text={message.text}
+                                    markup={message.markup}
+                                />
+                        }
+
                         if(message.translated){
                             return renderSwitch()
-                         }
+                        }
+                        
                     })}
                 </ScrollView>
                 <View style={styles.footer}>

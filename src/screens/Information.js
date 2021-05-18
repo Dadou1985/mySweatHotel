@@ -40,7 +40,7 @@ const Information = ({ navigation }) => {
             headerTitleAlign: "right",
             headerTitle: () =>(
                 <View style={{flexDirection: "row", alignItems: "center"}}>
-                    {userDB !== null && userDB.checkoutDate !== moment(new Date()).format('LL') ? 
+                    {userDB !== null ? 
                      <Text style={{ color: "black", fontWeight : "bold", fontSize: 20, marginLeft: 5}}>Réservez votre prochain séjour</Text> : <Text style={{ color: "black", fontWeight : "bold", fontSize: 20, marginLeft: 5}}>Trouvez votre hôtel</Text>}
                 </View>
             )
@@ -51,6 +51,7 @@ const Information = ({ navigation }) => {
         const getHotel = () => {
             return db.collection("hotels")
                 .where("code_postal", "==", filter)
+                .where("partnership", "==", true)
             }
 
         let unsubscribe = getHotel().onSnapshot(function(snapshot) {
@@ -134,7 +135,7 @@ console.log(userDB)
     return (
         <KeyboardAvoidingView style={styles.container}>
             <StatusBar style="light" />
-            {userDB !== null && userDB.checkoutDate !== moment(new Date()).format('LL') ? <View style={styles.containerText}>
+            {userDB !== null ? <View style={styles.containerText}>
                         <View style={styles.containerImg}>
                         <ImageBackground source={ require('../../img/pic_booking2.png') } style={{
                             flex: 1,
@@ -168,11 +169,11 @@ console.log(userDB)
                         <View style={styles.buttonView}>
                             {inputSearch && <Input placeholder="Entrer le code postal de votre hôtel" type="text" value={initialFilter} 
                                 onChangeText={(text) => setInitialFilter(text)} style={{marginBottom: 5, textAlign: "center"}} />}
-                            {initialFilter.charAt(4) !== "" && <Button onPress={() => {
+                            {initialFilter.charAt(4) !== "" && <Button raised={true} onPress={() => {
                                 setShowModalHotel(true)
                                 setFilter(initialFilter)
                                 }} containerStyle={styles.button} title={hotelName} type="outlined" />}   
-                                {checkoutButton && <Button onPress={() => {
+                                {checkoutButton && <Button raised={true} onPress={() => {
                                     setShowDate(true)
                                     setHideAll(true)
                                     }} containerStyle={styles.button} title="Date de fin de séjour" type="outlined" />}
@@ -181,7 +182,7 @@ console.log(userDB)
                             {inputRoom && <Input placeholder="Entrer votre numéro de chambre" type="number" value={currentRoom} 
                             onChangeText={(text) => setCurrentRoom(text)} style={{textAlign: "center", marginBottom: 5}} />}
                             {currentRoom !== null &&
-                            <Button onPress={() => {
+                            <Button raised={true} onPress={() => {
                                 handleSubmit()
                                 setTimeout(() => {
                                     showMessage({
@@ -240,8 +241,8 @@ console.log(userDB)
                         <Text style={{fontSize: 10, textAlign: "center", marginBottom: 20}}>N'hésitez pas à parler de notre solution auprès de votre réception, vous leur rendrez un fier service!</Text>
                         <Text style={{fontSize: 10, textAlign: "center", marginBottom: 20, fontWeight: "bold"}}>Nous vous souhaitons un excellent séjour au sein de votre établissement.</Text>
                         <View>
-                            <Button onPress={() => setShowModalHotel(false)} containerStyle={styles.button} type="outlined" title="Revenir à la recherche" />
-                            <Button onPress={() => Logout()} containerStyle={styles.button} title="Se déconnecter" />
+                            <Button raised={true} onPress={() => setShowModalHotel(false)} containerStyle={styles.button} type="outlined" title="Revenir à la recherche" />
+                            <Button raised={true} onPress={() => Logout()} containerStyle={styles.button} title="Se déconnecter" />
                         </View>
                     </View>}
                 </ScrollView>

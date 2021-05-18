@@ -16,6 +16,8 @@ const Register = ({ navigation }) => {
     const [userId, setUserId] = useState("")
     const [img, setImg] = useState(null)
     const [url, setUrl] = useState("")
+    const [language, setLanguage] = useState("fr")
+    const [fullLanguage, setFullLanguage] = useState("")
     const [internationalization, setInternationalization] = useState(
       [
         {language: "fr", fullLanguage: ""},
@@ -34,15 +36,17 @@ const Register = ({ navigation }) => {
       ]
     )
 
-    const freeRegister = () => {
+    const freeRegister = (userId) => {
         return db.collection('guestUsers')
         .doc(userId)
         .set({
           username: name,
           email: email,
           password: password,
-          
-          lastTimeConnected: Date.now()
+          language: language,
+          lastTimeConnected: Date.now(),
+          userId: userId,
+          localLanguage: "fr"
         })  
       }
 
@@ -110,6 +114,7 @@ const Register = ({ navigation }) => {
                                 photoURL: url,
                                 displayName: name
                             })
+                          freeRegister(authUser.user.uid)
                         })
                 }
                   return setUrl(url, uploadTask())})
@@ -145,7 +150,6 @@ const Register = ({ navigation }) => {
             <Button onPress={() => navigation.navigate('Connexion')} containerStyle={styles.button} title="Connexion" type="clear" />
             <Button containerStyle={styles.button} title="Créer un compte" onPress={(event) => {
                 handleChangePhotoUrl(event)
-                .then(freeRegister())
                 }} />
         </KeyboardAvoidingView>
     )

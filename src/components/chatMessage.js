@@ -28,7 +28,7 @@ const ChatMessage = ({author, photo, text, translation, markup}) => {
                 right={-5}
                 size={30}
                 source={{ uri: photo}} />
-                <Text>{translation}</Text>
+                <Text>{translation || text}</Text>
                 <Text style={styles.time}>{moment(markup).startOf('hour').fromNow()}</Text>
 
             </View>
@@ -51,7 +51,7 @@ const ChatMessage = ({author, photo, text, translation, markup}) => {
                 right={-5}
                 size={30}
                 source={{ uri: photo}} />
-                <Text>{translation}</Text>
+                <Text>{translation || text}</Text>
                 <Text style={styles.time}>{moment(markup).startOf('hour').fromNow()}</Text>
 
             </View>
@@ -76,7 +76,7 @@ const ChatMessage = ({author, photo, text, translation, markup}) => {
                 left={-5}
                 size={30}
                 source={{ uri: "https://cdn.wallpapersafari.com/73/48/aVIBA4.jpg"}} />
-                <Text>{translation}</Text>
+                <Text>{translation || text}</Text>
                 <Text style={styles.time}>{moment(markup).startOf('hour').fromNow()}</Text>
 
             </View>
@@ -99,7 +99,7 @@ const ChatMessage = ({author, photo, text, translation, markup}) => {
                 left={-5}
                 size={30}
                 source={{ uri: "https://cdn.wallpapersafari.com/73/48/aVIBA4.jpg"}} />
-                <Text>{translation}</Text>
+                <Text>{translation || text}</Text>
                 <Text style={styles.time}>{moment(markup).startOf('hour').fromNow()}</Text>
 
             </View>

@@ -129,7 +129,7 @@ const RoomChange = ({ navigation }) => {
                 <Text style={{fontSize: 20, color: "grey", marginLeft: 10}}>Ajouter une image</Text>
                 </TouchableOpacity>
             </View>
-            <Button onPress={(event) => {
+            <Button raised={true} onPress={(event) => {
               handleChangePhotoUrl(event)
               showMessage({
                 message: "Votre demande de délogement a été transmise à la réception !",

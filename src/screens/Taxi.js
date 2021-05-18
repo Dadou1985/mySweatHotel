@@ -1,6 +1,6 @@
 import React, { useState,useContext, useLayoutEffect } from 'react';
 import { KeyboardAvoidingView, StyleSheet, Text, View, ImageBackground } from 'react-native';
-import { Button, Input, Image, ButtonGroup } from 'react-native-elements';
+import { Button, Input, Image } from 'react-native-elements';
 import { StatusBar } from 'expo-status-bar';
 import { auth, db } from "../../firebase"
 import { UserContext } from '../components/userContext'
@@ -16,7 +16,6 @@ const Taxi = ({ navigation }) => {
     const [passenger, setPassenger] = useState(null)
     const [type, setType] = useState("Berline")
     const [adress, setAdress] = useState("")
-    const [selectedIndex, setSelectedIndex] = useState(0)
     const [user, setUser] = useState(auth.currentUser)
     const {userDB, setUserDB} = useContext(UserContext)
 
@@ -59,7 +58,7 @@ const Taxi = ({ navigation }) => {
 
     const handleSubmit = () => {
         setPassenger(null)
-        setType('')
+        setType('Berline')
         setAdress('')
         
         return db.collection("hotels")
@@ -83,7 +82,6 @@ const Taxi = ({ navigation }) => {
           })
     }
 
-    const cabType = ["Berline", "Van"]
       
     moment.locale('fr')
 
@@ -99,34 +97,24 @@ const Taxi = ({ navigation }) => {
                 </ImageBackground>
             </View>
             <View style={styles.inputContainer}>
-            <View style={{flexDirection: "row", justifyContent: "space-around"}}>
+                <View style={{flexDirection: "row", justifyContent: "space-around"}}>
+                    <View style={{marginBottom: 20, flexDirection: "column", alignItems: "center"}}>
+                        <Text>Jour</Text>
+                        <Button type="clear" title={moment(date).format('L')} 
+                        onPress={handleShowDate} />
+                    </View>
+                    <View style={{marginBottom: 20, flexDirection: "column", alignItems: "center"}}>
+                        <Text>Heure</Text>
+                        <Button type="clear" title={moment(hour).format('LT')} 
+                            onPress={handleShowHour} />
+                    </View>   
+                </View> 
                 <View style={{marginBottom: 20, flexDirection: "column", alignItems: "center"}}>
-                    <Text>Jour</Text>
-                    <Button type="clear" title={moment(date).format('L')} 
-                    onPress={handleShowDate} />
-                </View>
-                <View style={{marginBottom: 20, flexDirection: "column", alignItems: "center"}}>
-                    <Text>Heure</Text>
-                    <Button type="clear" title={moment(hour).format('LT')} 
-                        onPress={handleShowHour} />
-                </View>   
-            </View> 
-            <View style={{marginBottom: 20, flexDirection: "column", alignItems: "center"}}>
-                    <Text>Type de véhicule</Text>
-                    <ButtonGroup
-                        onPress={() => {
-                            setSelectedIndex(selectedIndex)
-                            if(selectedIndex === 1) {
-                                setType('Van')
-                            }else{
-                                setType('Berline')
-                            }
-                        }}
-                        selectedIndex={selectedIndex}
-                        buttons={cabType}
-                        containerStyle={{height: 40}}
-                        selectedButtonStyle={{backgroundColor: "gray"}}
-                    />
+                        <Text>Type de véhicule</Text>
+                        <View style={{flexDirection: "row", width: 400, justifyContent: "center", marginTop: 15}}>
+                            <Button containerStyle={styles.typeButton} title="Berline" type={type === "Berline" ? "solid" : "clear"} raised={true} onPress={() => setType("Berline")} />
+                            <Button containerStyle={styles.typeButton} title="Van" type={type === "Van" ? "solid" : "clear"} raised={true} onPress={() => setType("Van")} />
+                        </View>
                 </View>
                 <Input placeholder="Nombre de passager(s)" type="number" value={passenger} 
                 onChangeText={(text) => setPassenger(text)} />
@@ -187,6 +175,13 @@ const styles = StyleSheet.create({
         width: 300,
         marginTop: 20, 
 
+    },
+    typeButton: {
+        width: 125,
+        marginTop: 10,
+        borderColor: "white",
+        marginLeft: 5,
+        marginRight: 5 
     },
     button: {
         width: 200,

@@ -202,14 +202,14 @@ const UserProfile = ({navigation}) => {
     const fadeIn = () => {
       Animated.timing(fadeAnim, {
         toValue: 0,
-        duration: 1000,
+        duration: 500,
       }).start();
     };
   
     const fadeOut = () => {
       Animated.timing(fadeAnim, {
         toValue: -500,
-        duration: 1000,
+        duration: 500,
       }).start();
     };
 
@@ -300,7 +300,7 @@ const UserProfile = ({navigation}) => {
                     <Image source={{uri: "https://cdn2.iconfinder.com/data/icons/car-11/100/taxi3-512.png"}} style={styles.img} />
                 </TouchableOpacity>
               </View>
-              <Button title="Utiliser le service Click & Wait" type="clear" onPress={fadeIn} /> 
+              <Button raised={true} title="Utiliser le service Click & Wait" type="clear" onPress={fadeIn} /> 
               <ClickNwaitDrawer fadeAnim={fadeAnim} fadeOut={fadeOut} />
             </View>
 

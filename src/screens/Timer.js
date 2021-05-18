@@ -98,7 +98,7 @@ const Timer = ({navigation}) => {
                         onPress={handleShowHour} />
                 </View>   
             </View> 
-            <Button onPress={() => {
+            <Button raised={true} onPress={() => {
                 handleSubmit()
                 showMessage({
                     message: "Votre demande de réveil a été transmise à la réception !",
