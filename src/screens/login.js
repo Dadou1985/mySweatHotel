@@ -77,10 +77,8 @@ const Login = ({ navigation }) => {
                 <Input placeholder="Mot de passe" secureTextEntry type="password" value={password} 
                 onChangeText={(text) => setPassword(text)} />
             </View>
-            <Button onPress={() => {
-                Login()
-                }} containerStyle={styles.button} title="Connexion" />
-            <Button onPress={() => navigation.navigate('Inscription')} containerStyle={styles.button} title="Créer un compte" type="clear" />
+            <Button raised={true} onPress={() => Login()} containerStyle={styles.button} title="Connexion" />
+            <Button raised={true} onPress={() => navigation.navigate('Inscription')} containerStyle={styles.button} title="Créer un compte" type="clear" />
         </KeyboardAvoidingView>
     )
 }

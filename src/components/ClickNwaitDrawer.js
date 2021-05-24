@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useState, useContext } from 'react'
-import { KeyboardAvoidingView, StyleSheet, Text, View, Image, TouchableOpacity, Animated } from 'react-native';
+import { KeyboardAvoidingView, StyleSheet, Text, View, Image, TouchableOpacity, Animated, Modal } from 'react-native';
 import { auth, db } from "../../firebase"
 import { UserContext } from '../components/userContext'
 import { showMessage } from "react-native-flash-message";
@@ -7,6 +7,7 @@ import { AntDesign } from '@expo/vector-icons';
 
 const ClickNwaitDrawer = ({fadeAnim, fadeOut}) => {
     const [user, setUser] = useState(auth.currentUser)
+    const [showModal, setShowModal] = useState(false)
     const {userDB, setUserDB} = useContext(UserContext)
 
     const handleClickAndWait = (item) => {
@@ -49,10 +50,16 @@ const ClickNwaitDrawer = ({fadeAnim, fadeOut}) => {
 
     return (
         <Animated.View style={[styles.fadingContainer, {bottom: fadeAnim}]}>
-                <View style={{flexDirection: "row", justifyContent: "space-around", width: "45%", alignItems: "center"}}>
-                    <Text style={{fontSize: 20, fontWeight: "bold"}}>Click & Wait</Text>
+                <View style={{flexDirection: "row", justifyContent: "flex-end", width: "95%", alignItems: "center"}}>
+                    <Text style={{fontSize: 20, fontWeight: "bold", marginRight: 100}}>Click & Wait</Text>
                     <TouchableOpacity activeOpacity={0.5} onPress={fadeOut}>
-                        <AntDesign name="down" size={24} color="black" />
+                        <AntDesign name="closecircle" size={20} color="black" />
+                    </TouchableOpacity>
+                </View>
+                <View style={{flexDirection: "row", justifyContent: "space-around", width: "65%", alignItems: "center"}}>
+                    <Text>Exprimez vos besoins en un clic</Text>
+                    <TouchableOpacity activeOpacity={0.5} onPress={fadeOut}>
+                        <AntDesign name="infocirlce" size={15} color="black" onPress={() => setShowModal(true)} />
                     </TouchableOpacity>
                 </View>
                 <View style={styles.cncContainer}>
@@ -65,7 +72,7 @@ const ClickNwaitDrawer = ({fadeAnim, fadeOut}) => {
                             type: "success",
                           })
                     }}>
-                        <Image source={{uri: "https://cdn4.iconfinder.com/data/icons/everyday-objects-line-art-1/128/towels-512.png"}} style={styles.img} />    
+                        <Image source={require('../../img/bath-towel.png')} style={styles.img} />    
                     </TouchableOpacity>}
                         {userDB.soap &&
                             <TouchableOpacity activeOpacity={0.5} style={styles.button} onPress={() => {
@@ -76,7 +83,7 @@ const ClickNwaitDrawer = ({fadeAnim, fadeOut}) => {
                             type: "success",
                           })
                     }}>
-                        <Image source={{uri: "https://cdn0.iconfinder.com/data/icons/beauty-and-fashion-14/512/Soap_bar-512.png"}} style={styles.img} />    
+                        <Image source={require('../../img/soap.png')} style={styles.img} />    
                     </TouchableOpacity> }
                     {userDB.toiletPaper &&
                         <TouchableOpacity activeOpacity={0.5} style={styles.button} onPress={() => {
@@ -87,7 +94,7 @@ const ClickNwaitDrawer = ({fadeAnim, fadeOut}) => {
                             type: "success",
                           })
                     }}>
-                        <Image source={{uri: "https://www.clipartmax.com/png/middle/181-1817034_toilet-trauma-youtube-toilet-paper-roll-icon.png"}} style={styles.img} />    
+                        <Image source={require('../../img/toilet-paper.png')} style={styles.img} />    
                     </TouchableOpacity>}  
                     {userDB.hairDryer &&
                         <TouchableOpacity activeOpacity={0.5} style={styles.button} onPress={() => {
@@ -98,7 +105,7 @@ const ClickNwaitDrawer = ({fadeAnim, fadeOut}) => {
                             type: "success",
                           })
                     }}>
-                        <Image source={{uri: "https://www.clipartmax.com/png/middle/177-1778082_hair-dryer-icon-hair-dryer.png"}} style={styles.img} />    
+                        <Image source={require('../../img/hair-dryer.png')} style={styles.img} />    
                     </TouchableOpacity> }    
                 </View>
                 <View style={styles.cncContainer}>
@@ -111,7 +118,7 @@ const ClickNwaitDrawer = ({fadeAnim, fadeOut}) => {
                             type: "success",
                           })
                     }}>
-                        <Image source={{uri: "https://cdn.iconscout.com/icon/premium/png-256-thumb/pillow-1427897-1207484.png"}} style={styles.img} />    
+                        <Image source={require('../../img/pillow.png')} style={styles.img} />    
                     </TouchableOpacity>}
                     {userDB.blanket &&
                         <TouchableOpacity activeOpacity={0.5} style={styles.button} onPress={() => {
@@ -122,7 +129,7 @@ const ClickNwaitDrawer = ({fadeAnim, fadeOut}) => {
                             type: "success",
                           })
                     }}>
-                        <Image source={{uri: "https://www.pinclipart.com/picdir/middle/159-1599759_weighted-blanket-blanket-clipart.png"}} style={styles.img} />    
+                        <Image source={require('../../img/bed-sheets.png')} style={styles.img} />    
                     </TouchableOpacity>}  
                     {userDB.iron &&
                         <TouchableOpacity activeOpacity={0.5} style={styles.button} onPress={() => {
@@ -133,7 +140,7 @@ const ClickNwaitDrawer = ({fadeAnim, fadeOut}) => {
                             type: "success",
                           })
                     }}>
-                        <Image source={{uri: "https://secure.webtoolhub.com/static/resources/icons/set73/c814a79e.png"}} style={styles.img} />    
+                        <Image source={require('../../img/iron.png')} style={styles.img} />    
                     </TouchableOpacity>}  
                     {userDB.babyBed &&
                         <TouchableOpacity activeOpacity={0.5} style={styles.button} onPress={() => {
@@ -147,6 +154,25 @@ const ClickNwaitDrawer = ({fadeAnim, fadeOut}) => {
                         <Image source={{uri: "https://www.pngkey.com/png/full/548-5481965_baby-bed-with-a-mobile-toy-with-hanging.png"}} style={styles.img} />    
                     </TouchableOpacity> } 
                 </View>
+                <Modal 
+                animationType="slide"
+                transparent={true}
+                visible={showModal} 
+                style={styles.centeredView}>
+                    <View style={styles.modal}>
+                        <Text style={{
+                            width: 375, 
+                            fontSize: 15,
+                            paddingBottom: 10,
+                            textAlign: "center",
+                            fontWeight: "bold" 
+                            }}><AntDesign name="infocirlce" size={15} color="black" style={{marginRight: 15}} />
+                            Prestation de service soumise à condition</Text>
+                            <Text style={{textAlign: "center"}}>Sous réserve de disponibilité et de mise à disposition des produits proposés par votre établissement hébergeur.</Text>
+                            <Text style={{textAlign: "center"}}>Pour plus d'informations, renseignez-vous auprès du personnel de votre hôtel.</Text>
+                            <Text style={{textAlign: "right", marginTop: 10, width: 300, fontWeight: "bold"}} onPress={() => setShowModal(false)}>Fermer</Text>
+                    </View>
+                </Modal>
         </Animated.View>
     )
 }
@@ -171,12 +197,35 @@ const styles = StyleSheet.create({
         position: "absolute", 
         backgroundColor: "white",
         bottom: 0, 
-        padding: 20
+        padding: 20,
+        marginBottom: 50
     },
     cncContainer: {
           flexDirection: "row",
           justifyContent: "space-around",
           width: "100%",
-          marginTop: 15
-      }
+          marginTop: 15,
+      },
+      centeredView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 22,
+      },
+    modal: {
+        padding: 10,
+        margin: 20,
+        marginTop: 265,
+        borderRadius: 10,
+        backgroundColor: 'white',
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+    }
 })

@@ -3,7 +3,6 @@ import { KeyboardAvoidingView, StyleSheet, Text, View, TouchableOpacity, Modal, 
 import { Button, Input, Image } from 'react-native-elements';
 import { StatusBar } from 'expo-status-bar';
 import { auth, db } from "../../firebase"
-import RegionDetails from '../../hotels/regionDetailsSheet.json'
 import { paris_arrondissement, ile_de_france, auvergne_rhone_alpes, bourgogne_franche_comte, bretagne, centre_val_de_loire, corse, grand_est, hauts_de_france, normandie, nouvelle_aquitaine, occitanie, pays_de_la_loire,provence_alpes_cote_d_azur } from "../../hotels"
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { UserContext } from '../components/userContext'
@@ -11,10 +10,12 @@ import moment from 'moment'
 import 'moment/locale/fr';
 import { showMessage, hideMessage } from "react-native-flash-message";
 import * as Linking from 'expo-linking';
+import { AntDesign } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 
 const Information = ({ navigation }) => {
     const [info, setInfo] = useState([])
-    const [currentRoom, setCurrentRoom] = useState(null)
+    const [currentRoom, setCurrentRoom] = useState("Numéro de chambre")
     const [date, setDate] = useState(new Date())
     const [showDate, setShowDate] = useState(false)
     const [formValue, setFormValue] = useState({username: "", email: "", region: "", departement: "", city: "", standing: "", phone: "", room: 0, code_postal: "", adress: "", website: "", mail: "", hotelId: "", hotelName: "", country: ""})
@@ -25,6 +26,7 @@ const Information = ({ navigation }) => {
     const [user, setUser] = useState(auth.currentUser)
     const {userDB, setUserDB} = useContext(UserContext)
     const [showModalHotel, setShowModalHotel] = useState(false)
+    const [showModalRoom, setShowModalRoom] = useState(false)
     const [inputSearch, setInputSearch] = useState(true)
     const [searchButton, setSearchButton] = useState(false)
     const [checkoutButton, setCheckoutButton] = useState(false)
@@ -149,7 +151,7 @@ console.log(userDB)
                                     handleLoadUserDB()
                                     setTimeout(() => {
                                         showMessage({
-                                            message: `Nous sommes heureux de vous revoir, ${user.displayName}`,
+                                            message: `Nous sommes ravis de vous revoir, ${user.displayName}`,
                                             type: "info",
                                           })
                                     }, 2000);
@@ -161,36 +163,46 @@ console.log(userDB)
                     <View style={styles.containerImg}>
                         <ImageBackground source={ require('../../img/pic_hotels.png') } style={{
                             flex: 1,
-                            resizeMode: "contain",
-                            justifyContent: "center",
-                            width: 500}}>
+                            width: 400}}>
                         </ImageBackground>
                     </View>
                         <View style={styles.buttonView}>
                             {inputSearch && <Input placeholder="Entrer le code postal de votre hôtel" type="text" value={initialFilter} 
                                 onChangeText={(text) => setInitialFilter(text)} style={{marginBottom: 5, textAlign: "center"}} />}
-                            {initialFilter.charAt(4) !== "" && <Button raised={true} onPress={() => {
-                                setShowModalHotel(true)
-                                setFilter(initialFilter)
-                                }} containerStyle={styles.button} title={hotelName} type="outlined" />}   
-                                {checkoutButton && <Button raised={true} onPress={() => {
-                                    setShowDate(true)
-                                    setHideAll(true)
-                                    }} containerStyle={styles.button} title="Date de fin de séjour" type="outlined" />}
-                        </View>
-                        <View style={{width: 350, marginTop: 20}}>
-                            {inputRoom && <Input placeholder="Entrer votre numéro de chambre" type="number" value={currentRoom} 
-                            onChangeText={(text) => setCurrentRoom(text)} style={{textAlign: "center", marginBottom: 5}} />}
-                            {currentRoom !== null &&
+                            {initialFilter.charAt(4) !== "" && 
+                            <Button 
+                                raised={true} 
+                                icon={<Ionicons name="search-circle" size={25} color="black" style={{marginRight: 5}} />}
+                                onPress={() => {
+                                    setShowModalHotel(true)
+                                    setFilter(initialFilter)
+                                    }} containerStyle={styles.button} title={hotelName} type="outline" />}   
+                                {checkoutButton && 
+                                <Button 
+                                    raised={true} 
+                                    icon={<Ionicons name="calendar" size={24} color="black" style={{marginRight: 5}} />}
+                                    onPress={() => {
+                                        setShowDate(true)
+                                        setHideAll(true)
+                                        }} containerStyle={styles.button} title={inputRoom ? `Check-out le ${moment(date).format('LL')}` : "Date de fin de séjour"} type="outline" />}
+
+                            {inputRoom && 
+                             <Button 
+                             raised={true} 
+                             icon={<Ionicons name="bed-sharp" size={25} color="black" style={{marginRight: 5}} />}
+                             onPress={() => {
+                                 setShowModalRoom(true)
+                                 }} containerStyle={styles.button} title={currentRoom !== "Numéro de chambre" ? `chambre n° ${currentRoom}` : currentRoom} type="outline" />}
+                            {currentRoom !== "Numéro de chambre" &&
                             <Button raised={true} onPress={() => {
                                 handleSubmit()
                                 setTimeout(() => {
                                     showMessage({
-                                        message: `Nous sommes heureux de vous revoir, ${user.displayName}`,
+                                        message: `Nous sommes ravis de vous revoir, ${user.displayName}`,
                                         type: "info",
                                       })
                                 }, 3000);
-                            }} style={{width: 300, marginTop: 10, borderRadius: 30}} title="Accéder à la page d'accueil" />}
+                            }} containerStyle={styles.button} title="Accéder à la page d'accueil" />}
                         </View>
                     </View>
                 
@@ -202,6 +214,20 @@ console.log(userDB)
             visible={showModalHotel} 
             style={styles.centeredView}>
                 <ScrollView contentContainerStyle={styles.modalView}>
+                    <View style={{
+                        flexDirection: "row", 
+                        width: 420, 
+                        alignItems: "center", 
+                        justifyContent: "center", 
+                        marginBottom: 10, 
+                        paddingTop: 10, 
+                        paddingBottom: 10, 
+                        backgroundColor: "lightblue"}}>
+                        <Text style={{fontSize: 25, marginRight: 20}}>Sélectionner votre hôtel</Text>
+                        <TouchableOpacity>
+                            <AntDesign name="closecircle" size={24} color="black" onPress={() => setShowModalHotel(false)} />
+                        </TouchableOpacity>
+                    </View>
                 {info.length > 0 ? info.map(hotel =>(
                 <TouchableOpacity>
                     <View style={{padding: 15, 
@@ -248,6 +274,31 @@ console.log(userDB)
                 </ScrollView>
             </Modal>
 
+            <Modal 
+            animationType="slide"
+            transparent={true}
+            visible={showModalRoom} 
+            style={styles.centeredView}>
+                <View style={styles.modalRoom}>
+                <Text style={{
+                    width: 375, 
+                    marginBottom: 10, 
+                    fontSize: 20,
+                    paddingTop: 10, 
+                    paddingBottom: 10,
+                    borderRadius: 5,
+                    textAlign: "center", 
+                    backgroundColor: "lightblue"
+                    }}>Numéro de chambre</Text>
+                    <Input 
+                        placeholder="Entrer votre numéro de chambre" 
+                        type="number" 
+                        value={currentRoom !== "Numéro de chambre" ? currentRoom : ""} 
+                        onChangeText={(text) => setCurrentRoom(text)} style={{textAlign: "center", marginBottom: 5}} />  
+                    <Button raised={true} onPress={() => setShowModalRoom(false)} containerStyle={{width: 300, borderRadius: 20, marginBottom: 15}} title="Valider" />
+                </View>
+            </Modal>
+
             {showDate && (
                 <DateTimePicker
                 testID="dateTimePicker"
@@ -287,7 +338,7 @@ const styles = StyleSheet.create({
         textAlign: "center"
     },
     button: {
-        width: 300,
+        width: 350,
         marginTop: 10,
         borderRadius: 30
     },
@@ -297,30 +348,42 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop: 22,
       },
-      modalView: {
-        margin: 10,
-        marginTop: 70,
+    modalView: {
+        marginTop: 55,
         backgroundColor: 'white',
-        borderRadius: 20,
-        padding: 15,
         alignItems: 'center',
         shadowColor: '#000',
         shadowOffset: {
-          width: 0,
-          height: 2,
+            width: 0,
+            height: 2,
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
-      },
-      buttonView: {
-          flexDirection: "column",
-          alignItems: "center",
-          marginTop: 30,
-          width: 350,
+    },
+    modalRoom: {
+        margin: 20,
+        marginTop: 265,
+        borderRadius: 10,
+        backgroundColor: 'white',
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+    },
+    buttonView: {
+        flexDirection: "column",
+        alignItems: "center",
+        marginTop: 30,
+        width: 350,
 
-      },
-      img: {marginLeft: 25,
+    },
+    img: {marginLeft: 25,
         width: 50,
         height: 50,
         shadowColor: "#000",

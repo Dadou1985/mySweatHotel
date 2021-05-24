@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: "center",
-        justifyContent: "center",
+        justifyContent: "space-between",
     },
     containerText: {
         flex: 2,
@@ -158,12 +158,12 @@ const styles = StyleSheet.create({
     },
     inputContainer: {
         width: 300,
-        marginTop: 50, 
+        marginTop: 30, 
 
     },
     button: {
         width: 200,
-        marginTop: 20, 
+        marginTop: 10, 
         marginBottom: 90,
         borderColor: "white" 
     },

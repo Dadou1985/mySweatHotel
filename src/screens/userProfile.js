@@ -300,7 +300,7 @@ const UserProfile = ({navigation}) => {
                     <Image source={{uri: "https://cdn2.iconfinder.com/data/icons/car-11/100/taxi3-512.png"}} style={styles.img} />
                 </TouchableOpacity>
               </View>
-              <Button raised={true} title="Utiliser le service Click & Wait" type="clear" onPress={fadeIn} /> 
+              <Button raised={true} title="Découvrez le service Click & Wait" containerStyle={{width: 500}} onPress={fadeIn} /> 
               <ClickNwaitDrawer fadeAnim={fadeAnim} fadeOut={fadeOut} />
             </View>
 

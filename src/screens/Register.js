@@ -147,8 +147,8 @@ const Register = ({ navigation }) => {
                 <Text style={{fontSize: 20, color: "grey", marginLeft: 10}}>Ajouter une photo de profile</Text>
                 </TouchableOpacity>
             </View>
-            <Button onPress={() => navigation.navigate('Connexion')} containerStyle={styles.button} title="Connexion" type="clear" />
-            <Button containerStyle={styles.button} title="Créer un compte" onPress={(event) => {
+            <Button raised={true} onPress={() => navigation.navigate('Connexion')} containerStyle={styles.button} title="Connexion" type="clear" />
+            <Button raised={true} containerStyle={styles.button} title="Créer un compte" onPress={(event) => {
                 handleChangePhotoUrl(event)
                 }} />
         </KeyboardAvoidingView>

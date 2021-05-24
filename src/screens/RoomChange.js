@@ -90,6 +90,8 @@ const RoomChange = ({ navigation }) => {
                         date: new Date(),
                         client: user.displayName,
                         fromRoom: userDB.room,
+                        toRoom: "",
+                        state: "",
                         reason: type,
                         details: details,
                         markup: Date.now(),
