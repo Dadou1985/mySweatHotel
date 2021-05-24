@@ -128,6 +128,7 @@ const Register = ({ navigation }) => {
         <KeyboardAvoidingView style={styles.container}>
             <StatusBar style="light" />
             <View style={styles.containerText}>
+                <Image source={require('../../img/mini-logo-msh.png')} style={{width: 150, height: 150}} />
                 <Text style={styles.text}>Créer un compte</Text>
             </View>    
             <View style={styles.inputContainer}> 
@@ -165,7 +166,10 @@ const styles = StyleSheet.create({
         padding: 10
     },
     containerText: {
-        marginBottom: 30
+        marginBottom: 30,
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
     },
     text: {
         fontSize: 30,

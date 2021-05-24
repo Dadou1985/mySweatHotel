@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native'
+import { KeyboardAvoidingView, StyleSheet, Text, View, Image } from 'react-native'
 import { Button, Input } from 'react-native-elements'
 import { StatusBar } from 'expo-status-bar'
 import { auth, db } from "../../firebase"
@@ -67,9 +67,7 @@ const Login = ({ navigation }) => {
         <KeyboardAvoidingView behavior="padding" style={styles.container}>
             <StatusBar style="light" />
             <View style={styles.containerText}>
-                <Text style={styles.text}>My</Text>
-                <Text style={styles.text}>Sweet</Text>
-                <Text style={styles.text}>Hotel</Text>
+                <Image source={require('../../img/logo-msh.png')} style={{width: "35%", height: "45%"}} />
             </View>
             <View style={styles.inputContainer}>
                 <Input placeholder="Email" autofocus type="email" value={email} 
@@ -89,18 +87,24 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         alignItems: "center",
-        justifyContent: "center",
-        padding: 10
+        justifyContent: "flex-start",
     },
     containerText: {
-        marginBottom: 50
+        marginBottom: 50, 
+        backgroundColor: "lightblue", 
+        width: 500, 
+        height: 250, 
+        flexDirection: "row", 
+        justifyContent: "center", 
+        alignItems: "center"
     },
     text: {
         fontSize: 40,
         textAlign: "center"
     },
     inputContainer: {
-        width: 300
+        width: 300,
+        marginBottom: 30
     },
     button: {
         width: 200,

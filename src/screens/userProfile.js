@@ -40,7 +40,7 @@ const UserProfile = ({navigation}) => {
           headerTitleAlign: "right",
           headerTitle: () =>(
               <View style={{flexDirection: "row", alignItems: "center"}}>
-                  <Text style={{ color: "black", fontWeight : "bold", fontSize: 20, marginLeft: 5}}>My Sweet Hotel</Text>
+                <Image source={require('../../img/mini-logo-msh.png')} style={{width: 50, height: 50}} />
               </View>
           ),
           headerLeft: null,

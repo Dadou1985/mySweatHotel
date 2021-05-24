@@ -89,11 +89,11 @@ const Taxi = ({ navigation }) => {
         <KeyboardAvoidingView behavior="padding" style={styles.container}>
             <StatusBar style="light" />
             <View style={styles.containerText}>
-            <ImageBackground source={ require('../../img/pic_taxi2.png') } style={{
+            <ImageBackground source={ require('../../img/pic-taxi7.png') } style={{
                 flex: 1,
                 resizeMode: "contain",
                 justifyContent: "center",
-                width: 500}}>
+                width: 460}}>
                 </ImageBackground>
             </View>
             <View style={styles.inputContainer}>

@@ -79,7 +79,7 @@ const Timer = ({navigation}) => {
         <KeyboardAvoidingView behavior="padding" style={styles.container}>
             <StatusBar style="light" />
             <View style={styles.containerText}>
-            <ImageBackground source={ require('../../img/pic_timer.png') } style={{
+            <ImageBackground source={ require('../../img/pic_timer3.png') } style={{
                 flex: 1,
                 resizeMode: "contain",
                 justifyContent: "center",
