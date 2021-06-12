@@ -13,6 +13,8 @@ import ChatMessage from '../components/chatMessage'
 import { getPendingResultAsync } from 'expo-image-picker';
 import { YellowBox } from 'react-native';
 import _ from 'lodash';
+import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
 
 YellowBox.ignoreWarnings(['Setting a timer']);
 const _console = _.clone(console);
@@ -29,6 +31,7 @@ const Chat = ({ navigation }) => {
     const [messages, setMessages] = useState([])
     const [chatRoom, setChatRoom] = useState(null)
 
+    const { t } = useTranslation()
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -128,6 +131,7 @@ const Chat = ({ navigation }) => {
             photo: user.photoURL,
             text: input,
             markup: Date.now(),
+            title: "guest"
         }).then(function(docRef){
             console.log(docRef.id)
           }).catch(function(error) {

@@ -3,12 +3,16 @@ import { KeyboardAvoidingView, StyleSheet, Text, View, Image, TouchableOpacity, 
 import { auth, db } from "../../firebase"
 import { UserContext } from '../components/userContext'
 import { showMessage } from "react-native-flash-message";
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, Entypo } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
 
-const ClickNwaitDrawer = ({fadeAnim, fadeOut}) => {
+const ClickNwaitDrawer = ({fadeAnim, fadeOut, navigation}) => {
     const [user, setUser] = useState(auth.currentUser)
     const [showModal, setShowModal] = useState(false)
     const {userDB, setUserDB} = useContext(UserContext)
+
+    const { t } = useTranslation()
 
     const handleClickAndWait = (item) => {
         return db.collection("hotels")
@@ -51,7 +55,7 @@ const ClickNwaitDrawer = ({fadeAnim, fadeOut}) => {
     return (
         <Animated.View style={[styles.fadingContainer, {bottom: fadeAnim}]}>
                 <View style={{flexDirection: "row", justifyContent: "flex-end", width: "95%", alignItems: "center"}}>
-                    <Text style={{fontSize: 20, fontWeight: "bold", marginRight: 100}}>Click & Wait</Text>
+                    <Text style={{fontSize: 20, fontWeight: "bold", marginRight: 100}}>Conciergerie</Text>
                     <TouchableOpacity activeOpacity={0.5} onPress={fadeOut}>
                         <AntDesign name="closecircle" size={20} color="black" />
                     </TouchableOpacity>
@@ -153,6 +157,13 @@ const ClickNwaitDrawer = ({fadeAnim, fadeOut}) => {
                     }}>
                         <Image source={{uri: "https://www.pngkey.com/png/full/548-5481965_baby-bed-with-a-mobile-toy-with-hanging.png"}} style={styles.img} />    
                     </TouchableOpacity> } 
+                    {!userDB.towel && !userDB.toiletPaper && !userDB.soap && !userDB.hairDryer && !userDB.pillow && !userDB.blanket && !userDB.iron && !userDB.babyBed && 
+                        <TouchableOpacity style={{flexDirection: "column", alignItems: "center"}} activeOpacity={0.5} onPress={() => {
+                            navigation.navigate('Chat')
+                            }}>
+                            <Entypo name="chat" size={40} color="black" />                   
+                            <Text>Contacter la réception pour plus de services</Text>
+                        </TouchableOpacity>}
                 </View>
                 <Modal 
                 animationType="slide"

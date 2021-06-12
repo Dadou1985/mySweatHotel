@@ -8,7 +8,8 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import moment from 'moment'
 import 'moment/locale/fr';
 import { showMessage, hideMessage } from "react-native-flash-message";
-
+import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
 
 const Timer = ({navigation}) => {
     const [date, setDate] = useState(new Date())
@@ -18,6 +19,8 @@ const Timer = ({navigation}) => {
 
     const [showDate, setShowDate] = useState(false)
     const [showHour, setShowHour] = useState(false)
+
+    const { t } = useTranslation()
 
     useLayoutEffect(() => {
         navigation.setOptions({
@@ -58,7 +61,7 @@ const Timer = ({navigation}) => {
         .doc(userDB.hotelId)
         .collection('clock')
         .add({
-            author: user.displayName,
+            author: "effectué par le client",
             client: user.displayName,
             room: userDB.room,
             markup: Date.now(),
@@ -79,7 +82,7 @@ const Timer = ({navigation}) => {
         <KeyboardAvoidingView behavior="padding" style={styles.container}>
             <StatusBar style="light" />
             <View style={styles.containerText}>
-            <ImageBackground source={ require('../../img/pic_timer3.png') } style={{
+            <ImageBackground source={ require('../../img/pic_timer.png') } style={{
                 flex: 1,
                 resizeMode: "contain",
                 justifyContent: "center",

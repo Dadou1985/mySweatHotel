@@ -12,6 +12,8 @@ import { showMessage, hideMessage } from "react-native-flash-message";
 import * as Linking from 'expo-linking';
 import { AntDesign } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
 
 const Information = ({ navigation }) => {
     const [info, setInfo] = useState([])
@@ -35,6 +37,8 @@ const Information = ({ navigation }) => {
 
     const deptDetails = [paris_arrondissement, ile_de_france, auvergne_rhone_alpes, bourgogne_franche_comte, bretagne, centre_val_de_loire, corse, grand_est, hauts_de_france, normandie, nouvelle_aquitaine, occitanie, pays_de_la_loire,provence_alpes_cote_d_azur]
 
+    const { t } = useTranslation()
+
     useLayoutEffect(() => {
         navigation.setOptions({
             title: "RoomChange",
@@ -43,7 +47,7 @@ const Information = ({ navigation }) => {
             headerTitle: () =>(
                 <View style={{flexDirection: "row", alignItems: "center"}}>
                     {userDB !== null ? 
-                     <Text style={{ color: "black", fontWeight : "bold", fontSize: 20, marginLeft: 5}}>Réservez votre prochain séjour</Text> : <Text style={{ color: "black", fontWeight : "bold", fontSize: 20, marginLeft: 5}}>Trouvez votre hôtel</Text>}
+                     <Text style={{ color: "black", fontWeight : "bold", fontSize: 20, marginLeft: 5}}>{t("prochain_sejour")}</Text> : <Text style={{ color: "black", fontWeight : "bold", fontSize: 20, marginLeft: 5}}>{t("trouver_hotel")}</Text>}
                 </View>
             )
         })
@@ -77,7 +81,7 @@ const Information = ({ navigation }) => {
         setInputRoom(true)
         setTimeout(() => {
             showMessage({
-                message: "La date de votre check-out a bien été enregistrée !",
+                message: t("message_checkout_valide"),
                 type: "info",
               })
         }, 1000);
@@ -146,12 +150,12 @@ console.log(userDB)
                             width: 500}}>
                         </ImageBackground>
                             <View style={{marginBottom: 0, marginTop: 0}}>
-                                <Button title='Oui' type="clear" onPress={handleLinkWebsite} />
-                                <Button style={{width: 300}} title='Non, merci' onPress={() => {
+                                <Button title={t("oui")} type="clear" onPress={handleLinkWebsite} />
+                                <Button style={{width: 300}} title={t("non")} onPress={() => {
                                     handleLoadUserDB()
                                     setTimeout(() => {
                                         showMessage({
-                                            message: `Nous sommes ravis de vous revoir, ${user.displayName}`,
+                                            message: `${t("message_bienvenue")} ${user.displayName}`,
                                             type: "info",
                                           })
                                     }, 2000);
@@ -167,7 +171,7 @@ console.log(userDB)
                         </ImageBackground>
                     </View>
                         <View style={styles.buttonView}>
-                            {inputSearch && <Input placeholder="Entrer le code postal de votre hôtel" type="text" value={initialFilter} 
+                            {inputSearch && <Input placeholder={t("code_postal")} type="text" value={initialFilter} 
                                 onChangeText={(text) => setInitialFilter(text)} style={{marginBottom: 5, textAlign: "center"}} />}
                             {initialFilter.charAt(4) !== "" && 
                             <Button 
@@ -176,7 +180,7 @@ console.log(userDB)
                                 onPress={() => {
                                     setShowModalHotel(true)
                                     setFilter(initialFilter)
-                                    }} containerStyle={styles.button} title={hotelName} type="outline" />}   
+                                    }} containerStyle={styles.button} title={hotelName === "Lancer la recherche" ? t("creation_compte") : hotelName} type="outline" />}   
                                 {checkoutButton && 
                                 <Button 
                                     raised={true} 
@@ -184,7 +188,7 @@ console.log(userDB)
                                     onPress={() => {
                                         setShowDate(true)
                                         setHideAll(true)
-                                        }} containerStyle={styles.button} title={inputRoom ? `Check-out le ${moment(date).format('LL')}` : "Date de fin de séjour"} type="outline" />}
+                                        }} containerStyle={styles.button} title={inputRoom ? `${t("checkout_information")} ${moment(date).format('LL')}` : t("date_checkout")} type="outline" />}
 
                             {inputRoom && 
                              <Button 
@@ -192,17 +196,17 @@ console.log(userDB)
                              icon={<Ionicons name="bed-sharp" size={25} color="black" style={{marginRight: 5}} />}
                              onPress={() => {
                                  setShowModalRoom(true)
-                                 }} containerStyle={styles.button} title={currentRoom !== "Numéro de chambre" ? `chambre n° ${currentRoom}` : currentRoom} type="outline" />}
+                                 }} containerStyle={styles.button} title={currentRoom !== "Numéro de chambre" ? `${t("chbre_num")} ${currentRoom}` : t("num_chbre")} type="outline" />}
                             {currentRoom !== "Numéro de chambre" &&
                             <Button raised={true} onPress={() => {
                                 handleSubmit()
                                 setTimeout(() => {
                                     showMessage({
-                                        message: `Nous sommes ravis de vous revoir, ${user.displayName}`,
+                                        message: `${t("message_bienvenue")} ${user.displayName}`,
                                         type: "info",
                                       })
                                 }, 3000);
-                            }} containerStyle={styles.button} title="Accéder à la page d'accueil" />}
+                            }} containerStyle={styles.button} title={t("accueil")} />}
                         </View>
                     </View>
                 
@@ -223,18 +227,16 @@ console.log(userDB)
                         paddingTop: 10, 
                         paddingBottom: 10, 
                         backgroundColor: "lightblue"}}>
-                        <Text style={{fontSize: 25, marginRight: 20}}>Sélectionner votre hôtel</Text>
+                        <Text style={{fontSize: 25, marginRight: 20}}>{t("selection_hotel")}</Text>
                         <TouchableOpacity>
                             <AntDesign name="closecircle" size={24} color="black" onPress={() => setShowModalHotel(false)} />
                         </TouchableOpacity>
                     </View>
                 {info.length > 0 ? info.map(hotel =>(
                 <TouchableOpacity>
-                    <View style={{padding: 15, 
-                    marginBottom: 30, 
-                    borderBottomWidth: 1, 
-                    borderBottomColor: "lightgrey", 
-                    width: "100%"}}>
+                    <View style={{
+                        padding: 15, 
+                        marginBottom: 30}}>
                             <Text style={{fontSize: 15}} onPress={() => {
                                 setFormValue({
                                     hotelId: hotel.id,
@@ -262,13 +264,13 @@ console.log(userDB)
 
                     )) :
                     <View style={styles.container}>
-                        <Text style={{fontSize: 25, textAlign: "center", marginBottom: 20}}>Nous n'avons pas encore d'hôtel partenaire dans ce secteur</Text>
-                        <Text style={{fontSize: 15, textAlign: "center", marginBottom: 20}}>L'équipe de MySweetHotel met tout en oeuvre pour étendre son réseau afin de vous offrir une expérience hôtelière de qualité.</Text>
-                        <Text style={{fontSize: 10, textAlign: "center", marginBottom: 20}}>N'hésitez pas à parler de notre solution auprès de votre réception, vous leur rendrez un fier service!</Text>
-                        <Text style={{fontSize: 10, textAlign: "center", marginBottom: 20, fontWeight: "bold"}}>Nous vous souhaitons un excellent séjour au sein de votre établissement.</Text>
+                        <Text style={{fontSize: 25, textAlign: "center", marginBottom: 20}}>{t("no_partenaire")}</Text>
+                        <Text style={{fontSize: 15, textAlign: "center", marginBottom: 20}}>{t("msh_team_message")}</Text>
+                        <Text style={{fontSize: 10, textAlign: "center", marginBottom: 20}}>{t("msh_team_message2")}</Text>
+                        <Text style={{fontSize: 10, textAlign: "center", marginBottom: 20, fontWeight: "bold"}}>{t("msh_team_message3")}</Text>
                         <View>
-                            <Button raised={true} onPress={() => setShowModalHotel(false)} containerStyle={styles.button} type="outlined" title="Revenir à la recherche" />
-                            <Button raised={true} onPress={() => Logout()} containerStyle={styles.button} title="Se déconnecter" />
+                            <Button raised={true} onPress={() => setShowModalHotel(false)} containerStyle={styles.button} type="outlined" title={t("retour_recherche")} />
+                            <Button raised={true} onPress={() => Logout()} containerStyle={styles.button} title={t("deconnexion_information")} />
                         </View>
                     </View>}
                 </ScrollView>
@@ -289,13 +291,13 @@ console.log(userDB)
                     borderRadius: 5,
                     textAlign: "center", 
                     backgroundColor: "lightblue"
-                    }}>Numéro de chambre</Text>
+                    }}>{t("num_chbre")}</Text>
                     <Input 
-                        placeholder="Entrer votre numéro de chambre" 
+                        placeholder={t("entre_num_chbre")} 
                         type="number" 
                         value={currentRoom !== "Numéro de chambre" ? currentRoom : ""} 
                         onChangeText={(text) => setCurrentRoom(text)} style={{textAlign: "center", marginBottom: 5}} />  
-                    <Button raised={true} onPress={() => setShowModalRoom(false)} containerStyle={{width: 300, borderRadius: 20, marginBottom: 15}} title="Valider" />
+                    <Button raised={true} onPress={() => setShowModalRoom(false)} containerStyle={{width: 300, borderRadius: 20, marginBottom: 15}} title={t("validation")} />
                 </View>
             </Modal>
 

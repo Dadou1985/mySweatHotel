@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
-import React, { useState } from 'react';
-import { StyleSheet} from 'react-native';
+import React, { useState, Suspense } from 'react';
+import { StyleSheet, Text} from 'react-native';
 import { NavigationContainer, NavigationAction } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from './src/screens/login'
@@ -13,8 +13,10 @@ import TaxiScreen from './src/screens/Taxi'
 import Information from './src/screens/Information'
 import UserProfileScreen from './src/screens/userProfile'
 import FlashMessage from "react-native-flash-message"
-
+import './src/i18next'
 import { UserContext } from './src/components/userContext'
+import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
 
 const Stack = createStackNavigator();
 
@@ -25,10 +27,12 @@ const globalScreenOptions = {
 
 export default function App() {
   const [userDB, setUserDB] = useState(null)
+  const loading = <Text>Loading...</Text>
 
   return (
     <>
     <UserContext.Provider value={{userDB, setUserDB}}>
+      <Suspense fallback={loading}>
       <NavigationContainer>
         <Stack.Navigator 
         initialRouteName="Connexion"
@@ -45,6 +49,7 @@ export default function App() {
             <Stack.Screen name="My Sweet Hotel" component={UserProfileScreen} />
         </Stack.Navigator>
       </NavigationContainer>
+      </Suspense>
     </UserContext.Provider>
     <FlashMessage position="top" />
     </>

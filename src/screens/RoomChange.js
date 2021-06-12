@@ -7,7 +7,8 @@ import { UserContext } from '../components/userContext'
 import { auth, db, storage } from "../../firebase"
 import * as ImagePicker from 'expo-image-picker';
 import { showMessage, hideMessage } from "react-native-flash-message";
-
+import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
 
 const RoomChange = ({ navigation }) => {
     const [type, setType] = useState("")
@@ -16,6 +17,8 @@ const RoomChange = ({ navigation }) => {
     const {userDB, setUserDB} = useContext(UserContext)
     const [img, setImg] = useState(null)
     const [url, setUrl] = useState("")
+
+    const { t } = useTranslation()
 
     useLayoutEffect(() => {
       navigation.setOptions({
@@ -86,7 +89,7 @@ const RoomChange = ({ navigation }) => {
                     .doc(userDB.hotelId)
                     .collection('roomChange')
                     .add({
-                        author: user.displayName,
+                        author: "effectué par le client",
                         date: new Date(),
                         client: user.displayName,
                         fromRoom: userDB.room,
@@ -96,7 +99,8 @@ const RoomChange = ({ navigation }) => {
                         details: details,
                         markup: Date.now(),
                         img: url,
-                        status: true
+                        status: true,
+                        userId: userDB.userId
                     }).then(function(docRef){
                         console.log(docRef.id)
                     }).catch(function(error) {
@@ -107,6 +111,33 @@ const RoomChange = ({ navigation }) => {
           }
         )
       } 
+
+    const handleSubmit = (event) => {
+      event.preventDefault()
+      setType('')
+      setDetails('')
+      return db.collection("hotels")
+              .doc(userDB.hotelId)
+              .collection('roomChange')
+              .add({
+                  author: "effectué par le client",
+                  date: new Date(),
+                  client: user.displayName,
+                  fromRoom: userDB.room,
+                  toRoom: "",
+                  state: "",
+                  reason: type,
+                  details: details,
+                  markup: Date.now(),
+                  img: url,
+                  status: true,
+                  userId: userDB.userId
+              }).then(function(docRef){
+                  console.log(docRef.id)
+              }).catch(function(error) {
+                  console.error(error)
+              })
+    } 
 
     return (
         <KeyboardAvoidingView behavior="padding" style={styles.container}>
@@ -128,15 +159,23 @@ const RoomChange = ({ navigation }) => {
             <View style={{marginBottom: 55}}>
                 <TouchableOpacity style={{flexDirection: "row", width: 300, alignItems: "center", justifyContent: "center"}} onPress={pickImage}>
                 <MaterialIcons name="add-a-photo" size={24} color="grey" />                    
-                <Text style={{fontSize: 20, color: "grey", marginLeft: 10}}>Ajouter une image</Text>
+                <Text style={{fontSize: 20, color: "grey", marginLeft: 10}}>Ajouter une photo</Text>
                 </TouchableOpacity>
             </View>
             <Button raised={true} onPress={(event) => {
-              handleChangePhotoUrl(event)
-              showMessage({
-                message: "Votre demande de délogement a été transmise à la réception !",
-                type: "success",
-              })
+              if(img !== null) {
+                  handleChangePhotoUrl(event)
+                  showMessage({
+                    message: "Votre demande de délogement a été transmise à la réception !",
+                    type: "success"
+                })
+              }else{
+                handleSubmit(event)
+                showMessage({
+                  message: "Votre demande de délogement a été transmise à la réception !",
+                  type: "success"
+                })
+              }
             }} containerStyle={styles.button} title="Demander maintenant" />
         </KeyboardAvoidingView>
     )

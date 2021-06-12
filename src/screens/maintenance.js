@@ -7,7 +7,8 @@ import { UserContext } from '../components/userContext'
 import { auth, db, storage } from "../../firebase"
 import * as ImagePicker from 'expo-image-picker';
 import { showMessage, hideMessage } from "react-native-flash-message";
-
+import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
 
 const Maintenance = ({ navigation }) => {
     const [type, setType] = useState("")
@@ -16,6 +17,8 @@ const Maintenance = ({ navigation }) => {
     const {userDB, setUserDB} = useContext(UserContext)
     const [img, setImg] = useState(null)
     const [url, setUrl] = useState("")
+
+    const { t } = useTranslation()
 
     useLayoutEffect(() => {
       navigation.setOptions({
@@ -86,7 +89,7 @@ const Maintenance = ({ navigation }) => {
                     .doc(userDB.hotelId)
                     .collection('maintenance')
                     .add({
-                        author: user.displayName,
+                        author: "effectué par le client",
                         date: new Date(),
                         client: user.displayName,
                         room: userDB.room,
@@ -104,6 +107,30 @@ const Maintenance = ({ navigation }) => {
                   return setUrl(url, uploadTask())})
           }
         )
+      } 
+
+      const handleSubmit = (event) => {
+        event.preventDefault()
+        setType('')
+        setDetails('')
+        return db.collection("hotels")
+                .doc(userDB.hotelId)
+                .collection('maintenance')
+                .add({
+                    author: "effectué par le client",
+                    date: new Date(),
+                    client: user.displayName,
+                    room: userDB.room,
+                    type: type,
+                    details: details,
+                    markup: Date.now(),
+                    img: url,
+                    status: true
+                }).then(function(docRef){
+                    console.log(docRef.id)
+                }).catch(function(error) {
+                    console.error(error)
+                })
       } 
 
 
@@ -127,15 +154,23 @@ const Maintenance = ({ navigation }) => {
             <View style={{marginBottom: 55}}>
                 <TouchableOpacity style={{flexDirection: "row", width: 300, alignItems: "center", justifyContent: "center"}} onPress={pickImage}>
                 <MaterialIcons name="add-a-photo" size={24} color="grey" />                    
-                <Text style={{fontSize: 20, color: "grey", marginLeft: 10}}>Ajouter une image</Text>
+                <Text style={{fontSize: 20, color: "grey", marginLeft: 10}}>Ajouter une photo</Text>
                 </TouchableOpacity>
             </View>
             <Button raised={true} onPress={(event) => {
-              handleChangePhotoUrl(event)
-              showMessage({
-                message: "Votre signalement a été transmis au service de maintenance !",
-                type: "success",
+              if(img !== null) {
+                handleChangePhotoUrl(event)
+                showMessage({
+                  message: "Votre signalement a été transmis au service de maintenance !",
+                  type: "success"
               })
+              }else{
+                handleSubmit(event)
+                showMessage({
+                  message: "Votre signalement a été transmis au service de maintenance !",
+                  type: "success"
+                })
+              }
             }} containerStyle={styles.button} title="Signaler maintenant" />
         </KeyboardAvoidingView>
     )

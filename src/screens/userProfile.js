@@ -11,7 +11,8 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import * as ImagePicker from 'expo-image-picker';
 import { showMessage } from "react-native-flash-message";
 import ClickNwaitDrawer from '../components/ClickNwaitDrawer';
-
+import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
 
 const UserProfile = ({navigation}) => {
     const [img, setImg] = useState(null)
@@ -33,6 +34,8 @@ const UserProfile = ({navigation}) => {
       return auth.signOut()
   }
 
+  const { t } = useTranslation()
+
   useLayoutEffect(() => {
       navigation.setOptions({
           title: "My Sweet Hotel",
@@ -40,7 +43,7 @@ const UserProfile = ({navigation}) => {
           headerTitleAlign: "right",
           headerTitle: () =>(
               <View style={{flexDirection: "row", alignItems: "center"}}>
-                <Image source={require('../../img/mini-logo-msh.png')} style={{width: 50, height: 50}} />
+                <Image source={require('../../img/new-mini-logo-msh.png')} style={{width: 80, height: 60, marginTop: 15}} />
               </View>
           ),
           headerLeft: null,
@@ -133,7 +136,7 @@ const UserProfile = ({navigation}) => {
 
       return handleLoadUserDB()
       .then(() => {
-        setEmail(user.email)
+        setEmail("")
         setUpdateMail(false)
       })
   }
@@ -152,7 +155,7 @@ const UserProfile = ({navigation}) => {
 
       return handleLoadUserDB()
       .then(() => {
-        setRoom(userDB.room)
+        setRoom(null)
         setUpdateRoom(false)
       })
     }
@@ -278,7 +281,7 @@ const UserProfile = ({navigation}) => {
                   <Ionicons name="pencil-outline" size={24} color="black" />
                 </TouchableOpacity>
               </View>
-              <View style={{flexDirection: "row", justifyContent: "space-around", width: "100%", marginTop: 25, marginBottom: 25}}>
+              <View style={{flexDirection: "row", justifyContent: "space-around", width: "100%", marginTop: 25, marginBottom: 40}}>
                 <TouchableOpacity style={{flexDirection: "row"}} activeOpacity={0.5} onPress={() => {
                   navigation.navigate('Chat')
                   updateAdminSpeakStatus()}}>
@@ -300,8 +303,8 @@ const UserProfile = ({navigation}) => {
                     <Image source={{uri: "https://cdn2.iconfinder.com/data/icons/car-11/100/taxi3-512.png"}} style={styles.img} />
                 </TouchableOpacity>
               </View>
-              <Button raised={true} title="Découvrez le service Click & Wait" containerStyle={{width: 500}} onPress={fadeIn} /> 
-              <ClickNwaitDrawer fadeAnim={fadeAnim} fadeOut={fadeOut} />
+              <Button raised={true} title="Conciergerie" containerStyle={{width: 500, position: "absolute", bottom: 0}} onPress={fadeIn} /> 
+              <ClickNwaitDrawer fadeAnim={fadeAnim} fadeOut={fadeOut} navigation={navigation} />
             </View>
 
             <Overlay isVisible={updateMail} onBackdropPress={() => setUpdateMail(false)}>

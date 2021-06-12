@@ -7,6 +7,8 @@ import { auth, db, storage } from "../../firebase"
 import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants'
 import { showMessage, hideMessage } from "react-native-flash-message";
+import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
 
 const Register = ({ navigation }) => {
     const [email, setEmail] = useState("")
@@ -17,24 +19,8 @@ const Register = ({ navigation }) => {
     const [img, setImg] = useState(null)
     const [url, setUrl] = useState("")
     const [language, setLanguage] = useState("fr")
-    const [fullLanguage, setFullLanguage] = useState("")
-    const [internationalization, setInternationalization] = useState(
-      [
-        {language: "fr", fullLanguage: ""},
-        {language: "ar", fullLanguage: ""},
-        {language: "de", fullLanguage: ""},
-        {language: "en", fullLanguage: ""},
-        {language: "es", fullLanguage: ""},
-        {language: "hi", fullLanguage: ""},
-        {language: "it", fullLanguage: ""},
-        {language: "ja", fullLanguage: ""},
-        {language: "ja", fullLanguage: ""},
-        {language: "ko", fullLanguage: ""},
-        {language: "pt", fullLanguage: ""},
-        {language: "ur", fullLanguage: ""},
-        {language: "zh", fullLanguage: ""},
-      ]
-    )
+  
+    const { t } = useTranslation()
 
     const freeRegister = (userId) => {
         return db.collection('guestUsers')
@@ -128,28 +114,28 @@ const Register = ({ navigation }) => {
         <KeyboardAvoidingView style={styles.container}>
             <StatusBar style="light" />
             <View style={styles.containerText}>
-                <Image source={require('../../img/mini-logo-msh.png')} style={{width: 150, height: 150}} />
-                <Text style={styles.text}>Créer un compte</Text>
+                <Image source={require('../../img/new-mini-logo-msh.png')} style={{width: 150, height: 100}} />
+                <Text style={styles.text}>{t("creation_compte")}</Text>
             </View>    
             <View style={styles.inputContainer}> 
-                <Input placeholder="Nom" autofocus type="text" value={name} 
+                <Input placeholder={t("nom")} autofocus type="text" value={name} 
                 onChangeText={(text) => setName(text)} />
-                <Input placeholder="Email" type="email" value={email} 
+                <Input placeholder={t("email")} type="email" value={email} 
                 onChangeText={(text) => setEmail(text)} />
-                <Input placeholder="Mot de passe" secureTextEntry type="password" value={password} 
+                <Input placeholder={t("mot_de_passe")} secureTextEntry type="password" value={password} 
                 onChangeText={(text) => setPassword(text)} />
-                <Input placeholder="Confirmation du mot de passe" secureTextEntry type="confirmPassword" value={confirmPassword} 
+                <Input placeholder={t("confirmation_mdp")} secureTextEntry type="password" value={confirmPassword} 
                 onChangeText={(text) => setConfirmPassword(text)}
                 onSubmitEditing={freeRegister}  />
             </View>
             <View style={{marginBottom: 15}}>
                 <TouchableOpacity style={{flexDirection: "row", width: 300, alignItems: "center", justifyContent: "center"}} onPress={pickImage}>
                 <MaterialIcons name="add-a-photo" size={24} color="grey" />                    
-                <Text style={{fontSize: 20, color: "grey", marginLeft: 10}}>Ajouter une photo de profile</Text>
+                <Text style={{fontSize: 20, color: "grey", marginLeft: 10}}>{t("ajout_photo_profil")}</Text>
                 </TouchableOpacity>
             </View>
-            <Button raised={true} onPress={() => navigation.navigate('Connexion')} containerStyle={styles.button} title="Connexion" type="clear" />
-            <Button raised={true} containerStyle={styles.button} title="Créer un compte" onPress={(event) => {
+            <Button raised={true} onPress={() => navigation.navigate('Connexion')} containerStyle={styles.button} title={t("connection")} type="clear" />
+            <Button raised={true} containerStyle={styles.button} title={t("creation_compte")} onPress={(event) => {
                 handleChangePhotoUrl(event)
                 }} />
         </KeyboardAvoidingView>
