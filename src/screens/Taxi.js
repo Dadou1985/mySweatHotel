@@ -33,7 +33,7 @@ const Taxi = ({ navigation }) => {
             headerTitle: () =>(
                 <View style={{flexDirection: "row", alignItems: "center"}}>
                     <Image source={{uri: "https://cdn2.iconfinder.com/data/icons/car-11/100/taxi3-512.png"}} style={styles.img} />
-                    <Text style={{ color: "black", fontWeight : "bold", fontSize: 20}}>Réserver un taxi</Text>
+                    <Text style={{ color: "black", fontWeight : "bold", fontSize: 20}}>{t('taxi_titre')}</Text>
                 </View>
             )
         })
@@ -102,35 +102,35 @@ const Taxi = ({ navigation }) => {
             <View style={styles.inputContainer}>
                 <View style={{flexDirection: "row", justifyContent: "space-around"}}>
                     <View style={{marginBottom: 20, flexDirection: "column", alignItems: "center"}}>
-                        <Text>Jour</Text>
+                        <Text>{t('taxi_jour')}</Text>
                         <Button type="clear" title={moment(date).format('L')} 
                         onPress={handleShowDate} />
                     </View>
                     <View style={{marginBottom: 20, flexDirection: "column", alignItems: "center"}}>
-                        <Text>Heure</Text>
+                        <Text>{t('taxi_heure')}</Text>
                         <Button type="clear" title={moment(hour).format('LT')} 
                             onPress={handleShowHour} />
                     </View>   
                 </View> 
                 <View style={{marginBottom: 20, flexDirection: "column", alignItems: "center"}}>
-                        <Text>Type de véhicule</Text>
+                        <Text>{t('taxi_type')}</Text>
                         <View style={{flexDirection: "row", width: 400, justifyContent: "center", marginTop: 15}}>
-                            <Button containerStyle={styles.typeButton} title="Berline" type={type === "Berline" ? "solid" : "clear"} raised={true} onPress={() => setType("Berline")} />
-                            <Button containerStyle={styles.typeButton} title="Van" type={type === "Van" ? "solid" : "clear"} raised={true} onPress={() => setType("Van")} />
+                            <Button containerStyle={styles.typeButton} title={t('berline')} type={type === "Berline" ? "solid" : "clear"} raised={true} onPress={() => setType("Berline")} />
+                            <Button containerStyle={styles.typeButton} title={t('van')} type={type === "Van" ? "solid" : "clear"} raised={true} onPress={() => setType("Van")} />
                         </View>
                 </View>
-                <Input placeholder="Nombre de passager(s)" type="number" value={passenger} 
+                <Input placeholder={t('passager')} type="number" value={passenger} 
                 onChangeText={(text) => setPassenger(text)} />
-                <Input placeholder="Adresse de la destination"  type="text" value={adress} 
+                <Input placeholder={t('taxi_adresse_destination')}  type="text" value={adress} 
                 onChangeText={(text) => setAdress(text)} />
             </View>
             <Button raised={true} onPress={() => {
                 handleSubmit()
                 showMessage({
-                    message: "Votre demande de réservation d'un taxi a été transmise à la réception !",
+                    message: t('taxi_message_succes'),
                     type: "success",
                   })
-                }} containerStyle={styles.button} title="Réserver maintenant" />
+                }} containerStyle={styles.button} title={t('taxi_bouton')} />
             
             {showDate &&
             <DateTimePicker

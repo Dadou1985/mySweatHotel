@@ -13,7 +13,7 @@ const Login = ({ navigation }) => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const {userDB, setUserDB} = useContext(UserContext)
-    const [language, setLanguage] = useState("fr")
+    const [language, setLanguage] = useState("")
     const [flag, setFlag] = useState("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAArklEQVR4nO3avQnCYBiF0UwSdxDTmwkF8Qc70SZi1hBEHSABGxsJ1h8pjUu8IOh54C5w6ptlkiRJkvSPjctVFb3L9TFLKVWR63aHeZsXVfSy8XQ5RK+5P08ppSFy3WZ/bvLJELk2n7wBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPh5gHJdR+96e8z7vq8j99oeF82oqKP37ZOaJEmSJH2lD+DtRFTekXctAAAAAElFTkSuQmCC")
     const [showModalLanguage, setShowModalLanguage] = useState(false)
 
@@ -31,7 +31,8 @@ const Login = ({ navigation }) => {
                     <TouchableOpacity activeOpacity={0.5} onPress={() => setShowModalLanguage(true)}>
                         <Image source={{uri: flag}} style={{width: 30, height: 30, marginRight: 15}} />
                     </TouchableOpacity>
-                </View>)
+                </View>),
+                headerLeft: null,
         })
     }, [])
 
@@ -58,7 +59,7 @@ const Login = ({ navigation }) => {
         return unsubscribe
     }, [])
 
-    console.log("//////", flag)
+    console.log("//////", language)
 
     const Login = () => {
         auth.signInWithEmailAndPassword(email.trim(), password)

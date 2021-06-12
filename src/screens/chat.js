@@ -41,7 +41,7 @@ const Chat = ({ navigation }) => {
             headerTitle: () =>(
                 <View style={{flexDirection: "row", alignItems: "center"}}>
                     <Entypo name="chat" size={24} color="black" />            
-                    <Text style={{ color: "black", marginLeft: 10, fontWeight : "bold", fontSize: 20}}>Chat Réception</Text>
+                    <Text style={{ color: "black", marginLeft: 10, fontWeight : "bold", fontSize: 20}}>Chat {t('reception')}</Text>
                 </View>
             )
         })
@@ -264,7 +264,7 @@ const Chat = ({ navigation }) => {
                         value={input}
                         onChangeText={(text) => setInput(text)}
                         onSubmitEditing={sendMessage}
-                        placeholder="Envoyer un message"
+                        placeholder={t('envoi_message')}
                         style={styles.input}
                     />
                     <TouchableOpacity

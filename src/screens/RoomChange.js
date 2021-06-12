@@ -28,7 +28,7 @@ const RoomChange = ({ navigation }) => {
           headerTitle: () =>(
               <View style={{flexDirection: "row", alignItems: "center"}}>
                   <MaterialIcons name="room-preferences" size={24} color="black" />                
-                  <Text style={{ color: "black", fontWeight : "bold", fontSize: 20, marginLeft: 5}}>Délogement</Text>
+                  <Text style={{ color: "black", fontWeight : "bold", fontSize: 20, marginLeft: 5}}>{t('delogement')}</Text>
               </View>
           )
       })
@@ -58,7 +58,7 @@ const RoomChange = ({ navigation }) => {
         if (!result.cancelled) {
           setImg(result.uri);
           showMessage({
-            message: "Votre photo a bien été sélectionnée !",
+            message: t('delogement_photo_message'),
             type: "info",
           })
         }
@@ -151,32 +151,32 @@ const RoomChange = ({ navigation }) => {
                 </ImageBackground>
             </View>
             <View style={styles.inputContainer}>
-                <Input placeholder="Motif de la demande" type="text" value={type} 
+                <Input placeholder={t('motif_delogement')} type="text" value={type} 
                 onChangeText={(text) => setType(text)} />
-                <Input placeholder="Plus de détails"  type="text" value={details} 
+                <Input placeholder={t('details')}  type="text" value={details} 
                 onChangeText={(text) => setDetails(text)} />
             </View>
             <View style={{marginBottom: 55}}>
                 <TouchableOpacity style={{flexDirection: "row", width: 300, alignItems: "center", justifyContent: "center"}} onPress={pickImage}>
                 <MaterialIcons name="add-a-photo" size={24} color="grey" />                    
-                <Text style={{fontSize: 20, color: "grey", marginLeft: 10}}>Ajouter une photo</Text>
+                <Text style={{fontSize: 20, color: "grey", marginLeft: 10}}>{t('ajout_photo')}</Text>
                 </TouchableOpacity>
             </View>
             <Button raised={true} onPress={(event) => {
               if(img !== null) {
                   handleChangePhotoUrl(event)
                   showMessage({
-                    message: "Votre demande de délogement a été transmise à la réception !",
+                    message: t('delogement_message_succes'),
                     type: "success"
                 })
               }else{
                 handleSubmit(event)
                 showMessage({
-                  message: "Votre demande de délogement a été transmise à la réception !",
+                  message: t('delogement_message_succes'),
                   type: "success"
                 })
               }
-            }} containerStyle={styles.button} title="Demander maintenant" />
+            }} containerStyle={styles.button} title={t('delogement_bouton')} />
         </KeyboardAvoidingView>
     )
 }

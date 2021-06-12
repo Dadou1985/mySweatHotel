@@ -49,7 +49,8 @@ const Information = ({ navigation }) => {
                     {userDB !== null ? 
                      <Text style={{ color: "black", fontWeight : "bold", fontSize: 20, marginLeft: 5}}>{t("prochain_sejour")}</Text> : <Text style={{ color: "black", fontWeight : "bold", fontSize: 20, marginLeft: 5}}>{t("trouver_hotel")}</Text>}
                 </View>
-            )
+            ),
+            headerLeft: null
         })
     }, [navigation])
 
@@ -180,7 +181,7 @@ console.log(userDB)
                                 onPress={() => {
                                     setShowModalHotel(true)
                                     setFilter(initialFilter)
-                                    }} containerStyle={styles.button} title={hotelName === "Lancer la recherche" ? t("creation_compte") : hotelName} type="outline" />}   
+                                    }} containerStyle={styles.button} title={hotelName === "Lancer la recherche" ? t("recherche_hotel") : hotelName} type="outline" />}   
                                 {checkoutButton && 
                                 <Button 
                                     raised={true} 

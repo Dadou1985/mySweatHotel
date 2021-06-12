@@ -28,7 +28,7 @@ const Maintenance = ({ navigation }) => {
           headerTitle: () =>(
               <View style={{flexDirection: "row", alignItems: "center"}}>
                   <Image source={{uri: "https://static.thenounproject.com/png/41655-200.png"}} style={styles.img} />
-                  <Text style={{ color: "black", fontWeight : "bold", fontSize: 20}}>Maintenance technique</Text>
+                  <Text style={{ color: "black", fontWeight : "bold", fontSize: 20}}>{t('maintenance')}</Text>
               </View>
           )
       })
@@ -58,7 +58,7 @@ const Maintenance = ({ navigation }) => {
         if (!result.cancelled) {
           setImg(result.uri);
           showMessage({
-            message: "Votre photo a bien été sélectionnée !",
+            message: t('maintenance_photo_message'),
             type: "info",
           })
         }
@@ -146,32 +146,32 @@ const Maintenance = ({ navigation }) => {
               </ImageBackground>
             </View>
             <View style={styles.inputContainer}>
-                <Input placeholder="Type de problème" type="text" value={type} 
+                <Input placeholder={t('maintenance_type')} type="text" value={type} 
                 onChangeText={(text) => setType(text)} />
-                <Input placeholder="Plus de détails"  type="text" value={details} 
+                <Input placeholder={t('details')}  type="text" value={details} 
                 onChangeText={(text) => setDetails(text)} />
             </View>
             <View style={{marginBottom: 55}}>
                 <TouchableOpacity style={{flexDirection: "row", width: 300, alignItems: "center", justifyContent: "center"}} onPress={pickImage}>
                 <MaterialIcons name="add-a-photo" size={24} color="grey" />                    
-                <Text style={{fontSize: 20, color: "grey", marginLeft: 10}}>Ajouter une photo</Text>
+                <Text style={{fontSize: 20, color: "grey", marginLeft: 10}}>{t('ajout_photo')}</Text>
                 </TouchableOpacity>
             </View>
             <Button raised={true} onPress={(event) => {
               if(img !== null) {
                 handleChangePhotoUrl(event)
                 showMessage({
-                  message: "Votre signalement a été transmis au service de maintenance !",
+                  message: t('maintenance_message_succes'),
                   type: "success"
               })
               }else{
                 handleSubmit(event)
                 showMessage({
-                  message: "Votre signalement a été transmis au service de maintenance !",
+                  message: t('ajout_photo'),
                   type: "success"
                 })
               }
-            }} containerStyle={styles.button} title="Signaler maintenant" />
+            }} containerStyle={styles.button} title={t('maintenance_bouton')} />
         </KeyboardAvoidingView>
     )
 }

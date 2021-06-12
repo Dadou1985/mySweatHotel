@@ -57,7 +57,7 @@ const UserProfile = ({navigation}) => {
               Logout()
               setTimeout(() => {
                   showMessage({
-                      message: "Vous venez de vous déconnecter !",
+                      message: t('deconnexion'),
                       type: "info",
                     })
               }, 1000)
@@ -130,7 +130,7 @@ const UserProfile = ({navigation}) => {
         })
 
       await showMessage({
-        messsage: "Votre email a été actualisé avec succès !",
+        messsage: t('message_actualisation_email'),
         type: "success"
       })
 
@@ -149,7 +149,7 @@ const UserProfile = ({navigation}) => {
         })
 
       await showMessage({
-        messsage: "Votre numéro de chambre a été actualisé avec succès !",
+        messsage: t('message_actualisation_chbre'),
         type: "success"
       })
 
@@ -193,7 +193,7 @@ const UserProfile = ({navigation}) => {
       })
 
       await showMessage({
-        message: "La date de votre check-out a été actualisée avec succès !",
+        message: t('message_actualisation_checkout'),
         type: "success",
       })
 
@@ -270,13 +270,13 @@ const UserProfile = ({navigation}) => {
               </View>
               <Text style={{fontSize: 20, marginBottom: 20}}>{userDB.hotelName}</Text>
               <View style={{flexDirection: "row", justifyContent: "space-around", width: "70%"}}>
-              <Text style={{fontSize: 15, marginBottom: 10}}>Vous occupez la chambre {userDB.room}</Text>
+              <Text style={{fontSize: 15, marginBottom: 10}}>{t('occupation_chbre')} {userDB.room}</Text>
                 <TouchableOpacity activeOpacity={0.5} onPress={() => setUpdateRoom(true)}>
                   <Ionicons name="pencil-outline" size={24} color="black" />
                 </TouchableOpacity>
               </View>
               <View style={{flexDirection: "row", justifyContent: "space-around", width: "80%"}}>
-                <Text style={{fontSize: 14, marginBottom: 20}}>Check-out prévu pour le {userDB.checkoutDate}</Text>
+                <Text style={{fontSize: 14, marginBottom: 20}}>{t('checkout_prevu')} {userDB.checkoutDate}</Text>
                 <TouchableOpacity activeOpacity={0.5} onPress={() => {setShowDate(true)}}>
                   <Ionicons name="pencil-outline" size={24} color="black" />
                 </TouchableOpacity>
@@ -303,55 +303,55 @@ const UserProfile = ({navigation}) => {
                     <Image source={{uri: "https://cdn2.iconfinder.com/data/icons/car-11/100/taxi3-512.png"}} style={styles.img} />
                 </TouchableOpacity>
               </View>
-              <Button raised={true} title="Conciergerie" containerStyle={{width: 500, position: "absolute", bottom: 0}} onPress={fadeIn} /> 
+              <Button raised={true} title={t('conciergerie')} containerStyle={{width: 500, position: "absolute", bottom: 0}} onPress={fadeIn} /> 
               <ClickNwaitDrawer fadeAnim={fadeAnim} fadeOut={fadeOut} navigation={navigation} />
             </View>
 
             <Overlay isVisible={updateMail} onBackdropPress={() => setUpdateMail(false)}>
               <View style={{width: "100%", flexDirection: "column", alignItems: "center", padding: 10}}>
-                <Text style={{fontSize: 20, fontWeight: "bold", marginBottom: 20}}>Actualisation de votre e-mail</Text>
+                <Text style={{fontSize: 20, fontWeight: "bold", marginBottom: 20}}>{t('actualisation_email')}</Text>
                 <View style={styles.inputContainer}>
-                  <Text>Email</Text>
-                  <Input placeholder="Email" type="email" value={email} 
+                  <Text>{t('email')}</Text>
+                  <Input placeholder={t('email')} type="email" value={email} 
                   onChangeText={(text) => setEmail(text)} />
                 </View>
-                <Button title="Actualiser maintenant" containerStyle={styles.button} onPress={handleChangeEmail} />
+                <Button title={t('actualiser')} containerStyle={styles.button} onPress={handleChangeEmail} />
               </View>
             </Overlay>
 
             <Overlay isVisible={updateRoom} onBackdropPress={() => setUpdateRoom(false)}>
               <View style={{width: "100%", flexDirection: "column", alignItems: "center", padding: 10}}>
-                <Text style={{fontSize: 20, fontWeight: "bold", marginBottom: 20}}>Actualisation de votre chambre</Text>
+                <Text style={{fontSize: 20, fontWeight: "bold", marginBottom: 20}}>{t('actualisation_chbre')}</Text>
                 <View style={styles.inputContainer}>
-                  <Text>Numéro de chambre</Text>
-                  <Input placeholder="Numéro de chambre" type="number" value={room} 
+                  <Text>{t('num_chbre')}</Text>
+                  <Input placeholder={t('num_chbre')} type="number" value={room} 
                   onChangeText={(text) => setRoom(text)} />
                 </View>
-                <Button title="Actualiser maintenant" containerStyle={styles.button} onPress={handleSubmit} />
+                <Button title={t('actualiser')} containerStyle={styles.button} onPress={handleSubmit} />
               </View>
             </Overlay>
 
             <Overlay isVisible={updatePhoto} onBackdropPress={() => setUpdatePhoto(false)}>
               <View style={{width: "80%"}}>
-                <Text style={{textAlign: "center", fontWeight: "bold", fontSize: 18, marginBottom: 15}}>Etes-vous sûr.e de vouloir changer ma photo de profil</Text>
-                <Button title="Confirmer" style={{marginTop: 1, marginBottom: 1}} onPress={(event) => {
+                <Text style={{textAlign: "center", fontWeight: "bold", fontSize: 18, marginBottom: 15}}>{t('message_confirmation_actualisation_photo')}</Text>
+                <Button title={t('confirmer')} style={{marginTop: 1, marginBottom: 1}} onPress={(event) => {
                   handleChangePhotoUrl(event)
                   setUpdatePhoto(false)
                   showMessage({
-                    message: "Votre photo de profil a été actualisée avec succès !",
+                    message: t('message_actualisation_photo'),
                     type: "success",
                   })
                 }} />
                 <View>
-                  <Text style={{ fontSize: 10, textAlign: "center"}}>Vous serez redirigez vers l'écran d'accueil à l'issue de cette opération</Text>
+                  <Text style={{ fontSize: 10, textAlign: "center"}}>{t('message_redirection')}</Text>
                 </View>
               </View>
             </Overlay>
 
             <Overlay isVisible={updateCheckout} onBackdropPress={() => setUpdateCheckout(false)}>
               <View style={{width: "80%"}}>
-                <Text style={{textAlign: "center", fontWeight: "bold", fontSize: 18, marginBottom: 15}}>Etes-vous sûr.e de vouloir changer la date de votre check-out</Text>
-                <Button title="Confirmer" style={{marginTop: 1, marginBottom: 1}} onPress={() => {
+                <Text style={{textAlign: "center", fontWeight: "bold", fontSize: 18, marginBottom: 15}}>{t('message_confirmation_actualisation_checkout')}</Text>
+                <Button title={t('confirmer')} style={{marginTop: 1, marginBottom: 1}} onPress={() => {
                   handleCheckoutDateChange()
                   setUpdateCheckout(false)
                 }} />

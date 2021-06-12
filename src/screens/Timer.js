@@ -30,7 +30,7 @@ const Timer = ({navigation}) => {
             headerTitle: () =>(
                 <View style={{flexDirection: "row", alignItems: "center"}}>
                     <Image source={{uri: "https://image.flaticon.com/icons/png/512/62/62834.png"}} style={styles.img} />
-                    <Text style={{ color: "black", fontWeight : "bold", fontSize: 20}}>Programmer un réveil</Text>
+                    <Text style={{ color: "black", fontWeight : "bold", fontSize: 20}}>{t('reveil_titre')}</Text>
                 </View>
             )
         })
@@ -91,12 +91,12 @@ const Timer = ({navigation}) => {
             </View>
             <View style={{flexDirection: "column", justifyContent: "space-around", width: 300, marginTop: 60}}>
                 <View style={{marginBottom: 20, flexDirection: "column", alignItems: "center"}}>
-                    <Text style={{fontSize: 20}}>Choisir un jour</Text>
+                    <Text style={{fontSize: 20}}>{t('reveil_jour')}</Text>
                     <Button type="clear" title={moment(date).format('L')} 
                     onPress={handleShowDate} />
                 </View>
                 <View style={{marginBottom: 20, flexDirection: "column", alignItems: "center"}}>
-                    <Text style={{fontSize: 20}}>Choisir une heure</Text>
+                    <Text style={{fontSize: 20}}>{t('reveil_heure')}</Text>
                     <Button type="clear" title={moment(hour).format('LT')} 
                         onPress={handleShowHour} />
                 </View>   
@@ -104,10 +104,10 @@ const Timer = ({navigation}) => {
             <Button raised={true} onPress={() => {
                 handleSubmit()
                 showMessage({
-                    message: "Votre demande de réveil a été transmise à la réception !",
+                    message: t('reveil_message_succes'),
                     type: "success",
                   })
-                }} containerStyle={styles.button} title="Programmer maintenant" />
+                }} containerStyle={styles.button} title={t('reveil_bouton')} />
             
             {showDate &&
             <DateTimePicker

@@ -55,13 +55,13 @@ const ClickNwaitDrawer = ({fadeAnim, fadeOut, navigation}) => {
     return (
         <Animated.View style={[styles.fadingContainer, {bottom: fadeAnim}]}>
                 <View style={{flexDirection: "row", justifyContent: "flex-end", width: "95%", alignItems: "center"}}>
-                    <Text style={{fontSize: 20, fontWeight: "bold", marginRight: 100}}>Conciergerie</Text>
+                    <Text style={{fontSize: 20, fontWeight: "bold", marginRight: 100}}>{t('conciergerie')}</Text>
                     <TouchableOpacity activeOpacity={0.5} onPress={fadeOut}>
                         <AntDesign name="closecircle" size={20} color="black" />
                     </TouchableOpacity>
                 </View>
                 <View style={{flexDirection: "row", justifyContent: "space-around", width: "65%", alignItems: "center"}}>
-                    <Text>Exprimez vos besoins en un clic</Text>
+                    <Text>{t('besoins')}</Text>
                     <TouchableOpacity activeOpacity={0.5} onPress={fadeOut}>
                         <AntDesign name="infocirlce" size={15} color="black" onPress={() => setShowModal(true)} />
                     </TouchableOpacity>
@@ -72,7 +72,7 @@ const ClickNwaitDrawer = ({fadeAnim, fadeOut, navigation}) => {
                         handleClickAndWait("towel")
                         handleDeleteItemChoosen({towel: false})
                         showMessage({
-                            message: "Votre demande a été transmise à la réception !",
+                            message: t('conciergerie_message_succes'),
                             type: "success",
                           })
                     }}>
@@ -83,7 +83,7 @@ const ClickNwaitDrawer = ({fadeAnim, fadeOut, navigation}) => {
                         handleClickAndWait("soap")
                         handleDeleteItemChoosen({soap: false})
                         showMessage({
-                            message: "Votre demande a été transmise à la réception !",
+                            message: t('conciergerie_message_succes'),
                             type: "success",
                           })
                     }}>
@@ -94,7 +94,7 @@ const ClickNwaitDrawer = ({fadeAnim, fadeOut, navigation}) => {
                         handleClickAndWait("toiletPaper")
                         handleDeleteItemChoosen({toiletPaper: false})
                         showMessage({
-                            message: "Votre demande a été transmise à la réception !",
+                            message: t('conciergerie_message_succes'),
                             type: "success",
                           })
                     }}>
@@ -105,7 +105,7 @@ const ClickNwaitDrawer = ({fadeAnim, fadeOut, navigation}) => {
                         handleClickAndWait("hairDryer")
                         handleDeleteItemChoosen({hairDryer: false})
                         showMessage({
-                            message: "Votre demande a été transmise à la réception !",
+                            message: t('conciergerie_message_succes'),
                             type: "success",
                           })
                     }}>
@@ -118,7 +118,7 @@ const ClickNwaitDrawer = ({fadeAnim, fadeOut, navigation}) => {
                         handleClickAndWait("pillow")
                         handleDeleteItemChoosen({pillow: false})
                         showMessage({
-                            message: "Votre demande a été transmise à la réception !",
+                            message: t('conciergerie_message_succes'),
                             type: "success",
                           })
                     }}>
@@ -129,7 +129,7 @@ const ClickNwaitDrawer = ({fadeAnim, fadeOut, navigation}) => {
                         handleClickAndWait("blanket")
                         handleDeleteItemChoosen({blanket: false})
                         showMessage({
-                            message: "Votre demande a été transmise à la réception !",
+                            message: t('conciergerie_message_succes'),
                             type: "success",
                           })
                     }}>
@@ -140,7 +140,7 @@ const ClickNwaitDrawer = ({fadeAnim, fadeOut, navigation}) => {
                         handleClickAndWait("iron")
                         handleDeleteItemChoosen({iron: false})
                         showMessage({
-                            message: "Votre demande a été transmise à la réception !",
+                            message: t('conciergerie_message_succes'),
                             type: "success",
                           })
                     }}>
@@ -151,7 +151,7 @@ const ClickNwaitDrawer = ({fadeAnim, fadeOut, navigation}) => {
                         handleClickAndWait("babyBed")
                         handleDeleteItemChoosen({babyBed: false})
                         showMessage({
-                            message: "Votre demande a été transmise à la réception !",
+                            message: t('conciergerie_message_succes'),
                             type: "success",
                           })
                     }}>
@@ -162,7 +162,7 @@ const ClickNwaitDrawer = ({fadeAnim, fadeOut, navigation}) => {
                             navigation.navigate('Chat')
                             }}>
                             <Entypo name="chat" size={40} color="black" />                   
-                            <Text>Contacter la réception pour plus de services</Text>
+                            <Text>{t('conciergerie_message_fin')}</Text>
                         </TouchableOpacity>}
                 </View>
                 <Modal 
@@ -178,10 +178,10 @@ const ClickNwaitDrawer = ({fadeAnim, fadeOut, navigation}) => {
                             textAlign: "center",
                             fontWeight: "bold" 
                             }}><AntDesign name="infocirlce" size={15} color="black" style={{marginRight: 15}} />
-                            Prestation de service soumise à condition</Text>
-                            <Text style={{textAlign: "center"}}>Sous réserve de disponibilité et de mise à disposition des produits proposés par votre établissement hébergeur.</Text>
-                            <Text style={{textAlign: "center"}}>Pour plus d'informations, renseignez-vous auprès du personnel de votre hôtel.</Text>
-                            <Text style={{textAlign: "right", marginTop: 10, width: 300, fontWeight: "bold"}} onPress={() => setShowModal(false)}>Fermer</Text>
+                            {t('conciergerie_conditions_titre')}</Text>
+                            <Text style={{textAlign: "center"}}>{t('conciergerie_conditions_para1')}</Text>
+                            <Text style={{textAlign: "center"}}>{t('conciergerie_conditions_para2')}</Text>
+                            <Text style={{textAlign: "right", marginTop: 10, width: 300, fontWeight: "bold"}} onPress={() => setShowModal(false)}>{t('fermer')}</Text>
                     </View>
                 </Modal>
         </Animated.View>
