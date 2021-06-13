@@ -35,6 +35,12 @@ const Taxi = ({ navigation }) => {
                     <Image source={{uri: "https://cdn2.iconfinder.com/data/icons/car-11/100/taxi3-512.png"}} style={styles.img} />
                     <Text style={{ color: "black", fontWeight : "bold", fontSize: 20}}>{t('taxi_titre')}</Text>
                 </View>
+            ),
+            headerLeft: () => (
+                <TouchableOpacity onPress={() => {
+                navigation.navigate("My Sweet Hotel")}}>
+                    <AntDesign name="left" size={24} color="black" style={{marginLeft: 5}} />
+                </TouchableOpacity>
             )
         })
     }, [navigation])
@@ -135,6 +141,7 @@ const Taxi = ({ navigation }) => {
             {showDate &&
             <DateTimePicker
                 testID="dateTimePicker"
+                locale={i18next.language}
                 value={date}
                 mode='date'
                 is24Hour={true}

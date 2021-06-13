@@ -102,6 +102,14 @@ const Information = ({ navigation }) => {
         }).then(() => navigation.replace('My Sweet Hotel'))
     }
 
+    const handleUpdateLanguage = () => {
+        return db.collection('guestUsers')
+        .doc(user.uid)
+        .update({
+            language: i18next.language
+        })
+    }
+
     const handleSubmit = async () => {
         await db.collection('guestUsers')
         .doc(user.uid)
@@ -153,9 +161,10 @@ console.log(userDB)
                         </ImageBackground>
                             <View style={{marginBottom: 0, marginTop: 0}}>
                                 <Button title={t("oui")} type="clear" onPress={handleLinkWebsite} />
-                                <Button style={{width: 300}} title={t("non")} onPress={() => {
+                                <Button style={{width: 300}} title={t("non")} onPress={async() => {
+                                    await handleUpdateLanguage()
                                     handleLoadUserDB()
-                                    setTimeout(() => {
+                                    return setTimeout(() => {
                                         showMessage({
                                             message: `${t("message_bienvenue")} ${user.displayName}`,
                                             type: "info",
@@ -235,44 +244,44 @@ console.log(userDB)
                         </TouchableOpacity>
                     </View>
                 {info.length > 0 ? info.map(hotel =>(
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => {
+                    setFormValue({
+                        hotelId: hotel.id,
+                        departement: hotel.departement,
+                        region: hotel.region,
+                        classement: hotel.classement,
+                        city: hotel.city,
+                        code_postal: hotel.code_postal,
+                        country: hotel.country,
+                        room: hotel.room,
+                        city: hotel.city,
+                        standing: hotel.classement,
+                        website: hotel.website,
+                        phone: hotel.phone
+                    })
+                    setHotelName(hotel.hotelName)
+                    setUrl(hotel.website)
+                    setShowModalHotel(false)
+                    setCheckoutButton(true)
+                    }}>
                     <View style={{
                         padding: 15, 
                         marginBottom: 30}}>
-                            <Text style={{fontSize: 15}} onPress={() => {
-                                setFormValue({
-                                    hotelId: hotel.id,
-                                    departement: hotel.departement,
-                                    region: hotel.region,
-                                    classement: hotel.classement,
-                                    city: hotel.city,
-                                    code_postal: hotel.code_postal,
-                                    country: hotel.country,
-                                    room: hotel.room,
-                                    city: hotel.city,
-                                    standing: hotel.classement,
-                                    website: hotel.website,
-                                    phone: hotel.phone
-                                })
-                                setHotelName(hotel.hotelName)
-                                setUrl(hotel.website)
-                                setShowModalHotel(false)
-                                setCheckoutButton(true)
-                                }}>
+                            <Text style={{fontSize: 15}}>
                                 {hotel.hotelName}
                             </Text>
                         </View>
                     </TouchableOpacity>
 
                     )) :
-                    <View style={styles.container}>
-                        <Text style={{fontSize: 25, textAlign: "center", marginBottom: 20}}>{t("no_partenaire")}</Text>
-                        <Text style={{fontSize: 15, textAlign: "center", marginBottom: 20}}>{t("msh_team_message")}</Text>
-                        <Text style={{fontSize: 10, textAlign: "center", marginBottom: 20}}>{t("msh_team_message2")}</Text>
-                        <Text style={{fontSize: 10, textAlign: "center", marginBottom: 20, fontWeight: "bold"}}>{t("msh_team_message3")}</Text>
+                    <View style={styles.container2}>
+                        <Text style={{fontSize: 20, textAlign: "center", marginBottom: 60}}>{t("no_partenaire")}</Text>
+                        <Text style={{fontSize: 15, textAlign: "center", marginBottom: 60}}>{t("msh_team_message")}</Text>
+                        <Text style={{fontSize: 10, textAlign: "center", marginBottom: 60}}>{t("msh_team_message2")}</Text>
+                        <Text style={{fontSize: 10, textAlign: "center", marginBottom: 60, fontWeight: "bold"}}>{t("msh_team_message3")}</Text>
                         <View>
                             <Button raised={true} onPress={() => setShowModalHotel(false)} containerStyle={styles.button} type="outlined" title={t("retour_recherche")} />
-                            <Button raised={true} onPress={() => Logout()} containerStyle={styles.button} title={t("deconnexion_information")} />
+                            <Button raised={true} onPress={() => Logout()} containerStyle={styles.button2} title={t("deconnexion_information")} />
                         </View>
                     </View>}
                 </ScrollView>
@@ -306,6 +315,7 @@ console.log(userDB)
             {showDate && (
                 <DateTimePicker
                 testID="dateTimePicker"
+                locale={i18next.language}
                 value={date}
                 mode='date'
                 is24Hour={true}
@@ -326,6 +336,12 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
     },
+    container2: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+        padding: 25
+    },
     containerText: {
         flexDirection: "column",
         alignItems: "center",
@@ -344,7 +360,13 @@ const styles = StyleSheet.create({
     button: {
         width: 350,
         marginTop: 10,
-        borderRadius: 30
+        borderRadius: 30,
+    },
+    button2: {
+        width: 350,
+        marginTop: 10,
+        borderRadius: 30,
+        marginBottom: 30
     },
     centeredView: {
         flex: 1,

@@ -361,6 +361,7 @@ const UserProfile = ({navigation}) => {
             {showDate && (
                 <DateTimePicker
                 testID="dateTimePicker"
+                locale={i18next.language}
                 value={date}
                 mode='date'
                 is24Hour={true}

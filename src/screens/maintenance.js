@@ -30,6 +30,12 @@ const Maintenance = ({ navigation }) => {
                   <Image source={{uri: "https://static.thenounproject.com/png/41655-200.png"}} style={styles.img} />
                   <Text style={{ color: "black", fontWeight : "bold", fontSize: 20}}>{t('maintenance')}</Text>
               </View>
+          ),
+          headerLeft: () => (
+              <TouchableOpacity onPress={() => {
+              navigation.navigate("My Sweet Hotel")}}>
+                  <AntDesign name="left" size={24} color="black" style={{marginLeft: 5}} />
+              </TouchableOpacity>
           )
       })
   }, [navigation])

@@ -15,6 +15,7 @@ import { YellowBox } from 'react-native';
 import _ from 'lodash';
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
+import { AntDesign } from '@expo/vector-icons';
 
 YellowBox.ignoreWarnings(['Setting a timer']);
 const _console = _.clone(console);
@@ -43,6 +44,13 @@ const Chat = ({ navigation }) => {
                     <Entypo name="chat" size={24} color="black" />            
                     <Text style={{ color: "black", marginLeft: 10, fontWeight : "bold", fontSize: 20}}>Chat {t('reception')}</Text>
                 </View>
+            ),
+            headerLeft: () => (
+                <TouchableOpacity onPress={() => {
+                handleUpdateHotelResponse()
+                navigation.navigate("My Sweet Hotel")}}>
+                    <AntDesign name="left" size={24} color="black" style={{marginLeft: 5}} />
+                </TouchableOpacity>
             )
         })
     }, [navigation])
@@ -71,6 +79,15 @@ const Chat = ({ navigation }) => {
         return unsubscribe
     }, [])
 
+    const handleUpdateHotelResponse = () => {
+        return db.collection("hotels")
+                .doc(userDB.hotelId)
+                .collection('chat')
+                .doc(user.displayName)
+                .update({
+                    hotelResponding: false
+                })
+    }
 
     const getChatRoom = () => {
         return db.collection('hotels')
@@ -164,14 +181,14 @@ const Chat = ({ navigation }) => {
                                         translation={message.translated.en}
                                         markup={message.markup}
                                     />
-                                case 'ar':
+                                case 'de':
                                     return <ChatMessage 
                                         author={message.author}
                                         photo={message.photo}
-                                        translation={message.translated.ar}
+                                        translation={message.translated.de}
                                         markup={message.markup}
-                                    />
-                                    case 'it':
+                                />
+                                case 'it':
                                 return <ChatMessage 
                                     author={message.author}
                                     photo={message.photo}
@@ -185,46 +202,11 @@ const Chat = ({ navigation }) => {
                                     translation={message.translated.pt}
                                     markup={message.markup}
                                 />
-                                case 'hi':
-                                return <ChatMessage 
-                                    author={message.author}
-                                    photo={message.photo}
-                                    translation={message.translated.hi}
-                                    markup={message.markup}
-                                />
-                                case 'ur':
-                                return <ChatMessage 
-                                    author={message.author}
-                                    photo={message.photo}
-                                    translation={message.translated.ur}
-                                    markup={message.markup}
-                                />
-                                case 'zh':
-                                return <ChatMessage 
-                                    author={message.author}
-                                    photo={message.photo}
-                                    translation={message.translated.zh}
-                                    markup={message.markup}
-                                />
                                 case 'es':
                                 return <ChatMessage 
                                     author={message.author}
                                     photo={message.photo}
                                     translation={message.translated.es}
-                                    markup={message.markup}
-                                />
-                                case 'ko':
-                                return <ChatMessage 
-                                    author={message.author}
-                                    photo={message.photo}
-                                    translation={message.translated.ko}
-                                    markup={message.markup}
-                                />
-                                case 'ja':
-                                return <ChatMessage 
-                                    author={message.author}
-                                    photo={message.photo}
-                                    translation={message.translated.ja}
                                     markup={message.markup}
                                 />
                                 case 'fr':

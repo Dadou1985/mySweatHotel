@@ -16,6 +16,7 @@ const Login = ({ navigation }) => {
     const [language, setLanguage] = useState(i18next.language)
     const [flag, setFlag] = useState("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAArklEQVR4nO3avQnCYBiF0UwSdxDTmwkF8Qc70SZi1hBEHSABGxsJ1h8pjUu8IOh54C5w6ptlkiRJkvSPjctVFb3L9TFLKVWR63aHeZsXVfSy8XQ5RK+5P08ppSFy3WZ/bvLJELk2n7wBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPh5gHJdR+96e8z7vq8j99oeF82oqKP37ZOaJEmSJH2lD+DtRFTekXctAAAAAElFTkSuQmCC")
     const [showModalLanguage, setShowModalLanguage] = useState(false)
+    const [refresh, setRefresh] = useState([1])
 
     const { t } = useTranslation()
 
@@ -24,12 +25,12 @@ const Login = ({ navigation }) => {
             headerRight: () => (
                 <View style={{flexDirection: "row", alignItems: "center"}}>
                     <TouchableOpacity activeOpacity={0.5} onPress={() => setShowModalLanguage(true)}>
-                        <Image source={{uri: flag}} style={{width: 30, height: 30, marginRight: 15}} />
+                        <Image id="flag" source={{uri: flag}} style={{width: 30, height: 30, marginRight: 15}} />
                     </TouchableOpacity>
                 </View>),
                 headerLeft: null,
         })
-    }, [])
+    }, [flag])
 
     useEffect(() => {
         
@@ -56,6 +57,7 @@ const Login = ({ navigation }) => {
             setPassword('')
         })
     }
+
 
     const internationalization = [
         {title: "Français", value: "fr", countryFlag: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAArklEQVR4nO3avQnCYBiF0UwSdxDTmwkF8Qc70SZi1hBEHSABGxsJ1h8pjUu8IOh54C5w6ptlkiRJkvSPjctVFb3L9TFLKVWR63aHeZsXVfSy8XQ5RK+5P08ppSFy3WZ/bvLJELk2n7wBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPh5gHJdR+96e8z7vq8j99oeF82oqKP37ZOaJEmSJH2lD+DtRFTekXctAAAAAElFTkSuQmCC"},

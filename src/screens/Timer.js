@@ -32,6 +32,12 @@ const Timer = ({navigation}) => {
                     <Image source={{uri: "https://image.flaticon.com/icons/png/512/62/62834.png"}} style={styles.img} />
                     <Text style={{ color: "black", fontWeight : "bold", fontSize: 20}}>{t('reveil_titre')}</Text>
                 </View>
+            ),
+            headerLeft: () => (
+                <TouchableOpacity onPress={() => {
+                navigation.navigate("My Sweet Hotel")}}>
+                    <AntDesign name="left" size={24} color="black" style={{marginLeft: 5}} />
+                </TouchableOpacity>
             )
         })
     }, [navigation])
@@ -112,6 +118,7 @@ const Timer = ({navigation}) => {
             {showDate &&
             <DateTimePicker
                 testID="dateTimePicker"
+                locale={i18next.language}
                 value={date}
                 mode='date'
                 is24Hour={true}

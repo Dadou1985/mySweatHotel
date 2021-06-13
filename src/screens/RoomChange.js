@@ -30,6 +30,12 @@ const RoomChange = ({ navigation }) => {
                   <MaterialIcons name="room-preferences" size={24} color="black" />                
                   <Text style={{ color: "black", fontWeight : "bold", fontSize: 20, marginLeft: 5}}>{t('delogement')}</Text>
               </View>
+          ),
+          headerLeft: () => (
+              <TouchableOpacity onPress={() => {
+              navigation.navigate("My Sweet Hotel")}}>
+                  <AntDesign name="left" size={24} color="black" style={{marginLeft: 5}} />
+              </TouchableOpacity>
           )
       })
   }, [navigation])
