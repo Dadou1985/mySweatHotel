@@ -13,7 +13,7 @@ const Login = ({ navigation }) => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const {userDB, setUserDB} = useContext(UserContext)
-    const [language, setLanguage] = useState("")
+    const [language, setLanguage] = useState(i18next.language)
     const [flag, setFlag] = useState("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAArklEQVR4nO3avQnCYBiF0UwSdxDTmwkF8Qc70SZi1hBEHSABGxsJ1h8pjUu8IOh54C5w6ptlkiRJkvSPjctVFb3L9TFLKVWR63aHeZsXVfSy8XQ5RK+5P08ppSFy3WZ/bvLJELk2n7wBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPh5gHJdR+96e8z7vq8j99oeF82oqKP37ZOaJEmSJH2lD+DtRFTekXctAAAAAElFTkSuQmCC")
     const [showModalLanguage, setShowModalLanguage] = useState(false)
 
@@ -21,11 +21,6 @@ const Login = ({ navigation }) => {
 
     useLayoutEffect(() => {
         navigation.setOptions({
-            headerTitle: () =>(
-                <View style={{flexDirection: "row", alignItems: "center"}}>
-                  <Text style={{ color: "black", marginLeft: 10, fontWeight : "bold", fontSize: 20}}>{t('connection')}</Text>
-                </View>
-            ),
             headerRight: () => (
                 <View style={{flexDirection: "row", alignItems: "center"}}>
                     <TouchableOpacity activeOpacity={0.5} onPress={() => setShowModalLanguage(true)}>
@@ -36,17 +31,10 @@ const Login = ({ navigation }) => {
         })
     }, [])
 
-    const handleGuestRegistration = (userId) => {
-        return db.collection('guestUsers')
-        .doc(userId)
-        .update({language: language})
-    }
-
     useEffect(() => {
         
         let unsubscribe = auth.onAuthStateChanged(function(user) {
             if (user) {
-                handleGuestRegistration(user.uid)
                 navigation.navigate('Information')
                 setTimeout(() => {
                     showMessage({
@@ -59,7 +47,7 @@ const Login = ({ navigation }) => {
         return unsubscribe
     }, [])
 
-    console.log("//////", language)
+    console.log("//////", i18next.language)
 
     const Login = () => {
         auth.signInWithEmailAndPassword(email.trim(), password)
@@ -124,7 +112,6 @@ const Login = ({ navigation }) => {
                         marginBottom: 30}}>
                             <TouchableOpacity activeOpacity={0.5} style={{flexDirection: "row", justifyContent: "center"}} onPress={() => {
                                 setFlag(data.countryFlag)
-                                setLanguage(data.value)
                                 setShowModalLanguage(false)
                                 i18next.changeLanguage(data.value)
                             }}>

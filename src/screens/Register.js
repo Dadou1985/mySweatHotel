@@ -18,7 +18,7 @@ const Register = ({ navigation }) => {
     const [userId, setUserId] = useState("")
     const [img, setImg] = useState(null)
     const [url, setUrl] = useState("")
-    const [language, setLanguage] = useState("fr")
+    const [language, setLanguage] = useState(i18next.language)
   
     const { t } = useTranslation()
 

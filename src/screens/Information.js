@@ -123,7 +123,8 @@ const Information = ({ navigation }) => {
             iron: true,
             babyBed: true, 
             website: formValue.website,
-            phone: formValue.phone
+            phone: formValue.phone,
+            language: i18next.language
             })
         return handleLoadUserDB()
     }

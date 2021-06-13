@@ -29,9 +29,9 @@ const UserProfile = ({navigation}) => {
     const [showDate, setShowDate] = useState(false)
     const [chatResponse, setChatResponse] = useState([])
 
-    const Logout = async() => {
-      await navigation.replace('Connexion')
-      return auth.signOut()
+    const Logout = () => {
+      navigation.replace('Connexion')
+      auth.signOut()
   }
 
   const { t } = useTranslation()

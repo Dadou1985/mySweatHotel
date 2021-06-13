@@ -38,7 +38,7 @@ export default function App() {
         initialRouteName="Connexion"
         screenOptions={globalScreenOptions}
         >
-            <Stack.Screen name="Connexion" component={LoginScreen} options={{headerLeft: null}} />
+            <Stack.Screen name="Connexion" component={LoginScreen} options={{headerLeft: null, headerTitle: null}} />
             <Stack.Screen name="Inscription" component={RegisterScreen} />
             <Stack.Screen name="Chat" component={ChatScreen} />
             <Stack.Screen name="Délogement" component={RoomChangeScreen} />
