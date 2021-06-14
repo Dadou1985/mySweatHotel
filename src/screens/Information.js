@@ -14,6 +14,7 @@ import { AntDesign } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
+import { FontAwesome5 } from '@expo/vector-icons';
 
 const Information = ({ navigation }) => {
     const [info, setInfo] = useState([])
@@ -56,9 +57,7 @@ const Information = ({ navigation }) => {
 
     useEffect(() => {
         const getHotel = () => {
-            return db.collection("hotels")
-                .where("code_postal", "==", filter)
-                .where("partnership", "==", true)
+            return db.collection("hotel")
             }
 
         let unsubscribe = getHotel().onSnapshot(function(snapshot) {
@@ -84,7 +83,7 @@ const Information = ({ navigation }) => {
             showMessage({
                 message: t("message_checkout_valide"),
                 type: "info",
-              })
+            })
         }, 1000);
       };
     
@@ -146,7 +145,9 @@ const Information = ({ navigation }) => {
         return Linking.openURL(userDB.website)
     }
 
-console.log(userDB)
+    let tomrorrow = moment().add(1, 'days')
+
+console.log(date)
 
     return (
         <KeyboardAvoidingView style={styles.container}>
@@ -182,16 +183,16 @@ console.log(userDB)
                         </ImageBackground>
                     </View>
                         <View style={styles.buttonView}>
-                            {inputSearch && <Input placeholder={t("code_postal")} type="text" value={initialFilter} 
-                                onChangeText={(text) => setInitialFilter(text)} style={{marginBottom: 5, textAlign: "center"}} />}
-                            {initialFilter.charAt(4) !== "" && 
+                            {/*inputSearch && <Input placeholder={t("code_postal")} type="text" value={initialFilter} 
+                                onChangeText={(text) => setInitialFilter(text)} style={{marginBottom: 5, textAlign: "center"}} />*/}
+                            {/*initialFilter.charAt(4) !== "" && */}
                             <Button 
                                 raised={true} 
                                 icon={<Ionicons name="search-circle" size={25} color="black" style={{marginRight: 5}} />}
                                 onPress={() => {
                                     setShowModalHotel(true)
                                     setFilter(initialFilter)
-                                    }} containerStyle={styles.button} title={hotelName === "Lancer la recherche" ? t("recherche_hotel") : hotelName} type="outline" />}   
+                                    }} containerStyle={styles.button} title={hotelName === "Lancer la recherche" ? t("recherche_hotel") : hotelName} type="outline" />   
                                 {checkoutButton && 
                                 <Button 
                                     raised={true} 
@@ -249,12 +250,10 @@ console.log(userDB)
                         hotelId: hotel.id,
                         departement: hotel.departement,
                         region: hotel.region,
-                        classement: hotel.classement,
                         city: hotel.city,
                         code_postal: hotel.code_postal,
                         country: hotel.country,
                         room: hotel.room,
-                        city: hotel.city,
                         standing: hotel.classement,
                         website: hotel.website,
                         phone: hotel.phone
@@ -265,8 +264,11 @@ console.log(userDB)
                     setCheckoutButton(true)
                     }}>
                     <View style={{
+                        flexDirection: "row",
+                        justifyContent: "flex-start",
                         padding: 15, 
                         marginBottom: 30}}>
+                            {/*<FontAwesome5 name="building" size={24} color="black" style={{marginRight: 10}} />*/}
                             <Text style={{fontSize: 15}}>
                                 {hotel.hotelName}
                             </Text>
@@ -319,6 +321,7 @@ console.log(userDB)
                 value={date}
                 mode='date'
                 is24Hour={true}
+                minimumDate={Date.now() + 86400000}
                 display="default"
                 onChange={onChange}
                 />
@@ -386,6 +389,8 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
+        minHeight: 750
+
     },
     modalRoom: {
         margin: 20,

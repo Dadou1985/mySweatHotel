@@ -27,7 +27,7 @@ const globalScreenOptions = {
 
 export default function App() {
   const [userDB, setUserDB] = useState(null)
-  const loading = <Text>Loading...</Text>
+  const loading = <Text style={{color: "white"}}>Loading...</Text>
 
   return (
     <>

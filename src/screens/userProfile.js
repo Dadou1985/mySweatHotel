@@ -275,8 +275,8 @@ const UserProfile = ({navigation}) => {
                   <Ionicons name="pencil-outline" size={24} color="black" />
                 </TouchableOpacity>
               </View>
-              <View style={{flexDirection: "row", justifyContent: "space-around", width: "80%"}}>
-                <Text style={{fontSize: 14, marginBottom: 20}}>{t('checkout_prevu')} {userDB.checkoutDate}</Text>
+              <View style={{flexDirection: "row", justifyContent: "space-around", width: "70%"}}>
+                <Text style={{fontSize: 14, marginBottom: 20}}>{t('checkout_prevu')}{userDB.checkoutDate}</Text>
                 <TouchableOpacity activeOpacity={0.5} onPress={() => {setShowDate(true)}}>
                   <Ionicons name="pencil-outline" size={24} color="black" />
                 </TouchableOpacity>
@@ -365,6 +365,7 @@ const UserProfile = ({navigation}) => {
                 value={date}
                 mode='date'
                 is24Hour={true}
+                minimumDate={new Date()}
                 display="default"
                 onChange={onChange}
                 />

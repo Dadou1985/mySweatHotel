@@ -123,6 +123,7 @@ const Timer = ({navigation}) => {
                 value={date}
                 mode='date'
                 is24Hour={true}
+                minimumDate={new Date()}
                 display="default"
                 onChange={onDateChange}
                 />}
