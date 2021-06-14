@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "My Sweet Hotel",
-    "slug": "My Sweet Hotel",
+    "slug": "mySweatHotel",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

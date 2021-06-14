@@ -60,8 +60,8 @@ const ClickNwaitDrawer = ({fadeAnim, fadeOut, navigation}) => {
                         <AntDesign name="closecircle" size={20} color="black" />
                     </TouchableOpacity>
                 </View>
-                <View style={{flexDirection: "row", justifyContent: "space-around", width: "65%", alignItems: "center"}}>
-                    <Text>{t('besoins')}</Text>
+                <View style={{flexDirection: "row", justifyContent: "space-around", width: "70%", alignItems: "center"}}>
+                    <Text style={{textAlign: 'center'}}>{t('besoins')}</Text>
                     <TouchableOpacity activeOpacity={0.5} onPress={fadeOut}>
                         <AntDesign name="infocirlce" size={15} color="black" onPress={() => setShowModal(true)} />
                     </TouchableOpacity>
