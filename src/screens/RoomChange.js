@@ -9,6 +9,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { showMessage, hideMessage } from "react-native-flash-message";
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
+import { AntDesign } from '@expo/vector-icons';
 
 const RoomChange = ({ navigation }) => {
     const [type, setType] = useState("")

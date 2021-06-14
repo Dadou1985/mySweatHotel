@@ -1,5 +1,5 @@
 import React, { useState,useContext, useLayoutEffect } from 'react';
-import { KeyboardAvoidingView, StyleSheet, Text, View, ImageBackground } from 'react-native';
+import { KeyboardAvoidingView, StyleSheet, Text, View, ImageBackground, TouchableOpacity } from 'react-native';
 import { Button, Input, Image } from 'react-native-elements';
 import { StatusBar } from 'expo-status-bar';
 import { auth, db } from "../../firebase"
@@ -10,6 +10,7 @@ import 'moment/locale/fr';
 import { showMessage, hideMessage } from "react-native-flash-message";
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
+import { AntDesign } from '@expo/vector-icons';
 
 const Taxi = ({ navigation }) => {
     const [date, setDate] = useState(new Date())

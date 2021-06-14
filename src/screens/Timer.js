@@ -10,6 +10,7 @@ import 'moment/locale/fr';
 import { showMessage, hideMessage } from "react-native-flash-message";
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
+import { AntDesign } from '@expo/vector-icons';
 
 const Timer = ({navigation}) => {
     const [date, setDate] = useState(new Date())
