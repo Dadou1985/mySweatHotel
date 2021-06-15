@@ -14,23 +14,52 @@ const Login = ({ navigation }) => {
     const [password, setPassword] = useState("")
     const {userDB, setUserDB} = useContext(UserContext)
     const [language, setLanguage] = useState(i18next.language)
-    const [flag, setFlag] = useState("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAArklEQVR4nO3avQnCYBiF0UwSdxDTmwkF8Qc70SZi1hBEHSABGxsJ1h8pjUu8IOh54C5w6ptlkiRJkvSPjctVFb3L9TFLKVWR63aHeZsXVfSy8XQ5RK+5P08ppSFy3WZ/bvLJELk2n7wBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPh5gHJdR+96e8z7vq8j99oeF82oqKP37ZOaJEmSJH2lD+DtRFTekXctAAAAAElFTkSuQmCC")
+    const [flag, setFlag] = useState(userDB !== null ? userDB.flag : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAArklEQVR4nO3avQnCYBiF0UwSdxDTmwkF8Qc70SZi1hBEHSABGxsJ1h8pjUu8IOh54C5w6ptlkiRJkvSPjctVFb3L9TFLKVWR63aHeZsXVfSy8XQ5RK+5P08ppSFy3WZ/bvLJELk2n7wBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPh5gHJdR+96e8z7vq8j99oeF82oqKP37ZOaJEmSJH2lD+DtRFTekXctAAAAAElFTkSuQmCC")
     const [showModalLanguage, setShowModalLanguage] = useState(false)
     const [refresh, setRefresh] = useState([1])
 
     const { t } = useTranslation()
+
+    const renderSwitchFlag = () => {
+        switch(i18next.language) {
+            case 'fr':
+                return <Image id="flag" 
+                source={{uri: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAArklEQVR4nO3avQnCYBiF0UwSdxDTmwkF8Qc70SZi1hBEHSABGxsJ1h8pjUu8IOh54C5w6ptlkiRJkvSPjctVFb3L9TFLKVWR63aHeZsXVfSy8XQ5RK+5P08ppSFy3WZ/bvLJELk2n7wBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPh5gHJdR+96e8z7vq8j99oeF82oqKP37ZOaJEmSJH2lD+DtRFTekXctAAAAAElFTkSuQmCC"}} 
+                style={{width: 30, height: 30, marginRight: 15}} />
+            case 'en':
+                return <Image id="flag" 
+                source={{uri: "data:image/png;base64,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"}} 
+                style={{width: 30, height: 30, marginRight: 15}} />
+            case 'es':
+                return <Image id="flag" 
+                source={{uri: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAADR0lEQVR4nO2a22+TdRyHe+m1yI2xrN3bw9ruKJDNkDhYt6lBDMsMbBBQHOIhAxYJJFRAcSmhHmiQTcR11XVd2eYYK9u6HsbarhzCnBFRAb2oiOEKNS70/vGfeOcvod8nee6/nyfv1S+vwSAIgiAIgiAIglCMxAzlw8WsYdrgpJiVAKoPUK0EUH2AaiWA6gNUKwEWGhwUs4ZCzk4xq1uApaz6MQoDuJgL11LIuZQP+t8CPLpSwe/xKvLJWu7PVpGJrCYfr+R2dA33UzUszVcqH7esAfLT1SS2a3zb7qR/hZWBfWUEn7JycXs56W0W7o5XKR+3rAEexB18s6mEs8+bOLtB46uXSwg2WumtNxHYaOLelPpxyxLgwvsa48dMFHJ2/pq1cfFjE0GvjeBbRkJeCxd8pTxM2Sjk7KRPaqS6zcpH6hpgpm8VM4FV5PtthFZa6HOZGFhpIbarmaupcWYH/ORmhniQ3cTs1yaivUblI3UN8HP6CAuxQ+T7bPQ8WUrXjhX0thhJtDeT+XyEqwf6SQ5f4s9MC7fTB1iIf6h8pG4B/p6xkzy0hWh7E/GtGl8+odHZUcm5tjomWt3kxhJcPxomMzzFDf9m4rsamX5vCw+nbMqH6hLgR6+FyT2tJE90sHjYRvfTRjyv1eOvKGFncxc9b3jIRKa4NjnHT4MtXPbuZGJvGwtHrcqH6hLgUdZOuns3Iw1urp+qIfiCk0CDi9PPWHl9XxcHHa8w0lTHiHsdi343oQ31JD17KMyrH6pLgF8+s5I83MEPiWNcO7Oa821mwi1mhtyl9JjKCZZonK/VCGtWvvc1cSft4dKRN7l5/HH5Aubt3Mmd4Obl42RP1xDZaibcamboJTN969cSNlqIbHMwttHCos/N3XkP36V8/DunfqguAZayDlKD5UTPlXFvoozAZjtDrWYGXjQT7tzN8Doro/UakTVO8qPVpAYriAbK+CftVD5UlwD5eB1f+Pfzifcdfp1cy61QNRMHGxk92Umg9yPGTn1A7N1X+S30HH8knuXMp3vxdb/NrdE65UN1CfA4KgFUP0mpVh5FVR+gWgmg+gDVSgDVB6hWAqg+QLWGmME1Vsyq/klNEARBEARBEARBCf8BUD72BGfc2zUAAAAASUVORK5CYII="}} 
+                style={{width: 30, height: 30, marginRight: 15}} />
+            case 'de':
+                return <Image id="flag" 
+                source={{uri: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAWUlEQVR4nO3QQQ0AMBDDsPLHNk69x2DUkULAiSRJkqT1OjYAAAAAAAAAAAAAAAAAJE26NAAAAAAAAAAAAAAAAAB8gJcuDQAAAAAAAAAAAAAAAAAAJEmSJM11+E5Cu4Z5zL0AAAAASUVORK5CYII="}} 
+                style={{width: 30, height: 30, marginRight: 15}} />
+            case 'it':
+                return <Image id="flag" 
+                source={{uri: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAsElEQVR4nO3avQnCYBiF0UwSl9BSW8XlhBAEO9EmYtYQBH9qAzY2ItYfKY1LvBDQ88Bd4NQ3yyRJkiTpH5ssp1X0To/LIqVURe612RVNPqqil43LWRe95nk/pJS6yL1W2+MtH3aRa/LhBwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAXweYlPM6eufHtWjbto7ce70vb4NRHb2+T2qSJEmS1EtfJaB8msbUm8wAAAAASUVORK5CYII="}} 
+                style={{width: 30, height: 30, marginRight: 15}} />
+            case 'pt':
+                return <Image id="flag" 
+                source={{uri: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAEt0lEQVR4nO2a3U9TdxyH/Uc67KClnnPawgHNsrls84U5Z+KSIWrMNjfNxqHqjFmcLwlcSFwyddFsZia70IvFsUVxWVCn8iYWaEtfKPQNViwtpdJWgUnxJbt4doEjXoOsEH9P8knO1Uk+z/md7zm/k7NsmUAgEAgEAoFAIBC8jFhrVjYsRL5fI3+XfaW4YbFnmUUrZyFyYq2lI60zstgjBAgBQoAQIAQIAULAi0u5plJ51IqzyTweXWVgZLkh7yUXXIC1uozTF8z4e2R6HRK9Tolo0IzfKePtkuh3K4Q+Kc572QURsKWuhF6njN8lEelVeDBayv1kCcMRC7msSjpeQsirEHDL+J0SSdPiWhHzEmA7aSXgWUX4lo1E1x6G79iIddgYum0jfKuawRaNwRaNYXsNcXsNgfbd9LlkEtb8F5+3gC/qzdxoMnL7VgUtW01cr9bPntTztoHLWgFRqYi0zsiQVMQVTY9772bcdglHm4m4tDhWwpwFxMIWIj6F5mvradtr4spBPaM6A6M6A77NRTTW6QmVGRjTGRkoM/B7nZ6erzdw766Vu0Ezrb/mv/ycBVTXm+luW0HIJxMNvs+oqYS0zki2vYNHk5NkkmlcnREe3h/n0eQkyW9OkNYZyezaTS6rkhiw0OeSSS3P/2Cck4DmVoWQVyGXVYmFN5F8JmDK5QagoyPKxo0/Mj4+DcDYqTOkdUbGPv2MXFYll1UJuBUGdixRAWGfgs8h0++W8Tg24Fwn4/qwcFZALveUixdnjgFi3x7Hvr2IweqtBDwz8vwuM6FGeWkK6G43YW8tps8l09P1Lm37TVw+pMfX2IamNXDzZpjq6l9obo6gaQ0ETh6h6VghzkMVBL0KYZ+Cq8OEv1tZmgLa/jQRC88855PRTXhXr6DrzUIGr91h27bz+HwjVFWdx+1OsH37BSLH6+l+p5D+nZWzt0CfS8bXKS1NAZHemauYy6qkht5g5PU1pHVG/r5+E4BMZoobN4I8efIPAPHaY6R1Rob32cgkSmZmgEch1LhEBbS2mWeHYC6rEt/5ESl9MYkDXwJgtw9RUfEDk5OPeDo9TbhiLfeWFzNy7gh/9ZtJDVkJuBUiO/Jbfs4CqmpL6e+RSAxYCHkV3Oc+x2Ez8MfBQmJn6nk8/ZjOzrtMj43Rf7SK374qwPmxBdfVSiZSpQyFLPQ6JUYLlqgAi1ZOMmolGjAT8ChEgyU4Dn+A/YiBlN5IUipjdO17JPUSQ6qRpsOv4j63i4dplQG/mexICe6rK/Jefl4CdtYqBHpkBvxmclmVTGI1kVN7iEvq7MnHdEaib60jcrmGiVQZUxkVv1Oms8VETMp/+XkJsGjl7D1hJeiVCXkVpjLP5sFAJYPXDxD8aR/Rjv3ci60nl1WZSJXOTH6HRNy6OPYB8xZg0crZWleK3ynT71YY7DPzYLSUiVQpAY8yux0OPrcdTpjyX/qFCrBo5Vhryjj7s5m+Hhlft0zAI9HrkPA7JbxdEkGPQmRX/l97F0zA81llU9lSa8HRpEwNvmYgqV88y/1/EfBfXtqPokKAECAECAFCgBCwhARYtZWXFiJn1yinMwWmS4s9+f5JTSAQCAQCgUAgEAjywr/ZVBJ3mPtZuAAAAABJRU5ErkJggg=="}} 
+                style={{width: 30, height: 30, marginRight: 15}} />
+        }
+    }
 
     useLayoutEffect(() => {
         navigation.setOptions({
             headerRight: () => (
                 <View style={{flexDirection: "row", alignItems: "center"}}>
                     <TouchableOpacity activeOpacity={0.5} onPress={() => setShowModalLanguage(true)}>
-                        <Image id="flag" source={{uri: flag}} style={{width: 30, height: 30, marginRight: 15}} />
+                        {renderSwitchFlag()}
                     </TouchableOpacity>
                 </View>),
                 headerLeft: null,
         })
-    }, [flag])
+    }, [i18next.language])
 
     useEffect(() => {
         
@@ -46,7 +75,7 @@ const Login = ({ navigation }) => {
             } 
           });
         return unsubscribe
-    }, [])
+    }, [flag])
 
     console.log("//////", i18next.language)
 
@@ -86,7 +115,7 @@ const Login = ({ navigation }) => {
                 onChangeText={(text) => setPassword(text)} />
             </View>
             <Button raised={true} onPress={() => Login()} containerStyle={styles.button} title={t('connection')} />
-            {userDB === null && <Button raised={true} onPress={() => navigation.navigate('Inscription')} containerStyle={styles.button} title={t('creation_compte')} type="clear" />}
+            {userDB === null && <Button raised={true} onPress={() => navigation.navigate('Inscription', { currentFlag: flag})} containerStyle={styles.button} title={t('creation_compte')} type="clear" />}
        
             <Modal 
             animationType="slide"
@@ -113,7 +142,6 @@ const Login = ({ navigation }) => {
                         padding: 15, 
                         marginBottom: 30}}>
                             <TouchableOpacity activeOpacity={0.5} style={{flexDirection: "row", justifyContent: "center"}} onPress={() => {
-                                setFlag(data.countryFlag)
                                 setShowModalLanguage(false)
                                 i18next.changeLanguage(data.value)
                             }}>
