@@ -15,6 +15,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
 import { FontAwesome5 } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Information = ({ navigation }) => {
     const [info, setInfo] = useState([])
@@ -28,6 +29,7 @@ const Information = ({ navigation }) => {
     const [hideAll, setHideAll] = useState(false)
     const [user, setUser] = useState(auth.currentUser)
     const {userDB, setUserDB} = useContext(UserContext)
+    const [userMemo, setUserMemo] = useState("")
     const [showModalHotel, setShowModalHotel] = useState(false)
     const [showModalRoom, setShowModalRoom] = useState(false)
     const [inputSearch, setInputSearch] = useState(true)
@@ -98,7 +100,9 @@ const Information = ({ navigation }) => {
                 // doc.data() will be undefined in this case
                 console.log("No such document!");
             }
-        }).then(() => navigation.replace('My Sweet Hotel'))
+        }).then(() => {
+            return navigation.replace('My Sweet Hotel')
+        })
     }
 
     const handleUpdateLanguage = () => {
@@ -145,14 +149,12 @@ const Information = ({ navigation }) => {
         return Linking.openURL(userDB.website)
     }
 
-    let tomrorrow = moment().add(1, 'days')
-
-console.log(date)
+    console.log(userDB)
 
     return (
         <KeyboardAvoidingView style={styles.container}>
             <StatusBar style="light" />
-            {userDB !== null ? <View style={styles.containerText}>
+            {userDB.checkoutDate !== "" ? <View style={styles.containerText}>
                         <View style={styles.containerImg}>
                         <ImageBackground source={ require('../../img/pic_booking2.png') } style={{
                             flex: 1,

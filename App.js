@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
-import React, { useState, Suspense } from 'react';
-import { StyleSheet, Text} from 'react-native';
+import React, { useState, Suspense, useEffect } from 'react';
+import { StyleSheet, Text, Image } from 'react-native';
 import { NavigationContainer, NavigationAction } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import LoginScreen from './src/screens/login'
@@ -17,6 +17,7 @@ import './src/i18next'
 import { UserContext } from './src/components/userContext'
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createStackNavigator();
 
@@ -27,33 +28,57 @@ const globalScreenOptions = {
 
 export default function App() {
   const [userDB, setUserDB] = useState(null)
+  const [isLoading, setIsLoading] = useState(true)
   const loading = <Text style={{color: "white"}}>Loading...</Text>
 
-  return (
-    <>
-    <UserContext.Provider value={{userDB, setUserDB}}>
-      <Suspense fallback={loading}>
-      <NavigationContainer>
-        <Stack.Navigator 
-        initialRouteName="Connexion"
-        screenOptions={globalScreenOptions}
-        >
-            <Stack.Screen name="Connexion" component={LoginScreen} options={{headerLeft: null, headerTitle: null}} />
-            <Stack.Screen name="Inscription" component={RegisterScreen} />
-            <Stack.Screen name="Chat" component={ChatScreen} />
-            <Stack.Screen name="Délogement" component={RoomChangeScreen} />
-            <Stack.Screen name="Maintenance" component={MaintenanceScreen} />
-            <Stack.Screen name="Réveil" component={TimerScreen} />
-            <Stack.Screen name="Taxi" component={TaxiScreen}/>
-            <Stack.Screen name="Information" component={Information} />
-            <Stack.Screen name="My Sweet Hotel" component={UserProfileScreen} />
-        </Stack.Navigator>
-      </NavigationContainer>
-      </Suspense>
-    </UserContext.Provider>
-    <FlashMessage position="top" />
-    </>
-  );
+  const load = async () => {
+    try{
+        let userMemo = await AsyncStorage.getItem("userDB")
+
+        if(userMemo !== null){
+            setUserDB(JSON.parse(userMemo))
+        }
+    }catch (err) {
+        alert(err)
+    }
+}
+
+useEffect(() => {
+    load().then(async() => {
+      return setIsLoading(false)})
+}, [])
+
+  if(!isLoading) {
+   return <>
+      <UserContext.Provider value={{userDB, setUserDB}}>
+        <Suspense fallback={loading}>
+        <NavigationContainer>
+          <Stack.Navigator 
+          initialRouteName="Connexion"
+          screenOptions={globalScreenOptions}
+          >
+              <Stack.Screen name="Connexion" component={LoginScreen} options={{headerLeft: null, headerTitle: null}} />
+              <Stack.Screen name="Inscription" component={RegisterScreen} />
+              <Stack.Screen name="Chat" component={ChatScreen} />
+              <Stack.Screen name="Délogement" component={RoomChangeScreen} />
+              <Stack.Screen name="Maintenance" component={MaintenanceScreen} />
+              <Stack.Screen name="Réveil" component={TimerScreen} />
+              <Stack.Screen name="Taxi" component={TaxiScreen}/>
+              <Stack.Screen name="Information" component={Information} />
+              <Stack.Screen name="My Sweet Hotel" component={UserProfileScreen} />
+          </Stack.Navigator>
+        </NavigationContainer>
+        </Suspense>
+      </UserContext.Provider>
+      <FlashMessage position="top" />
+      </>
+  }else{
+    return <Image id="flag" 
+    source={require('./assets/splash.png')} 
+    /> 
+  }
+    
+  
 }
 
 const styles = StyleSheet.create({

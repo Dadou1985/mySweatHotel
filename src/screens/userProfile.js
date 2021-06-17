@@ -13,6 +13,7 @@ import { showMessage } from "react-native-flash-message";
 import ClickNwaitDrawer from '../components/ClickNwaitDrawer';
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const UserProfile = ({navigation}) => {
     const [img, setImg] = useState(null)
@@ -76,6 +77,19 @@ const UserProfile = ({navigation}) => {
         }
       })();
     }, []);
+
+    const save = async () => {
+      try {
+        let userMemo = JSON.stringify(userDB)
+          await AsyncStorage.setItem("userDB", userMemo)
+      }catch (err) {
+          alert(err)
+      }
+  }
+
+  useEffect(() => {
+    save()
+  }, [])
     
     const pickImage = async () => {
       let result = await ImagePicker.launchImageLibraryAsync({

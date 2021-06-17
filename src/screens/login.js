@@ -13,8 +13,8 @@ const Login = ({ navigation }) => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const {userDB, setUserDB} = useContext(UserContext)
-    const [language, setLanguage] = useState(i18next.language)
-    const [flag, setFlag] = useState(userDB !== null ? userDB.flag : "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAArklEQVR4nO3avQnCYBiF0UwSdxDTmwkF8Qc70SZi1hBEHSABGxsJ1h8pjUu8IOh54C5w6ptlkiRJkvSPjctVFb3L9TFLKVWR63aHeZsXVfSy8XQ5RK+5P08ppSFy3WZ/bvLJELk2n7wBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPh5gHJdR+96e8z7vq8j99oeF82oqKP37ZOaJEmSJH2lD+DtRFTekXctAAAAAElFTkSuQmCC")
+    const [language, setLanguage] = useState(userDB !== null ? userDB.language : i18next.language)
+    const [flag, setFlag] = useState(userDB.flag)
     const [showModalLanguage, setShowModalLanguage] = useState(false)
     const [refresh, setRefresh] = useState([1])
 
@@ -45,6 +45,10 @@ const Login = ({ navigation }) => {
             case 'pt':
                 return <Image id="flag" 
                 source={{uri: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAEt0lEQVR4nO2a3U9TdxyH/Uc67KClnnPawgHNsrls84U5Z+KSIWrMNjfNxqHqjFmcLwlcSFwyddFsZia70IvFsUVxWVCn8iYWaEtfKPQNViwtpdJWgUnxJbt4doEjXoOsEH9P8knO1Uk+z/md7zm/k7NsmUAgEAgEAoFAIBC8jFhrVjYsRL5fI3+XfaW4YbFnmUUrZyFyYq2lI60zstgjBAgBQoAQIAQIAULAi0u5plJ51IqzyTweXWVgZLkh7yUXXIC1uozTF8z4e2R6HRK9Tolo0IzfKePtkuh3K4Q+Kc572QURsKWuhF6njN8lEelVeDBayv1kCcMRC7msSjpeQsirEHDL+J0SSdPiWhHzEmA7aSXgWUX4lo1E1x6G79iIddgYum0jfKuawRaNwRaNYXsNcXsNgfbd9LlkEtb8F5+3gC/qzdxoMnL7VgUtW01cr9bPntTztoHLWgFRqYi0zsiQVMQVTY9772bcdglHm4m4tDhWwpwFxMIWIj6F5mvradtr4spBPaM6A6M6A77NRTTW6QmVGRjTGRkoM/B7nZ6erzdw766Vu0Ezrb/mv/ycBVTXm+luW0HIJxMNvs+oqYS0zki2vYNHk5NkkmlcnREe3h/n0eQkyW9OkNYZyezaTS6rkhiw0OeSSS3P/2Cck4DmVoWQVyGXVYmFN5F8JmDK5QagoyPKxo0/Mj4+DcDYqTOkdUbGPv2MXFYll1UJuBUGdixRAWGfgs8h0++W8Tg24Fwn4/qwcFZALveUixdnjgFi3x7Hvr2IweqtBDwz8vwuM6FGeWkK6G43YW8tps8l09P1Lm37TVw+pMfX2IamNXDzZpjq6l9obo6gaQ0ETh6h6VghzkMVBL0KYZ+Cq8OEv1tZmgLa/jQRC88855PRTXhXr6DrzUIGr91h27bz+HwjVFWdx+1OsH37BSLH6+l+p5D+nZWzt0CfS8bXKS1NAZHemauYy6qkht5g5PU1pHVG/r5+E4BMZoobN4I8efIPAPHaY6R1Rob32cgkSmZmgEch1LhEBbS2mWeHYC6rEt/5ESl9MYkDXwJgtw9RUfEDk5OPeDo9TbhiLfeWFzNy7gh/9ZtJDVkJuBUiO/Jbfs4CqmpL6e+RSAxYCHkV3Oc+x2Ez8MfBQmJn6nk8/ZjOzrtMj43Rf7SK374qwPmxBdfVSiZSpQyFLPQ6JUYLlqgAi1ZOMmolGjAT8ChEgyU4Dn+A/YiBlN5IUipjdO17JPUSQ6qRpsOv4j63i4dplQG/mexICe6rK/Jefl4CdtYqBHpkBvxmclmVTGI1kVN7iEvq7MnHdEaib60jcrmGiVQZUxkVv1Oms8VETMp/+XkJsGjl7D1hJeiVCXkVpjLP5sFAJYPXDxD8aR/Rjv3ci60nl1WZSJXOTH6HRNy6OPYB8xZg0crZWleK3ynT71YY7DPzYLSUiVQpAY8yux0OPrcdTpjyX/qFCrBo5Vhryjj7s5m+Hhlft0zAI9HrkPA7JbxdEkGPQmRX/l97F0zA81llU9lSa8HRpEwNvmYgqV88y/1/EfBfXtqPokKAECAECAFCgBCwhARYtZWXFiJn1yinMwWmS4s9+f5JTSAQCAQCgUAgEAjywr/ZVBJ3mPtZuAAAAABJRU5ErkJggg=="}} 
+                style={{width: 30, height: 30, marginRight: 15}} />
+            default:
+                return <Image id="flag" 
+                source={{uri: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAArklEQVR4nO3avQnCYBiF0UwSdxDTmwkF8Qc70SZi1hBEHSABGxsJ1h8pjUu8IOh54C5w6ptlkiRJkvSPjctVFb3L9TFLKVWR63aHeZsXVfSy8XQ5RK+5P08ppSFy3WZ/bvLJELk2n7wBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPh5gHJdR+96e8z7vq8j99oeF82oqKP37ZOaJEmSJH2lD+DtRFTekXctAAAAAElFTkSuQmCC"}} 
                 style={{width: 30, height: 30, marginRight: 15}} />
         }
     }
@@ -77,7 +81,13 @@ const Login = ({ navigation }) => {
         return unsubscribe
     }, [flag])
 
-    console.log("//////", i18next.language)
+    useEffect(() => {
+        if(userDB !== null) {
+            i18next.changeLanguage(userDB.language)
+        }
+    }, [])
+
+    console.log("//////", userDB)
 
     const Login = () => {
         auth.signInWithEmailAndPassword(email.trim(), password)
