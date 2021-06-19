@@ -71,7 +71,7 @@ const Taxi = ({ navigation }) => {
         setType('Berline')
         setAdress('')
         
-        return db.collection("hotels")
+        return db.collection("hotel")
         .doc(userDB.hotelId)
         .collection('cab')
         .add({

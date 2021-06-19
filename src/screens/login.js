@@ -14,7 +14,6 @@ const Login = ({ navigation }) => {
     const [password, setPassword] = useState("")
     const {userDB, setUserDB} = useContext(UserContext)
     const [language, setLanguage] = useState(userDB !== null ? userDB.language : i18next.language)
-    const [flag, setFlag] = useState(userDB.flag)
     const [showModalLanguage, setShowModalLanguage] = useState(false)
     const [refresh, setRefresh] = useState([1])
 
@@ -53,6 +52,22 @@ const Login = ({ navigation }) => {
         }
     }
 
+    const handleLoadUserDB = (userId) => {
+        return db.collection('guestUsers')
+        .doc(userId)
+        .get()
+        .then((doc) => {
+            if (doc.exists) {
+            setUserDB(doc.data())
+            } else {
+                // doc.data() will be undefined in this case
+                console.log("No such document!");
+            }
+        }).then(() => {
+            return navigation.navigate('Information')
+        })
+    }
+
     useLayoutEffect(() => {
         navigation.setOptions({
             headerRight: () => (
@@ -69,7 +84,7 @@ const Login = ({ navigation }) => {
         
         let unsubscribe = auth.onAuthStateChanged(function(user) {
             if (user) {
-                navigation.navigate('Information')
+                handleLoadUserDB(user.uid)
                 setTimeout(() => {
                     showMessage({
                         message: t("succes_connection"),
@@ -79,7 +94,7 @@ const Login = ({ navigation }) => {
             } 
           });
         return unsubscribe
-    }, [flag])
+    }, [])
 
     useEffect(() => {
         if(userDB !== null) {
@@ -125,7 +140,7 @@ const Login = ({ navigation }) => {
                 onChangeText={(text) => setPassword(text)} />
             </View>
             <Button raised={true} onPress={() => Login()} containerStyle={styles.button} title={t('connection')} />
-            {userDB === null && <Button raised={true} onPress={() => navigation.navigate('Inscription', { currentFlag: flag})} containerStyle={styles.button} title={t('creation_compte')} type="clear" />}
+            {userDB === null && <Button raised={true} onPress={() => navigation.navigate('Inscription')} containerStyle={styles.button} title={t('creation_compte')} type="clear" />}
        
             <Modal 
             animationType="slide"

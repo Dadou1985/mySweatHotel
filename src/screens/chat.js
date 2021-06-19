@@ -57,7 +57,7 @@ const Chat = ({ navigation }) => {
 
     useEffect(() => {
         const getMessages = () => {
-                return db.collection("hotels")
+                return db.collection("hotel")
                 .doc(userDB.hotelId)
                 .collection('chat')
                 .doc(user.displayName)
@@ -80,7 +80,7 @@ const Chat = ({ navigation }) => {
     }, [])
 
     const handleUpdateHotelResponse = () => {
-        return db.collection("hotels")
+        return db.collection("hotel")
                 .doc(userDB.hotelId)
                 .collection('chat')
                 .doc(user.displayName)
@@ -90,7 +90,7 @@ const Chat = ({ navigation }) => {
     }
 
     const getChatRoom = () => {
-        return db.collection('hotels')
+        return db.collection('hotel')
         .doc(userDB.hotelId)
         .collection('chat')
         .doc(user.displayName)
@@ -106,7 +106,7 @@ const Chat = ({ navigation }) => {
     }
 
     const createRoomnameSubmit = () => {
-        return db.collection('hotels')
+        return db.collection('hotel')
           .doc(userDB.hotelId)
           .collection('chat')
           .doc(user.displayName)
@@ -121,7 +121,7 @@ const Chat = ({ navigation }) => {
       }
 
     const updateRoomnameSubmit = () => {
-        return db.collection('hotels')
+        return db.collection('hotel')
           .doc(userDB.hotelId)
           .collection('chat')
           .doc(user.displayName)
@@ -135,7 +135,7 @@ const Chat = ({ navigation }) => {
         Keyboard.dismiss()
         setInput("")
 
-        return db.collection("hotels")
+        return db.collection("hotel")
         .doc(userDB.hotelId)
         .collection('chat')
         .doc(user.displayName)

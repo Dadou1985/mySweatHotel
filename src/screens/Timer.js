@@ -64,7 +64,7 @@ const Timer = ({navigation}) => {
     }
 
     const handleSubmit = () => {
-        return db.collection("hotels")
+        return db.collection("hotel")
         .doc(userDB.hotelId)
         .collection('clock')
         .add({

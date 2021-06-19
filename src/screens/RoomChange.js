@@ -92,7 +92,7 @@ const RoomChange = ({ navigation }) => {
                     setType('')
                     setDetails('')
 
-                   return db.collection("hotels")
+                   return db.collection("hotel")
                     .doc(userDB.hotelId)
                     .collection('roomChange')
                     .add({
@@ -123,7 +123,7 @@ const RoomChange = ({ navigation }) => {
       event.preventDefault()
       setType('')
       setDetails('')
-      return db.collection("hotels")
+      return db.collection("hotel")
               .doc(userDB.hotelId)
               .collection('roomChange')
               .add({

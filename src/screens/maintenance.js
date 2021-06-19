@@ -92,7 +92,7 @@ const Maintenance = ({ navigation }) => {
                     setType('')
                     setDetails('')
                     
-                    return db.collection("hotels")
+                    return db.collection("hotel")
                     .doc(userDB.hotelId)
                     .collection('maintenance')
                     .add({
@@ -120,7 +120,7 @@ const Maintenance = ({ navigation }) => {
         event.preventDefault()
         setType('')
         setDetails('')
-        return db.collection("hotels")
+        return db.collection("hotel")
                 .doc(userDB.hotelId)
                 .collection('maintenance')
                 .add({

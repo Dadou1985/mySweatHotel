@@ -232,7 +232,7 @@ const UserProfile = ({navigation}) => {
 
     useEffect(() => {
       const toolOnAir = () => {
-        return db.collection('hotels')
+        return db.collection('hotel')
           .doc(userDB.hotelId)
           .collection("chat")
           .where("title", "==", user.displayName)
@@ -253,7 +253,7 @@ const UserProfile = ({navigation}) => {
    },[])
 
    const updateAdminSpeakStatus = () => {
-    return db.collection('hotels')
+    return db.collection('hotel')
           .doc(userDB.hotelId)
           .collection('chat')
           .doc(user.displayName)
