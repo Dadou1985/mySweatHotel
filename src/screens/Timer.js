@@ -1,5 +1,5 @@
 import React, { useState, useContext, useLayoutEffect } from 'react';
-import { KeyboardAvoidingView, StyleSheet, Text, View, TouchableOpacity, ImageBackground } from 'react-native';
+import { KeyboardAvoidingView, StyleSheet, Text, View, TouchableOpacity, ImageBackground, Modal } from 'react-native';
 import { Button, Input, Image } from 'react-native-elements';
 import { StatusBar } from 'expo-status-bar';
 import { UserContext } from '../components/userContext'
@@ -11,7 +11,6 @@ import { showMessage, hideMessage } from "react-native-flash-message";
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
 import { AntDesign } from '@expo/vector-icons';
-import DatePickerModal from 'react-native-modal'
 
 const Timer = ({navigation}) => {
     const [date, setDate] = useState(new Date())
@@ -86,29 +85,45 @@ const Timer = ({navigation}) => {
     const handlePlatformDate = () => {
         if(Platform.OS === 'ios') {
             return (
-                <View>
-                    <View style={{height: 300}}>
-                        <DatePickerModal isVisible={showDate}>
-                            <View style={{
-                                backgroundColor: "#fff",
-                                height: 250,
-                                justifyContent: "center",
-                                margin: 200
-                            }}>
-                                <DateTimePicker
-                                    testID="dateTimePicker"
-                                    locale={i18next.language}
-                                    value={date}
-                                    mode='date'
-                                    is24Hour={true}
-                                    minimumDate={new Date()}
-                                    display="default"
-                                    onChange={onDateChange}
-                                />
-                            </View>
-                        </DatePickerModal>
+                <Modal 
+                    animationType="slide"
+                    visible={showDate} 
+                    style={styles.datePickerModal}>
+                    <View style={{
+                        flexDirection: "column",
+                        alignItems: "center",
+                        backgroundColor: "white",
+                        marginTop: 55,
+                        width: "100%",
+                        height: "80%"
+                    }}>
+                        <View style={{
+                            flexDirection: "row", 
+                            width: 420, 
+                            alignItems: "center", 
+                            justifyContent: "center", 
+                            marginBottom: 10, 
+                            paddingTop: 10, 
+                            paddingBottom: 10, 
+                            backgroundColor: "lightblue"}}>
+                            <Text style={{fontSize: 25, marginRight: 20}}>{t('reveil_jour')}</Text>
+                            <TouchableOpacity>
+                                <AntDesign name="closecircle" size={24} color="black" onPress={() => setShowDate(false)} />
+                            </TouchableOpacity>
+                        </View>
+                        <DateTimePicker
+                            testID="dateTimePicker"
+                            locale={i18next.language}
+                            value={date}
+                            mode='date'
+                            is24Hour={true}
+                            minimumDate={new Date()}
+                            display="spinner"
+                            onChange={onDateChange}
+                            style={styles.datePicker}
+                        />
                     </View>
-                </View>
+                </Modal>
             )
         }else{
             return (
@@ -131,27 +146,45 @@ const Timer = ({navigation}) => {
     const handlePlatformTime = () => {
         if(Platform.OS === 'ios') {
             return (
-                <View>
-                    <View style={{height: 300}}>
-                        <DatePickerModal isVisible={showDate}>
-                            <View style={{
-                                backgroundColor: "#fff",
-                                height: 250,
-                                justifyContent: "center",
-                                margin: 200
-                            }}>
-                                <DateTimePicker
-                                    testID="dateTimePicker"
-                                    value={hour}
-                                    mode='time'
-                                    is24Hour={true}
-                                    display="default"
-                                    onChange={onTimeChange}
-                                />
-                            </View>
-                        </DatePickerModal>
+                <Modal 
+                    animationType="slide"
+                    visible={showHour} 
+                    style={styles.datePickerModal}>
+                    <View style={{
+                        flexDirection: "column",
+                        alignItems: "center",
+                        backgroundColor: "white",
+                        marginTop: 55,
+                        width: "100%",
+                        height: "80%"
+                    }}>
+                        <View style={{
+                            flexDirection: "row", 
+                            width: 420, 
+                            alignItems: "center", 
+                            justifyContent: "center", 
+                            marginBottom: 10, 
+                            paddingTop: 10, 
+                            paddingBottom: 10, 
+                            backgroundColor: "lightblue"}}>
+                            <Text style={{fontSize: 25, marginRight: 20}}>{t('reveil_heure')}</Text>
+                            <TouchableOpacity>
+                                <AntDesign name="closecircle" size={24} color="black" onPress={() => setShowHour(false)} />
+                            </TouchableOpacity>
+                        </View>
+                        <DateTimePicker
+                            testID="dateTimePicker"
+                            locale={i18next.language}
+                            value={hour}
+                            mode='time'
+                            is24Hour={true}
+                            minimumDate={new Date()}
+                            display="spinner"
+                            onChange={onTimeChange}
+                            style={styles.datePicker}
+                        />
                     </View>
-                </View>
+                </Modal>
             )
         }else{
             return (
@@ -248,5 +281,21 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         marginRight: 5
-    }
+    },
+    datePicker: {
+        width: 350,
+        height: 260,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "flex-start",
+        backgroundColor: "white",
+        marginTop: 200
+    },
+    datePickerModal: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 55,
+        backgroundColor: "white"
+      }
 })

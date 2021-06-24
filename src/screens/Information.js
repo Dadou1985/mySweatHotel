@@ -217,15 +217,20 @@ const Information = ({ navigation }) => {
             <StatusBar style="light" />
             {userDB.checkoutDate !== "" ? <View style={styles.containerText}>
                         <View style={styles.containerImg}>
-                        <ImageBackground source={ require('../../img/pic_booking2.png') } style={{
+                        <ImageBackground source={ require('../../img/booking11.png') } style={{
                             flex: 1,
                             resizeMode: "contain",
                             justifyContent: "center",
-                            width: 500}}>
+                            width: 410}}>
                         </ImageBackground>
-                            <View style={{marginBottom: 0, marginTop: 0}}>
-                                <Button title={t("oui")} type="clear" onPress={handleLinkWebsite} />
-                                <Button style={{width: 300}} title={t("non")} onPress={async() => {
+                            <View style={{
+                                position: "absolute",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                width: "100%",
+                                top: 500}}>
+                                <Button containerStyle={styles.button} type="clear" title={t("oui")} onPress={handleLinkWebsite} />
+                                <Button containerStyle={styles.button} title={t("non")} onPress={async() => {
                                     await handleUpdateLanguage()
                                     handleLoadUserDB()
                                     return setTimeout(() => {
@@ -484,7 +489,8 @@ const styles = StyleSheet.create({
         display: "flex",
         justifyContent: "center",
         alignItems: "flex-start",
-        backgroundColor: "white"
+        backgroundColor: "white",
+        marginTop: 200
     },
     datePickerModal: {
         flex: 1,

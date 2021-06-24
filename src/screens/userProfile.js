@@ -290,7 +290,7 @@ const UserProfile = ({navigation}) => {
                 </TouchableOpacity>
               </View>
               <View style={{flexDirection: "row", justifyContent: "space-around", width: "70%"}}>
-                <Text style={{fontSize: 14, marginBottom: 20}}>{t('checkout_prevu')}{userDB.checkoutDate}</Text>
+                <Text style={{fontSize: 14, marginBottom: 20}}>{t('checkout_prevu')} {userDB.checkoutDate}</Text>
                 <TouchableOpacity activeOpacity={0.5} onPress={() => {setShowDate(true)}}>
                   <Ionicons name="pencil-outline" size={24} color="black" />
                 </TouchableOpacity>
