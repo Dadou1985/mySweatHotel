@@ -80,7 +80,6 @@ const Information = ({ navigation }) => {
         const currentDate = selectedDate || date;
         setShowDate(Platform.OS === 'ios');
         setDate(currentDate);
-        setInputRoom(true)
         setTimeout(() => {
             showMessage({
                 message: t("message_checkout_valide"),
@@ -190,7 +189,8 @@ const Information = ({ navigation }) => {
                             style={styles.datePicker}
                         />
                         <Button raised={true} onPress={() => {
-                            setShowHour(false)
+                            setInputRoom(true)
+                            setShowDate(false)
                         }} containerStyle={styles.datePickerButton} title={t('validation')} />
                     </View>
                 </Modal>
