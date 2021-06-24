@@ -133,6 +133,9 @@ const Taxi = ({ navigation }) => {
                             onChange={onDateChange}
                             style={styles.datePicker}
                         />
+                        <Button raised={true} onPress={() => {
+                            setShowDate(false)
+                        }} containerStyle={styles.datePickerButton} title={t('validation')} />
                     </View>
                 </Modal>
             )
@@ -195,12 +198,8 @@ const Taxi = ({ navigation }) => {
                             style={styles.datePicker}
                         />
                         <Button raised={true} onPress={() => {
-                            handleSubmit()
-                            showMessage({
-                                message: t('taxi_message_succes'),
-                                type: "success",
-                            })
-                            }} containerStyle={styles.button} title={t('taxi_bouton')} />
+                            setShowHour(false)
+                            }} containerStyle={styles.datePickerButton} title={t('validation')} />
                     </View>
                 </Modal>
             )
@@ -311,6 +310,13 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginBottom: 50, 
         borderColor: "white" 
+    },
+    datePickerButton: {
+        width: 250,
+        marginTop: 50, 
+        marginBottom: 90,
+        borderColor: "white",
+        marginTop: 100
     },
     img: {
         width: 24,

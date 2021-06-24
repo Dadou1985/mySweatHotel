@@ -122,6 +122,9 @@ const Timer = ({navigation}) => {
                             onChange={onDateChange}
                             style={styles.datePicker}
                         />
+                        <Button raised={true} onPress={() => {
+                            setShowDate(false)
+                        }} containerStyle={styles.datePickerButton} title={t('validation')} />
                     </View>
                 </Modal>
             )
@@ -183,6 +186,9 @@ const Timer = ({navigation}) => {
                             onChange={onTimeChange}
                             style={styles.datePicker}
                         />
+                        <Button raised={true} onPress={() => {
+                            setShowHour(false)
+                        }} containerStyle={styles.datePickerButton} title={t('validation')} />
                     </View>
                 </Modal>
             )
@@ -269,6 +275,13 @@ const styles = StyleSheet.create({
         marginTop: 50, 
         marginBottom: 90,
         borderColor: "white" 
+    },
+    datePickerButton: {
+        width: 250,
+        marginTop: 50, 
+        marginBottom: 90,
+        borderColor: "white",
+        marginTop: 100
     },
     img: {
         width: 24,

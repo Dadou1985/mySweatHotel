@@ -20,7 +20,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 const Information = ({ navigation }) => {
     const [info, setInfo] = useState([])
     const [currentRoom, setCurrentRoom] = useState("Numéro de chambre")
-    const [date, setDate] = useState(new Date())
+    const [date, setDate] = useState(Date.now() + 86400000)
     const [showDate, setShowDate] = useState(false)
     const [formValue, setFormValue] = useState({username: "", email: "", region: "", departement: "", city: "", standing: "", phone: "", room: 0, code_postal: "", adress: "", website: "", mail: "", hotelId: "", hotelName: "", country: ""})
     const [filter, setFilter] = useState("")
@@ -86,7 +86,7 @@ const Information = ({ navigation }) => {
                 message: t("message_checkout_valide"),
                 type: "info",
             })
-        }, 1000);
+        }, 2000);
       };
     
     const handleLoadUserDB = () => {
@@ -173,7 +173,7 @@ const Information = ({ navigation }) => {
                             paddingTop: 10, 
                             paddingBottom: 10, 
                             backgroundColor: "lightblue"}}>
-                            <Text style={{fontSize: 25, marginRight: 20}}>Sélectionnez une date</Text>
+                            <Text style={{fontSize: 25, marginRight: 20}}>{t('reveil_jour')}</Text>
                             <TouchableOpacity>
                                 <AntDesign name="closecircle" size={24} color="black" onPress={() => setShowDate(false)} />
                             </TouchableOpacity>
@@ -189,6 +189,9 @@ const Information = ({ navigation }) => {
                             onChange={onChange}
                             style={styles.datePicker}
                         />
+                        <Button raised={true} onPress={() => {
+                            setShowHour(false)
+                        }} containerStyle={styles.datePickerButton} title={t('validation')} />
                     </View>
                 </Modal>
             )
@@ -230,7 +233,7 @@ const Information = ({ navigation }) => {
                                 width: "100%",
                                 top: 500}}>
                                 <Button containerStyle={styles.button} type="clear" title={t("oui")} onPress={handleLinkWebsite} />
-                                <Button containerStyle={styles.button} title={t("non")} onPress={async() => {
+                                <Button raised={true} containerStyle={styles.button} title={t("non")} onPress={async() => {
                                     await handleUpdateLanguage()
                                     handleLoadUserDB()
                                     return setTimeout(() => {
@@ -498,5 +501,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop: 55,
         backgroundColor: "white"
-      }
+      },
+    datePickerButton: {
+    width: 250,
+    marginTop: 50, 
+    marginBottom: 90,
+    borderColor: "white",
+    marginTop: 100
+    },
 })
