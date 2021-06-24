@@ -373,16 +373,19 @@ const UserProfile = ({navigation}) => {
             </Overlay>
 
             {showDate && (
-                <DateTimePicker
-                testID="dateTimePicker"
-                locale={i18next.language}
-                value={date}
-                mode='date'
-                is24Hour={true}
-                minimumDate={new Date()}
-                display="default"
-                onChange={onChange}
-                />
+                <View>
+                  <DateTimePicker
+                  style={{width: "100%"}}
+                    testID="dateTimePicker"
+                    locale={i18next.language}
+                    value={date}
+                    mode='date'
+                    is24Hour={true}
+                    minimumDate={new Date()}
+                    display="default"
+                    onChange={onChange}
+                  />
+                </View>
             )}
 
         </KeyboardAvoidingView>

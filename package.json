@@ -37,6 +37,8 @@
     "react-native-flash-message": "^0.1.23",
     "react-native-gesture-handler": "~1.8.0",
     "react-native-locale-detector": "^1.0.1",
+    "react-native-modal": "^12.0.2",
+    "react-native-modal-datetime-picker": "^10.0.0",
     "react-native-modal-dropdown": "https://github.com/siemiatj/react-native-modal-dropdown",
     "react-native-paper": "^4.7.2",
     "react-native-reanimated": "~1.13.0",

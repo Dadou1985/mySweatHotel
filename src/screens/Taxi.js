@@ -11,6 +11,8 @@ import { showMessage, hideMessage } from "react-native-flash-message";
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
 import { AntDesign } from '@expo/vector-icons';
+import { Platform } from 'react-native';
+import DatePickerModal from 'react-native-modal'
 
 const Taxi = ({ navigation }) => {
     const [date, setDate] = useState(new Date())
@@ -92,6 +94,93 @@ const Taxi = ({ navigation }) => {
           })
     }
 
+    const handlePlatformDate = () => {
+        if(Platform.OS === 'ios') {
+            return (
+                <View>
+                    <View style={{height: 300}}>
+                        <DatePickerModal isVisible={showDate}>
+                            <View style={{
+                                backgroundColor: "#fff",
+                                height: 250,
+                                justifyContent: "center",
+                                margin: 200
+                            }}>
+                                <DateTimePicker
+                                    testID="dateTimePicker"
+                                    locale={i18next.language}
+                                    value={date}
+                                    mode='date'
+                                    is24Hour={true}
+                                    minimumDate={new Date()}
+                                    display="default"
+                                    onChange={onDateChange}
+                                />
+                            </View>
+                        </DatePickerModal>
+                    </View>
+                </View>
+            )
+        }else{
+            return (
+                <View>
+                    <DateTimePicker
+                        testID="dateTimePicker"
+                        locale={i18next.language}
+                        value={date}
+                        mode='date'
+                        is24Hour={true}
+                        minimumDate={new Date()}
+                        display="default"
+                        onChange={onDateChange}
+                    />
+                </View>
+            )
+        }
+    }
+
+    const handlePlatformTime = () => {
+        if(Platform.OS === 'ios') {
+            return (
+                <View>
+                    <View style={{height: 300}}>
+                        <DatePickerModal isVisible={showDate}>
+                            <View style={{
+                                backgroundColor: "#fff",
+                                height: 250,
+                                justifyContent: "center",
+                                margin: 200
+                            }}>
+                                <DateTimePicker
+                                    testID="dateTimePicker"
+                                    value={hour}
+                                    mode='time'
+                                    is24Hour={true}
+                                    display="default"
+                                    onChange={onTimeChange}
+                                />
+                            </View>
+                        </DatePickerModal>
+                    </View>
+                </View>
+            )
+        }else{
+            return (
+                <View>
+                    <DateTimePicker
+                    style={{width: "100%"}}
+                    testID="dateTimePicker"
+                    value={hour}
+                    mode='time'
+                    is24Hour={true}
+                    display="default"
+                    onChange={onTimeChange}
+                    />
+                </View>
+            )
+        }
+    }
+
       
     moment.locale('fr')
 
@@ -139,27 +228,9 @@ const Taxi = ({ navigation }) => {
                   })
                 }} containerStyle={styles.button} title={t('taxi_bouton')} />
             
-            {showDate &&
-            <DateTimePicker
-                testID="dateTimePicker"
-                locale={i18next.language}
-                value={date}
-                mode='date'
-                is24Hour={true}
-                minimumDate={new Date()}
-                display="default"
-                onChange={onDateChange}
-                />}
-
-            {showHour && 
-            <DateTimePicker
-                testID="dateTimePicker"
-                value={hour}
-                mode='time'
-                is24Hour={true}
-                display="default"
-                onChange={onTimeChange}
-                />}
+            {showDate && handlePlatformDate()}
+            {showHour && handlePlatformTime()}
+            
         </KeyboardAvoidingView>
     )
 }

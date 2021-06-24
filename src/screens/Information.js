@@ -14,8 +14,8 @@ import { AntDesign } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
-import { FontAwesome5 } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import DatePickerModal from 'react-native-modal'
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 const Information = ({ navigation }) => {
     const [info, setInfo] = useState([])
@@ -147,6 +147,67 @@ const Information = ({ navigation }) => {
 
     const handleLinkWebsite = async() => {
         return Linking.openURL(userDB.website)
+    }
+
+    const handlePlatformDate = () => {
+        if(Platform.OS === 'ios') {
+            return (
+                <Modal 
+                    animationType="slide"
+                    visible={showDate} 
+                    style={styles.datePickerModal}>
+                    <View style={{
+                        flexDirection: "column",
+                        alignItems: "center",
+                        backgroundColor: "white",
+                        marginTop: 55,
+                        width: "100%",
+                        height: "80%"
+                    }}>
+                        <View style={{
+                            flexDirection: "row", 
+                            width: 420, 
+                            alignItems: "center", 
+                            justifyContent: "center", 
+                            marginBottom: 10, 
+                            paddingTop: 10, 
+                            paddingBottom: 10, 
+                            backgroundColor: "lightblue"}}>
+                            <Text style={{fontSize: 25, marginRight: 20}}>Sélectionnez une date</Text>
+                            <TouchableOpacity>
+                                <AntDesign name="closecircle" size={24} color="black" onPress={() => setShowDate(false)} />
+                            </TouchableOpacity>
+                        </View>
+                        <DateTimePicker
+                            testID="dateTimePicker"
+                            locale={i18next.language}
+                            value={date}
+                            mode='date'
+                            is24Hour={true}
+                            minimumDate={Date.now() + 86400000}
+                            display="spinner"
+                            onChange={onChange}
+                            style={styles.datePicker}
+                        />
+                    </View>
+                </Modal>
+            )
+        }else{
+            return (
+                <View>
+                    <DateTimePicker
+                        testID="dateTimePicker"
+                        locale={i18next.language}
+                        value={date}
+                        mode='date'
+                        is24Hour={true}
+                        minimumDate={Date.now() + 86400000}
+                        display="default"
+                        onChange={onChange}
+                    />
+                </View>
+            )
+        }
     }
 
     console.log(userDB)
@@ -316,18 +377,7 @@ const Information = ({ navigation }) => {
                 </View>
             </Modal>
 
-            {showDate && (
-                <DateTimePicker
-                testID="dateTimePicker"
-                locale={i18next.language}
-                value={date}
-                mode='date'
-                is24Hour={true}
-                minimumDate={Date.now() + 86400000}
-                display="default"
-                onChange={onChange}
-                />
-            )}
+            {showDate && handlePlatformDate()}
            
         </KeyboardAvoidingView>
     )
@@ -428,4 +478,19 @@ const styles = StyleSheet.create({
         shadowRadius: 3.84,
         elevation: 5,
     },
+    datePicker: {
+        width: 350,
+        height: 260,
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "flex-start",
+        backgroundColor: "white"
+    },
+    datePickerModal: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 55,
+        backgroundColor: "white"
+      }
 })
