@@ -192,7 +192,6 @@ const Taxi = ({ navigation }) => {
                             value={hour}
                             mode='time'
                             is24Hour={true}
-                            minimumDate={new Date()}
                             display="spinner"
                             onChange={onTimeChange}
                             style={styles.datePicker}

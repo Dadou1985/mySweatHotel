@@ -1,7 +1,7 @@
 import React, { useLayoutEffect, useState, useContext, useEffect, useRef } from 'react'
 import { KeyboardAvoidingView, StyleSheet, Text, View, Image, TouchableOpacity, ImageBackground, Animated, Modal, Platform } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { Entypo, MaterialIcons, SimpleLineIcons, Ionicons } from '@expo/vector-icons';
+import { Entypo, MaterialIcons, SimpleLineIcons, Ionicons, AntDesign } from '@expo/vector-icons';
 import { auth, db, storage } from "../../firebase"
 import { UserContext } from '../components/userContext'
 import moment from 'moment'
