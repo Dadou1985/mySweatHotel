@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useLayoutEffect } from 'react';
-import { KeyboardAvoidingView, StyleSheet, Text, View, TouchableOpacity, Modal, ScrollView, ImageBackground } from 'react-native';
+import { KeyboardAvoidingView, StyleSheet, Text, View, TouchableOpacity, Modal, ScrollView, ImageBackground, Platform } from 'react-native';
 import { Button, Input, Image } from 'react-native-elements';
 import { StatusBar } from 'expo-status-bar';
 import { auth, db } from "../../firebase"
@@ -14,13 +14,12 @@ import { AntDesign } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
-import DatePickerModal from 'react-native-modal'
-import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 const Information = ({ navigation }) => {
+    
     const [info, setInfo] = useState([])
     const [currentRoom, setCurrentRoom] = useState("Numéro de chambre")
-    const [date, setDate] = useState(Date.now() + 86400000)
+    const [date, setDate] = useState(new Date())
     const [showDate, setShowDate] = useState(false)
     const [formValue, setFormValue] = useState({username: "", email: "", region: "", departement: "", city: "", standing: "", phone: "", room: 0, code_postal: "", adress: "", website: "", mail: "", hotelId: "", hotelName: "", country: ""})
     const [filter, setFilter] = useState("")
@@ -49,7 +48,7 @@ const Information = ({ navigation }) => {
             headerTitleAlign: "right",
             headerTitle: () =>(
                 <View style={{flexDirection: "row", alignItems: "center"}}>
-                    {userDB !== null ? 
+                    {userDB.checkoutDate !== "" ? 
                      <Text style={{ color: "black", fontWeight : "bold", fontSize: 20, marginLeft: 5}}>{t("prochain_sejour")}</Text> : <Text style={{ color: "black", fontWeight : "bold", fontSize: 20, marginLeft: 5}}>{t("trouver_hotel")}</Text>}
                 </View>
             ),
@@ -79,6 +78,7 @@ const Information = ({ navigation }) => {
     const onChange = (event, selectedDate) => {
         const currentDate = selectedDate || date;
         setShowDate(Platform.OS === 'ios');
+        setInputRoom(true)
         setDate(currentDate);
         setTimeout(() => {
             showMessage({
@@ -183,7 +183,7 @@ const Information = ({ navigation }) => {
                             value={date}
                             mode='date'
                             is24Hour={true}
-                            minimumDate={Date.now() + 86400000}
+                            minimumDate={new Date()}
                             display="spinner"
                             onChange={onChange}
                             style={styles.datePicker}

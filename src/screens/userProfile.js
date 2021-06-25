@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useState, useContext, useEffect, useRef } from 'react'
-import { KeyboardAvoidingView, StyleSheet, Text, View, Image, TouchableOpacity, ImageBackground, Animated } from 'react-native';
+import { KeyboardAvoidingView, StyleSheet, Text, View, Image, TouchableOpacity, ImageBackground, Animated, Modal, Platform } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Entypo, MaterialIcons, SimpleLineIcons, Ionicons } from '@expo/vector-icons';
 import { auth, db, storage } from "../../firebase"
@@ -112,7 +112,7 @@ const UserProfile = ({navigation}) => {
       const currentDate = selectedDate || date;
        setShowDate(Platform.OS === 'ios');
        setDate(currentDate);
-       if(userDB.checkoutDate !== moment(currentDate).format('L')) {
+       if(userDB.checkoutDate !== moment(currentDate).format('LL')) {
         setUpdateCheckout(true)
        }    
     };
@@ -262,7 +262,74 @@ const UserProfile = ({navigation}) => {
           })      
   }
 
-    console.log(userDB)
+  const tomorrow = Date.now() + 86400000
+
+  const handlePlatformDate = () => {
+    if(Platform.OS === 'ios') {
+        return (
+            <Modal 
+                animationType="slide"
+                visible={showDate} 
+                style={styles.datePickerModal}>
+                <View style={{
+                    flexDirection: "column",
+                    alignItems: "center",
+                    backgroundColor: "white",
+                    marginTop: 55,
+                    width: "100%",
+                    height: "80%"
+                }}>
+                    <View style={{
+                        flexDirection: "row", 
+                        width: 420, 
+                        alignItems: "center", 
+                        justifyContent: "center", 
+                        marginBottom: 10, 
+                        paddingTop: 10, 
+                        paddingBottom: 10, 
+                        backgroundColor: "lightblue"}}>
+                        <Text style={{fontSize: 25, marginRight: 20}}>{t('reveil_jour')}</Text>
+                        <TouchableOpacity>
+                            <AntDesign name="closecircle" size={24} color="black" onPress={() => setShowDate(false)} />
+                        </TouchableOpacity>
+                    </View>
+                    <DateTimePicker
+                        testID="dateTimePicker"
+                        locale={i18next.language}
+                        value={date}
+                        mode='date'
+                        is24Hour={true}
+                        minimumDate={new Date()}
+                        display="spinner"
+                        onChange={onChange}
+                        style={styles.datePicker}
+                    />
+                    <Button raised={true} onPress={() => {
+                        setShowDate(false)                   
+                      }} containerStyle={styles.datePickerButton} title={t('validation')} />
+                </View>
+            </Modal>
+        )
+    }else{
+        return (
+            <View>
+                <DateTimePicker
+                    testID="dateTimePicker"
+                    locale={i18next.language}
+                    value={date}
+                    mode='date'
+                    is24Hour={true}
+                    minimumDate={tomorrow}
+                    display="default"
+                    onChange={onChange}
+                />
+            </View>
+        )
+    }
+}
+
+
+    console.log(moment(tomorrow).format('LL'))
     
     return (
         <KeyboardAvoidingView style={styles.container}>
@@ -372,21 +439,7 @@ const UserProfile = ({navigation}) => {
               </View>
             </Overlay>
 
-            {showDate && (
-                <View>
-                  <DateTimePicker
-                  style={{width: "100%"}}
-                    testID="dateTimePicker"
-                    locale={i18next.language}
-                    value={date}
-                    mode='date'
-                    is24Hour={true}
-                    minimumDate={new Date()}
-                    display="default"
-                    onChange={onChange}
-                  />
-                </View>
-            )}
+            {showDate && handlePlatformDate()}
 
         </KeyboardAvoidingView>
     )
@@ -427,5 +480,28 @@ const styles = StyleSheet.create({
       shadowOpacity: 0.25,
       shadowRadius: 3.84,
       elevation: 5,
-  }
+  },
+  datePicker: {
+    width: 350,
+    height: 260,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "flex-start",
+    backgroundColor: "white",
+    marginTop: 200
+},
+datePickerModal: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 55,
+    backgroundColor: "white"
+  },
+datePickerButton: {
+    width: 250,
+    marginTop: 50, 
+    marginBottom: 90,
+    borderColor: "white",
+    marginTop: 100
+},
 })

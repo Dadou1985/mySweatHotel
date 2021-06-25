@@ -70,7 +70,7 @@ useEffect(() => {
         </NavigationContainer>
         </Suspense>
       </UserContext.Provider>
-      <FlashMessage position="top" />
+      <FlashMessage position="top" style={{zIndex: 10}} />
       </>
   }else{
     return <Image id="flag" 

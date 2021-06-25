@@ -1,5 +1,5 @@
 import React, { useState, useContext, useLayoutEffect } from 'react';
-import { KeyboardAvoidingView, StyleSheet, Text, View, TouchableOpacity, ImageBackground, Modal } from 'react-native';
+import { KeyboardAvoidingView, StyleSheet, Text, View, TouchableOpacity, ImageBackground, Modal, Platform } from 'react-native';
 import { Button, Input, Image } from 'react-native-elements';
 import { StatusBar } from 'expo-status-bar';
 import { UserContext } from '../components/userContext'
