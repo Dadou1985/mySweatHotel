@@ -123,7 +123,7 @@ const Information = ({ navigation }) => {
             city: formValue.city,
             classement: formValue.standing,            
             room: currentRoom,
-            checkoutDate: moment(date.getTime()).format('LL'),
+            checkoutDate: moment(date.getTime()).format('L'),
             towel: true,
             soap: true,
             toiletPaper: true,
@@ -271,7 +271,7 @@ const Information = ({ navigation }) => {
                                     onPress={() => {
                                         setShowDate(true)
                                         setHideAll(true)
-                                        }} containerStyle={styles.button} title={inputRoom ? `${t("checkout_information")} ${moment(date).format('LL')}` : t("date_checkout")} type="outline" />}
+                                        }} containerStyle={styles.button} title={inputRoom ? `${t("checkout_information")} ${moment(date).format('L')}` : t("date_checkout")} type="outline" />}
 
                             {inputRoom && 
                              <Button 

@@ -27,12 +27,13 @@ const Register = ({ navigation }) => {
         .doc(userId)
         .set({
           username: name,
-          email: email,
+          email: email.trim(),
           password: password,
           language: language,
           lastTimeConnected: Date.now(),
           userId: userId,
-          localLanguage: "fr"
+          localLanguage: i18next.language,
+          checkoutDate: ""
         })  
       }
 
@@ -94,7 +95,7 @@ const Register = ({ navigation }) => {
               .getDownloadURL()
               .then(url => {
                 const uploadTask = () => {
-                    auth.createUserWithEmailAndPassword(email, password)
+                    auth.createUserWithEmailAndPassword(email.trim(), password)
                         .then((authUser) => {
                             authUser.user.updateProfile({
                                 photoURL: url,
@@ -107,6 +108,16 @@ const Register = ({ navigation }) => {
           }
         )
       } 
+
+      const handleAuthRegister = () => {
+        auth.createUserWithEmailAndPassword(email.trim(), password)
+          .then((authUser) => {
+              authUser.user.updateProfile({
+                  displayName: name
+              })
+            freeRegister(authUser.user.uid)
+          })
+      }
 
       console.log("$$$$$$", img)
 
@@ -136,7 +147,11 @@ const Register = ({ navigation }) => {
             </View>
             <Button raised={true} onPress={() => navigation.navigate('Connexion')} containerStyle={styles.button} title={t("connection")} type="clear" />
             <Button raised={true} containerStyle={styles.button} title={t("creation_compte")} onPress={(event) => {
+              if(img !== null) {
                 handleChangePhotoUrl(event)
+              }else{
+                handleAuthRegister()
+              }
                 }} />
         </KeyboardAvoidingView>
     )

@@ -112,7 +112,7 @@ const UserProfile = ({navigation}) => {
       const currentDate = selectedDate || date;
        setShowDate(Platform.OS === 'ios');
        setDate(currentDate);
-       if(userDB.checkoutDate !== moment(currentDate).format('LL')) {
+       if(userDB.checkoutDate !== moment(currentDate).format('L')) {
         setUpdateCheckout(true)
        }    
     };
@@ -203,7 +203,7 @@ const UserProfile = ({navigation}) => {
       await db.collection('guestUsers')
       .doc(user.uid)
       .update({
-        checkoutDate: moment(date).format('LL')
+        checkoutDate: moment(date).format('L')
       })
 
       await showMessage({
@@ -329,17 +329,22 @@ const UserProfile = ({navigation}) => {
 }
 
 
-    console.log(moment(tomorrow).format('LL'))
+    console.log(moment(tomorrow).format('L'))
     
     return (
         <KeyboardAvoidingView style={styles.container}>
             <StatusBar style="light" />
             <View style={{flex: 2, width: "100%"}}>
-              <ImageBackground source={{uri: user.photoURL}} style={styles.image}>
+              {user.photoURL ? <ImageBackground source={{uri: user.photoURL}} style={styles.image}>
               <TouchableOpacity style={{padding: 15}} onPress={pickImage}>
                     <MaterialIcons name="add-a-photo" size={35} color="grey" />                    
                   </TouchableOpacity>
-              </ImageBackground>
+              </ImageBackground> : 
+              <ImageBackground source={require('../../img/avatar-client.png')} style={styles.image}>
+                <TouchableOpacity style={{padding: 15}} onPress={pickImage}>
+                    <MaterialIcons name="add-a-photo" size={35} color="grey" />                    
+                  </TouchableOpacity>  
+              </ImageBackground>}
             </View>
             <View style={{flexDirection: "column", width: "100%", padding: 10, alignItems: "center"}}>
               <Text style={{fontSize: 30, fontWeight: "bold"}}>{user.displayName}</Text>

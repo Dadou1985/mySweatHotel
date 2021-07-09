@@ -140,7 +140,7 @@ const Login = ({ navigation }) => {
                 onChangeText={(text) => setPassword(text)} />
             </View>
             <Button raised={true} onPress={() => Login()} containerStyle={styles.button} title={t('connection')} />
-            {userDB === null && <Button raised={true} onPress={() => navigation.navigate('Inscription')} containerStyle={styles.button} title={t('creation_compte')} type="clear" />}
+            <Button raised={true} onPress={() => navigation.navigate('Inscription')} containerStyle={styles.button} title={t('creation_compte')} type="clear" />
        
             <Modal 
             animationType="slide"
