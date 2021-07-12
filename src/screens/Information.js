@@ -315,7 +315,7 @@ const Information = ({ navigation }) => {
                             <AntDesign name="closecircle" size={24} color="black" onPress={() => setShowModalHotel(false)} />
                         </TouchableOpacity>
                     </View>
-                {info.length > 0 ? info.map(hotel =>(
+                {info.map(hotel =>(
                 <TouchableOpacity onPress={() => {
                     setFormValue({
                         hotelId: hotel.id,
@@ -346,17 +346,7 @@ const Information = ({ navigation }) => {
                         </View>
                     </TouchableOpacity>
 
-                    )) :
-                    <View style={styles.container2}>
-                        <Text style={{fontSize: 20, textAlign: "center", marginBottom: 60}}>{t("no_partenaire")}</Text>
-                        <Text style={{fontSize: 15, textAlign: "center", marginBottom: 60}}>{t("msh_team_message")}</Text>
-                        <Text style={{fontSize: 10, textAlign: "center", marginBottom: 60}}>{t("msh_team_message2")}</Text>
-                        <Text style={{fontSize: 10, textAlign: "center", marginBottom: 60, fontWeight: "bold"}}>{t("msh_team_message3")}</Text>
-                        <View>
-                            <Button raised={true} onPress={() => setShowModalHotel(false)} containerStyle={styles.button} type="outlined" title={t("retour_recherche")} />
-                            <Button raised={true} onPress={() => Logout()} containerStyle={styles.button2} title={t("deconnexion_information")} />
-                        </View>
-                    </View>}
+                    ))}
                 </ScrollView>
             </Modal>
 

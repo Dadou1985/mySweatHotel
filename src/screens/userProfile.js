@@ -348,20 +348,20 @@ const UserProfile = ({navigation}) => {
             </View>
             <View style={{flexDirection: "column", width: "100%", padding: 10, alignItems: "center"}}>
               <Text style={{fontSize: 30, fontWeight: "bold"}}>{user.displayName}</Text>
-              <View style={{flexDirection: "row", justifyContent: "space-around", width: "55%", marginBottom: 20}}>
+              <View style={{flexDirection: "row", justifyContent: "space-around", mawWidth: "90%", marginBottom: 20}}>
                 <Text style={{fontSize: 15, fontWeight: "bold"}}>{userDB.email}</Text>
                 <TouchableOpacity activeOpacity={0.5} onPress={() => setUpdateMail(true)}>
                   <Ionicons name="pencil-outline" size={24} color="black" />
                 </TouchableOpacity>
               </View>
               <Text style={{fontSize: 20, marginBottom: 20}}>{userDB.hotelName}</Text>
-              <View style={{flexDirection: "row", justifyContent: "space-around", width: "70%"}}>
+              <View style={{flexDirection: "row", justifyContent: "space-around", mawWidth: "90%"}}>
               <Text style={{fontSize: 15, marginBottom: 10}}>{t('occupation_chbre')} {userDB.room}</Text>
                 <TouchableOpacity activeOpacity={0.5} onPress={() => setUpdateRoom(true)}>
                   <Ionicons name="pencil-outline" size={24} color="black" />
                 </TouchableOpacity>
               </View>
-              <View style={{flexDirection: "row", justifyContent: "space-around", width: "70%"}}>
+              <View style={{flexDirection: "row", justifyContent: "space-around", mawWidth: "90%"}}>
                 <Text style={{fontSize: 14, marginBottom: 20}}>{t('checkout_prevu')} {userDB.checkoutDate}</Text>
                 <TouchableOpacity activeOpacity={0.5} onPress={() => {setShowDate(true)}}>
                   <Ionicons name="pencil-outline" size={24} color="black" />

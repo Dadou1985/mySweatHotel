@@ -102,13 +102,20 @@ const Login = ({ navigation }) => {
         }
     }, [])
 
-    console.log("//////", userDB)
-
     const Login = () => {
         auth.signInWithEmailAndPassword(email.trim(), password)
         .then(() => {
             setEmail('') 
             setPassword('')
+        }).catch(function(error) {
+            if(error) {
+                setTimeout(() => {
+                    showMessage({
+                        message: t('login_error'),
+                        type: "danger",
+                      })
+                }, 1000)
+            }
         })
     }
 
@@ -140,7 +147,7 @@ const Login = ({ navigation }) => {
                 onChangeText={(text) => setPassword(text)} />
             </View>
             <Button raised={true} onPress={() => Login()} containerStyle={styles.button} title={t('connection')} />
-            <Button raised={true} onPress={() => navigation.navigate('Inscription')} containerStyle={styles.button} title={t('creation_compte')} type="clear" />
+            {userDB === null && <Button raised={true} onPress={() => navigation.navigate('Inscription')} containerStyle={styles.button} title={t('creation_compte')} type="clear" />}
        
             <Modal 
             animationType="slide"

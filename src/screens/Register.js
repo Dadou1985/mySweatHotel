@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import { KeyboardAvoidingView, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { Button, Input, Image } from 'react-native-elements';
 import { StatusBar } from 'expo-status-bar';
@@ -9,6 +9,8 @@ import Constants from 'expo-constants'
 import { showMessage, hideMessage } from "react-native-flash-message";
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
+import { AntDesign } from '@expo/vector-icons';
+
 
 const Register = ({ navigation }) => {
     const [email, setEmail] = useState("")
@@ -21,6 +23,25 @@ const Register = ({ navigation }) => {
     const [language, setLanguage] = useState(i18next.language)
   
     const { t } = useTranslation()
+
+    useLayoutEffect(() => {
+      navigation.setOptions({
+          title: "Inscription",
+          headerBackTitleVisible: false,
+          headerTitleAlign: "right",
+          headerTitle: () =>(
+              <View style={{flexDirection: "row", alignItems: "center"}}>
+                  <Text style={{ color: "black", fontWeight : "bold", fontSize: 20}}>{t('inscription_titre')}</Text>
+              </View>
+          ),
+          headerLeft: () => (
+              <TouchableOpacity onPress={() => {
+              navigation.navigate("Connexion")}}>
+                  <AntDesign name="left" size={24} color="black" style={{marginLeft: 5}} />
+              </TouchableOpacity>
+          )
+      })
+  }, [navigation])
 
     const freeRegister = (userId) => {
         return db.collection('guestUsers')
@@ -40,13 +61,19 @@ const Register = ({ navigation }) => {
       useEffect(() => {
         let unsubscribe = auth.onAuthStateChanged(function(user) {
             if (user) {
-                navigation.navigate('Information')
-                setTimeout(() => {
-                  showMessage({
-                      message: "Bienvenu.e chez vous !",
-                      type: "info",
-                    })
-              }, 3000);
+              return db.collection('guestUsers')
+              .doc(userId)
+              .get()
+              .then((doc) => {
+                  if (doc.exists) {
+                  setUserDB(doc.data())
+                  } else {
+                      // doc.data() will be undefined in this case
+                      console.log("No such document!");
+                  }
+              }).then(() => {
+                return navigation.navigate('Information')
+              })     
             } 
           });
         return unsubscribe
@@ -129,13 +156,13 @@ const Register = ({ navigation }) => {
                 <Text style={styles.text}>{t("creation_compte")}</Text>
             </View>    
             <View style={styles.inputContainer}> 
-                <Input placeholder={t("nom")} autofocus type="text" value={name} 
+                <Input placeholder={t("nom") + "*"} autofocus type="text" value={name} 
                 onChangeText={(text) => setName(text)} />
-                <Input placeholder={t("email")} type="email" value={email} 
+                <Input placeholder={t("email") + "*"} type="email" value={email} 
                 onChangeText={(text) => setEmail(text)} />
-                <Input placeholder={t("mot_de_passe")} secureTextEntry type="password" value={password} 
+                <Input placeholder={t("mot_de_passe") + "*"} secureTextEntry type="password" value={password} 
                 onChangeText={(text) => setPassword(text)} />
-                <Input placeholder={t("confirmation_mdp")} secureTextEntry type="password" value={confirmPassword} 
+                <Input placeholder={t("confirmation_mdp") + "*"} secureTextEntry type="password" value={confirmPassword} 
                 onChangeText={(text) => setConfirmPassword(text)}
                 onSubmitEditing={freeRegister}  />
             </View>
@@ -147,10 +174,28 @@ const Register = ({ navigation }) => {
             </View>
             <Button raised={true} onPress={() => navigation.navigate('Connexion')} containerStyle={styles.button} title={t("connection")} type="clear" />
             <Button raised={true} containerStyle={styles.button} title={t("creation_compte")} onPress={(event) => {
-              if(img !== null) {
-                handleChangePhotoUrl(event)
+              if(name !== "" && email !== "" && password !== "" && confirmPassword !== "" && password === confirmPassword) {
+                if(img !== null) {
+                  handleChangePhotoUrl(event)
+                }else{
+                  handleAuthRegister()
+                }
               }else{
-                handleAuthRegister()
+                if(password !== confirmPassword) {
+                  setTimeout(() => {
+                    showMessage({
+                        message: t('conf_mdp_error'),
+                        type: "danger",
+                      })
+                }, 1000)
+                }else{
+                  setTimeout(() => {
+                    showMessage({
+                        message: t('register_error'),
+                        type: "danger",
+                      })
+                }, 1000)
+                }
               }
                 }} />
         </KeyboardAvoidingView>

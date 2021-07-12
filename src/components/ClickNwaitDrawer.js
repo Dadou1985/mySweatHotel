@@ -54,16 +54,16 @@ const ClickNwaitDrawer = ({fadeAnim, fadeOut, navigation}) => {
 
     return (
         <Animated.View style={[styles.fadingContainer, {bottom: fadeAnim}]}>
-                <View style={{flexDirection: "row", justifyContent: "flex-end", width: "95%", alignItems: "center"}}>
-                    <Text style={{fontSize: 20, fontWeight: "bold", marginRight: 100}}>{t('conciergerie')}</Text>
-                    <TouchableOpacity activeOpacity={0.5} onPress={fadeOut}>
+                <View style={{flexDirection: "row", justifyContent: "flex-end", mawWidth: "90%", alignItems: "center"}}>
+                    <Text style={{fontSize: 20, fontWeight: "bold", marginLeft: 120}}>{t('conciergerie')}</Text>
+                    <TouchableOpacity activeOpacity={0.5} onPress={fadeOut} style={{marginLeft: 100}}>
                         <AntDesign name="closecircle" size={20} color="black" />
                     </TouchableOpacity>
                 </View>
-                <View style={{flexDirection: "row", justifyContent: "space-around", width: "70%", alignItems: "center"}}>
+                <View style={{flexDirection: "row", justifyContent: "space-around", mawWidth: "90%", alignItems: "center"}}>
                     <Text style={{textAlign: 'center'}}>{t('besoins')}</Text>
                     <TouchableOpacity activeOpacity={0.5} onPress={fadeOut}>
-                        <AntDesign name="infocirlce" size={15} color="black" onPress={() => setShowModal(true)} />
+                        <AntDesign name="infocirlce" size={15} color="black" style={{marginLeft: 5}} onPress={() => setShowModal(true)} />
                     </TouchableOpacity>
                 </View>
                 <View style={styles.cncContainer}>
@@ -216,6 +216,7 @@ const styles = StyleSheet.create({
           justifyContent: "space-around",
           width: "100%",
           marginTop: 15,
+          padding: 10,
       },
       centeredView: {
         flex: 1,
