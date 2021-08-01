@@ -2,7 +2,7 @@
   "expo": {
     "name": "My Sweet Hotel",
     "slug": "mySweatHotel",
-    "version": "1.0.0",
+    "version": "8.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -19,17 +19,19 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.dadou1885.mySweatHotel",
-      "buildNumber": "1.0.0"
+      "buildNumber": "8.0.0"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.dadou1885.mySweatHotel"
+      "package": "com.dadou1885.mySweatHotel",
+      "versionCode": 2,
+      "useNextNotificationsApi": true
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/icon.png"
     },
     "description": ""
   }

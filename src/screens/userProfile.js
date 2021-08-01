@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useState, useContext, useEffect, useRef } from 'react'
-import { KeyboardAvoidingView, StyleSheet, Text, View, Image, TouchableOpacity, ImageBackground, Animated, Modal, Platform } from 'react-native';
+import { KeyboardAvoidingView, StyleSheet, Text, View, Image, TouchableOpacity, ImageBackground, Animated, Modal, Platform, AppState } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Entypo, MaterialIcons, SimpleLineIcons, Ionicons, AntDesign } from '@expo/vector-icons';
 import { auth, db, storage } from "../../firebase"
@@ -14,6 +14,9 @@ import ClickNwaitDrawer from '../components/ClickNwaitDrawer';
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Constants from 'expo-constants';
+import * as Notifications from 'expo-notifications';
+import ChatNotification from '../components/chatNotification'
 
 const UserProfile = ({navigation}) => {
     const [img, setImg] = useState(null)
@@ -29,9 +32,10 @@ const UserProfile = ({navigation}) => {
     const [room, setRoom] = useState(null)
     const [showDate, setShowDate] = useState(false)
     const [chatResponse, setChatResponse] = useState([])
+    const appState = useRef(AppState.currentState);
+    const [appStateVisible, setAppStateVisible] = useState(appState.current);
 
     const Logout = () => {
-      navigation.replace('Connexion')
       auth.signOut()
   }
 
@@ -65,6 +69,16 @@ const UserProfile = ({navigation}) => {
           }} />)
       })
   }, [])
+
+  useEffect(() => {
+        
+    let unsubscribe = auth.onAuthStateChanged(function(user) {
+        if (!user) {
+          return navigation.replace('Connexion')
+        } 
+      });
+    return unsubscribe
+}, [])
 
 
     useEffect(() => {
@@ -328,8 +342,93 @@ const UserProfile = ({navigation}) => {
     }
 }
 
+useEffect(() => {
+  AppState.addEventListener('change', _handleAppStateChange);
 
-    console.log(moment(tomorrow).format('L'))
+  return () => {
+    AppState.removeEventListener('change', _handleAppStateChange);
+  };
+}, []);
+
+const _handleAppStateChange = (nextAppState) => {
+  if (
+    appState.current.match(/inactive|background/) &&
+    nextAppState === 'active'
+  ) {
+    console.log('App has come to the foreground!');
+  }
+
+  appState.current = nextAppState;
+  setAppStateVisible(appState.current);
+  console.log('AppState', appState.current);
+};
+
+
+useEffect(() => {
+  (() => registerForPushNotificationsAsync())()
+}, [])
+
+const registerForPushNotificationsAsync = async() => {
+  let token;
+  if (Constants.isDevice) {
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== 'granted') {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== 'granted') {
+      alert('Failed to get push token for push notification!');
+      return;
+    }
+    token = (await Notifications.getExpoPushTokenAsync()).data;
+    console.log(token);
+  } else {
+    alert('Must use physical device for Push Notifications');
+  }
+
+  if (token) {
+      const res = await db.collection("guestUsers")
+          .doc(user.uid)
+          .update({token: token})
+      return handleLoadUserDB()
+  }
+
+  if (Platform.OS === 'android') {
+    Notifications.setNotificationChannelAsync('default', {
+      name: 'default',
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: '#FF231F7C',
+    });
+  }
+
+  return token;
+}
+
+const sendPushNotification = async(token) => {
+  if (appState.current === "background") {
+    const message = {
+      to: token,
+      sound: 'default',
+      title: 'Chat Réception',
+      body: 'Vous avez un nouveau message !',
+      data: { someData: 'goes here' },
+    };
+  
+    await fetch('https://exp.host/--/api/v2/push/send', {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Accept-encoding': 'gzip, deflate',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(message),
+    });
+  }
+}
+
+  console.log(appState.current)
     
     return (
         <KeyboardAvoidingView style={styles.container}>
@@ -373,7 +472,9 @@ const UserProfile = ({navigation}) => {
                   updateAdminSpeakStatus()}}>
                   <Entypo name="chat" size={40} color="black" /> 
                   {chatResponse.map(response => {
-                    if(response.hotelResponding) {return <Text style={{fontWeight: "bold", color: "red", marginLeft: 5, fontSize: 20}}>!</Text>}
+                    if(response.hotelResponding) {
+                      return <ChatNotification userToken={userDB.token} />
+                    } 
                   })}                   
               </TouchableOpacity>
               <TouchableOpacity activeOpacity={0.5}  onPress={() => navigation.navigate('Délogement')}>
@@ -484,7 +585,6 @@ const styles = StyleSheet.create({
       },
       shadowOpacity: 0.25,
       shadowRadius: 3.84,
-      elevation: 5,
   },
   datePicker: {
     width: 350,

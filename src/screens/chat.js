@@ -57,13 +57,13 @@ const Chat = ({ navigation }) => {
 
     useEffect(() => {
         const getMessages = () => {
-                return db.collection("hotel")
-                .doc(userDB.hotelId)
-                .collection('chat')
-                .doc(user.displayName)
-                .collection("chatRoom")
-                .orderBy("markup", "desc")
-                }
+            return db.collection("hotel")
+            .doc(userDB.hotelId)
+            .collection('chat')
+            .doc(user.displayName)
+            .collection("chatRoom")
+            .orderBy("markup", "desc")
+        }
 
         let unsubscribe = getMessages().onSnapshot(function(snapshot) {
             const snapInfo = []
@@ -81,12 +81,12 @@ const Chat = ({ navigation }) => {
 
     const handleUpdateHotelResponse = () => {
         return db.collection("hotel")
-                .doc(userDB.hotelId)
-                .collection('chat')
-                .doc(user.displayName)
-                .update({
-                    hotelResponding: false
-                })
+            .doc(userDB.hotelId)
+            .collection('chat')
+            .doc(user.displayName)
+            .update({
+                hotelResponding: false
+        })
     }
 
     const getChatRoom = () => {

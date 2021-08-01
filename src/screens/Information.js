@@ -183,7 +183,7 @@ const Information = ({ navigation }) => {
                             value={date}
                             mode='date'
                             is24Hour={true}
-                            minimumDate={new Date()}
+                            minimumDate={Date.now() + 86400000}
                             display="spinner"
                             onChange={onChange}
                             style={styles.datePicker}
@@ -403,7 +403,7 @@ const styles = StyleSheet.create({
     containerImg: {
         flex: 2,
       },
-      containerInput: {
+    containerInput: {
         flex: 3,
       },
     text: {
@@ -438,7 +438,6 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
-        elevation: 5,
         minHeight: 750
 
     },
