@@ -1,5 +1,6 @@
 {
   "expo": {
+    "scheme": "mysweethotel",
     "name": "My Sweet Hotel",
     "slug": "mySweatHotel",
     "version": "8.0.0",

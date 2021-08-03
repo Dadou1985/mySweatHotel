@@ -15,8 +15,6 @@ import UserProfileScreen from './src/screens/userProfile'
 import FlashMessage from "react-native-flash-message"
 import './src/i18next'
 import { UserContext } from './src/components/userContext'
-import { useTranslation } from 'react-i18next'
-import i18next from 'i18next'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createStackNavigator();
@@ -43,10 +41,11 @@ export default function App() {
     }
 }
 
-useEffect(() => {
-    load().then(async() => {
-      return setIsLoading(false)})
-}, [])
+  useEffect(() => {
+      load().then(async() => {
+        return setIsLoading(false)})
+  }, [])
+
 
   if(!isLoading) {
    return <>

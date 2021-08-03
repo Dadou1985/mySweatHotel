@@ -14,8 +14,6 @@ import ClickNwaitDrawer from '../components/ClickNwaitDrawer';
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Constants from 'expo-constants';
-import * as Notifications from 'expo-notifications';
 import ChatNotification from '../components/chatNotification'
 
 const UserProfile = ({navigation}) => {
@@ -32,8 +30,6 @@ const UserProfile = ({navigation}) => {
     const [room, setRoom] = useState(null)
     const [showDate, setShowDate] = useState(false)
     const [chatResponse, setChatResponse] = useState([])
-    const appState = useRef(AppState.currentState);
-    const [appStateVisible, setAppStateVisible] = useState(appState.current);
 
     const Logout = () => {
       auth.signOut()
@@ -341,94 +337,6 @@ const UserProfile = ({navigation}) => {
         )
     }
 }
-
-useEffect(() => {
-  AppState.addEventListener('change', _handleAppStateChange);
-
-  return () => {
-    AppState.removeEventListener('change', _handleAppStateChange);
-  };
-}, []);
-
-const _handleAppStateChange = (nextAppState) => {
-  if (
-    appState.current.match(/inactive|background/) &&
-    nextAppState === 'active'
-  ) {
-    console.log('App has come to the foreground!');
-  }
-
-  appState.current = nextAppState;
-  setAppStateVisible(appState.current);
-  console.log('AppState', appState.current);
-};
-
-
-useEffect(() => {
-  (() => registerForPushNotificationsAsync())()
-}, [])
-
-const registerForPushNotificationsAsync = async() => {
-  let token;
-  if (Constants.isDevice) {
-    const { status: existingStatus } = await Notifications.getPermissionsAsync();
-    let finalStatus = existingStatus;
-    if (existingStatus !== 'granted') {
-      const { status } = await Notifications.requestPermissionsAsync();
-      finalStatus = status;
-    }
-    if (finalStatus !== 'granted') {
-      alert('Failed to get push token for push notification!');
-      return;
-    }
-    token = (await Notifications.getExpoPushTokenAsync()).data;
-    console.log(token);
-  } else {
-    alert('Must use physical device for Push Notifications');
-  }
-
-  if (token) {
-      const res = await db.collection("guestUsers")
-          .doc(user.uid)
-          .update({token: token})
-      return handleLoadUserDB()
-  }
-
-  if (Platform.OS === 'android') {
-    Notifications.setNotificationChannelAsync('default', {
-      name: 'default',
-      importance: Notifications.AndroidImportance.MAX,
-      vibrationPattern: [0, 250, 250, 250],
-      lightColor: '#FF231F7C',
-    });
-  }
-
-  return token;
-}
-
-const sendPushNotification = async(token) => {
-  if (appState.current === "background") {
-    const message = {
-      to: token,
-      sound: 'default',
-      title: 'Chat Réception',
-      body: 'Vous avez un nouveau message !',
-      data: { someData: 'goes here' },
-    };
-  
-    await fetch('https://exp.host/--/api/v2/push/send', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Accept-encoding': 'gzip, deflate',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(message),
-    });
-  }
-}
-
-  console.log(appState.current)
     
     return (
         <KeyboardAvoidingView style={styles.container}>
