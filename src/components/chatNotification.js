@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Text, AppState } from 'react-native';
+import * as Notifications from 'expo-notifications';
 
 const ChatNotification = ({userToken}) => {
     const appState = useRef(AppState.currentState);
@@ -31,7 +32,7 @@ const ChatNotification = ({userToken}) => {
           const message = {
             to: token,
             sound: 'default',
-            title: 'Chat Réception',
+            title: `Chat ${t('reception')}`,
             body: 'Vous avez un nouveau message !',
             data: { someData: 'goes here' },
           };

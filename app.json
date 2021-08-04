@@ -34,6 +34,12 @@
     "web": {
       "favicon": "./assets/icon.png"
     },
-    "description": ""
+    "description": "",
+    "notification": {
+        "icon": "./assets/notification_icon.png",
+        "color": "#ffffff",
+        "androidMode": "default",
+        "iosDisplayInForeground": true
+      }
   }
 }
