@@ -117,6 +117,8 @@ const Login = ({ navigation }) => {
         })
     }
 
+    console.log("userDB", userDB)
+
 
     const internationalization = [
         {title: "Français", value: "fr", countryFlag: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAArklEQVR4nO3avQnCYBiF0UwSdxDTmwkF8Qc70SZi1hBEHSABGxsJ1h8pjUu8IOh54C5w6ptlkiRJkvSPjctVFb3L9TFLKVWR63aHeZsXVfSy8XQ5RK+5P08ppSFy3WZ/bvLJELk2n7wBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPh5gHJdR+96e8z7vq8j99oeF82oqKP37ZOaJEmSJH2lD+DtRFTekXctAAAAAElFTkSuQmCC"},

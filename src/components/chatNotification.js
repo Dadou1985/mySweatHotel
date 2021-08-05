@@ -1,12 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { Text, AppState } from 'react-native';
-import * as Notifications from 'expo-notifications';
+import { useTranslation } from 'react-i18next'
+
 
 const ChatNotification = ({userToken}) => {
     const appState = useRef(AppState.currentState);
     const [appStateVisible, setAppStateVisible] = useState(appState.current);
 
-    useEffect(() => {
+    const { t } = useTranslation()
+
+
+    {/*useEffect(() => {
         AppState.addEventListener('change', _handleAppStateChange);
       
         return () => {
@@ -25,10 +29,9 @@ const ChatNotification = ({userToken}) => {
         appState.current = nextAppState;
         setAppStateVisible(appState.current);
         console.log('AppState', appState.current);
-      };
+      };*/}
 
       const sendPushNotification = async(token) => {
-        if (appState.current === "background") {
           const message = {
             to: token,
             sound: 'default',
@@ -46,7 +49,6 @@ const ChatNotification = ({userToken}) => {
             },
             body: JSON.stringify(message),
           });
-        }
       }
 
       useEffect(() => {

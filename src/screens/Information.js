@@ -137,11 +137,6 @@ const Information = ({ navigation }) => {
         return handleLoadUserDB()
     }
 
-    const Logout = async () => {
-        await auth.signOut()
-        .then(navigation.replace('Connexion'))
-    }
-
     const handleLinkWebsite = async() => {
         return Linking.openURL(userDB.website)
     }
@@ -181,7 +176,7 @@ const Information = ({ navigation }) => {
                             value={date}
                             mode='date'
                             is24Hour={true}
-                            minimumDate={Date.now() + 86400000}
+                            minimumDate={date}
                             display="spinner"
                             onChange={onChange}
                             style={styles.datePicker}

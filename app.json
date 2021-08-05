@@ -36,10 +36,10 @@
     },
     "description": "",
     "notification": {
-        "icon": "./assets/notification_icon.png",
-        "color": "#ffffff",
-        "androidMode": "default",
-        "iosDisplayInForeground": true
-      }
+      "icon": "./assets/notification_icon.png",
+      "color": "#ffffff",
+      "androidMode": "default",
+      "iosDisplayInForeground": true
+    }
   }
 }

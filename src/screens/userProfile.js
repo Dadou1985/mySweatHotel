@@ -442,7 +442,7 @@ const registerForPushNotificationsAsync = async() => {
                     <Image source={{uri: "https://cdn2.iconfinder.com/data/icons/car-11/100/taxi3-512.png"}} style={styles.img} />
                 </TouchableOpacity>
               </View>
-              <Button raised={true} title={t('conciergerie')} containerStyle={{width: 500, position: "absolute", bottom: 0}} onPress={fadeIn} /> 
+              <Button raised={true} title={t('conciergerie')} containerStyle={{width: 2000, position: "absolute", bottom: 0}} onPress={fadeIn} /> 
               <ClickNwaitDrawer fadeAnim={fadeAnim} fadeOut={fadeOut} navigation={navigation} />
             </View>
 
