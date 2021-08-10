@@ -294,7 +294,7 @@ const Information = ({ navigation }) => {
                                         })
                                         setCheckoutButton(true)
                                     }
-                                }} containerStyle={styles.button} title={hotelId === null ? t("recherche_hotel") : "Valider mon hôtel"} type={hotelId === null ? "outline" : "solid"} />
+                                }} containerStyle={styles.button} title={hotelId === null ? t("recherche_hotel") : t("validation_hotel")} type={hotelId === null ? "outline" : "solid"} />
                                
                                 {checkoutButton && 
                                 <Button 
@@ -335,14 +335,14 @@ const Information = ({ navigation }) => {
                 <ScrollView contentContainerStyle={styles.modalView}>
                     <View style={{
                         flexDirection: "row", 
-                        width: 420, 
+                        width: 1200, 
                         alignItems: "center", 
                         justifyContent: "center", 
                         marginBottom: 10, 
                         paddingTop: 10, 
                         paddingBottom: 10, 
                         backgroundColor: "lightblue"}}>
-                        <Text style={{fontSize: 25, marginRight: 20}}>{t("selection_hotel")}</Text>
+                        <Text style={{fontSize: 20, marginRight: 20}}>{t("recherche_hotel")}</Text>
                         <TouchableOpacity>
                             <AntDesign name="closecircle" size={24} color="black" onPress={() => setShowModalHotel(false)} />
                         </TouchableOpacity>
@@ -363,7 +363,7 @@ const Information = ({ navigation }) => {
             style={styles.centeredView}>
                 <View style={styles.modalRoom}>
                 <Text style={{
-                    width: 375, 
+                    width: "100%", 
                     marginBottom: 10, 
                     fontSize: 20,
                     paddingTop: 10, 

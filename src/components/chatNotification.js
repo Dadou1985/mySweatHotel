@@ -36,7 +36,7 @@ const ChatNotification = ({userToken}) => {
             to: token,
             sound: 'default',
             title: `Chat ${t('reception')}`,
-            body: 'Vous avez un nouveau message !',
+            body: t('notif_message'),
             data: { someData: 'goes here' },
           };
         

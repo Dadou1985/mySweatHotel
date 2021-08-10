@@ -221,17 +221,17 @@ const Timer = ({navigation}) => {
                 flex: 1,
                 resizeMode: "contain",
                 justifyContent: "center",
-                width: 500}}>
+                width: "100%"}}>
                 </ImageBackground>
             </View>
             <View style={{width: 300, marginTop: 60}}>
                 <View style={{marginBottom: 20, flexDirection: "column", alignItems: "center"}}>
-                    <Text style={{fontSize: 20}}>{t('reveil_jour')}</Text>
+                    <Text style={{fontSize: 20}}>{t('jour')}</Text>
                     <Button type="clear" title={moment(date).format('L')} 
                     onPress={handleShowDate} />
                 </View>
                 <View style={{marginBottom: 20, flexDirection: "column", alignItems: "center"}}>
-                    <Text style={{fontSize: 20}}>{t('reveil_heure')}</Text>
+                    <Text style={{fontSize: 20}}>{t('heure')}</Text>
                     <Button type="clear" title={moment(hour).format('LT')} 
                         onPress={handleShowHour} />
                 </View>
@@ -265,6 +265,7 @@ const styles = StyleSheet.create({
     },
     containerText: {
         flex: 2,
+        width: "100%"
     },
     text: {
         fontSize: 30,

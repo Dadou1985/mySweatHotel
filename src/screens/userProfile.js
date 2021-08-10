@@ -381,6 +381,8 @@ const registerForPushNotificationsAsync = async() => {
 
   return token;
 }
+
+console.log("photoURL", user)
     
     return (
         <KeyboardAvoidingView style={styles.container}>

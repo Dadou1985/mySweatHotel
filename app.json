@@ -39,7 +39,7 @@
       "icon": "./assets/notification_icon.png",
       "color": "#ffffff",
       "androidMode": "default",
-      "iosDisplayInForeground": true
+      "iosDisplayInForeground": false
     }
   }
 }
