@@ -300,7 +300,7 @@ const UserProfile = ({navigation}) => {
                         paddingTop: 10, 
                         paddingBottom: 10, 
                         backgroundColor: "lightblue"}}>
-                        <Text style={{fontSize: 25, marginRight: 20}}>{t('reveil_jour')}</Text>
+                        <Text style={{fontSize: 25, marginRight: 20}}>{t('date_checkout')}</Text>
                         <TouchableOpacity>
                             <AntDesign name="closecircle" size={24} color="black" onPress={() => setShowDate(false)} />
                         </TouchableOpacity>
@@ -483,9 +483,6 @@ console.log("photoURL", user)
                     type: "success",
                   })
                 }} />
-                <View>
-                  <Text style={{ fontSize: 10, textAlign: "center"}}>{t('message_redirection')}</Text>
-                </View>
               </View>
             </Overlay>
 

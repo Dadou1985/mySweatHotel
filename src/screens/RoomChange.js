@@ -65,7 +65,7 @@ const RoomChange = ({ navigation }) => {
         if (!result.cancelled) {
           setImg(result.uri);
           showMessage({
-            message: t('delogement_photo_message'),
+            message: t('photo_selectionnee_message'),
             type: "info",
           })
         }

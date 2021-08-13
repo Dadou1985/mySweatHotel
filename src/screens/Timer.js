@@ -226,18 +226,18 @@ const Timer = ({navigation}) => {
             </View>
             <View style={{width: 300, marginTop: 60}}>
                 <View style={{marginBottom: 20, flexDirection: "column", alignItems: "center"}}>
-                    <Text style={{fontSize: 20}}>{t('jour')}</Text>
+                    <Text style={{fontSize: 15}}>{t('jour')}</Text>
                     <Button type="clear" title={moment(date).format('L')} 
                     onPress={handleShowDate} />
                 </View>
                 <View style={{marginBottom: 20, flexDirection: "column", alignItems: "center"}}>
-                    <Text style={{fontSize: 20}}>{t('heure')}</Text>
+                    <Text style={{fontSize: 15}}>{t('heure')}</Text>
                     <Button type="clear" title={moment(hour).format('LT')} 
                         onPress={handleShowHour} />
                 </View>
             </View> 
             <View style={styles.inputContainer}>
-                <Input style={{textAlign: "center"}} placeholder="Votre n° de téléphone" type="text" value={phoneNumber} 
+                <Input style={{textAlign: "center"}} placeholder={t("timer_num_tel")} type="text" value={phoneNumber} 
                 onChangeText={(text) => setPhoneNumber(text)} />
             </View>
             <Button raised={true} onPress={() => {

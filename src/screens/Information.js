@@ -165,7 +165,7 @@ const Information = ({ navigation }) => {
                             paddingTop: 10, 
                             paddingBottom: 10, 
                             backgroundColor: "lightblue"}}>
-                            <Text style={{fontSize: 25, marginRight: 20}}>{t('reveil_jour')}</Text>
+                            <Text style={{fontSize: 25, marginRight: 20}}>{t('date_checkout')}</Text>
                             <TouchableOpacity>
                                 <AntDesign name="closecircle" size={24} color="black" onPress={() => setShowDate(false)} />
                             </TouchableOpacity>
@@ -216,7 +216,6 @@ const Information = ({ navigation }) => {
       const handleBarCodeScanned = ({ type, data }) => {
         setScanned(true);
         setHotelId(data)
-        setShowModalHotel(false)
       };
     
       if (hasPermission === null) {
@@ -226,7 +225,7 @@ const Information = ({ navigation }) => {
         return <Text>No access to camera</Text>;
       }
 
-    console.log(userDB)
+    console.log(hotelId)
 
     return (
         <KeyboardAvoidingView style={styles.container}>
@@ -266,46 +265,25 @@ const Information = ({ navigation }) => {
                             </ImageBackground>
                         </View>
                         <View style={styles.buttonView}>
-                            <Button 
+                            {!hotelId && <Button 
                                 raised={true} 
-                                icon={hotelId === null ? 
-                                    <Ionicons name="search-circle" size={25} color="black" style={{marginRight: 5}} /> :
-                                    <Feather name="check-circle" size={25} color="black" style={{marginRight: 5}} />}
+                                icon={<Ionicons name="search-circle" size={25} color="black" style={{marginRight: 5}} />}
                                 onPress={() => {
-                                    if(!hotelId){
-                                        setShowModalHotel(true)
-                                        setFilter(initialFilter)
-                                    }else{
-                                        info.map(hotel => {
-                                            setFormValue({
-                                                hotelId: hotelId,
-                                                departement: hotel.departement,
-                                                region: hotel.region,
-                                                city: hotel.city,
-                                                code_postal: hotel.code_postal,
-                                                country: hotel.country,
-                                                room: hotel.room,
-                                                standing: hotel.classement,
-                                                website: hotel.website,
-                                                phone: hotel.phone
-                                            })
-                                            setHotelName(hotel.hotelName)
-                                            setUrl(hotel.website)
-                                        })
-                                        setCheckoutButton(true)
-                                    }
-                                }} containerStyle={styles.button} title={hotelId === null ? t("recherche_hotel") : t("validation_hotel")} type={hotelId === null ? "outline" : "solid"} />
+                                    setShowModalHotel(true)}} containerStyle={styles.button} title={t("recherche_hotel")} type="outline" />}
+                            {hotelId && <Button 
+                                raised={true} 
+                                icon={<Feather name="check-circle" size={25} color="black" style={{marginRight: 5}} />}
+                                onPress={() => setCheckoutButton(true)} containerStyle={styles.button} title={hotelName} type="solid" />}
                                
-                                {checkoutButton && 
+                                {checkoutButton &&
                                 <Button 
                                     raised={true} 
                                     icon={<Ionicons name="calendar" size={24} color="black" style={{marginRight: 5}} />}
                                     onPress={() => {
                                         setShowDate(true)
-                                        setHideAll(true)
-                                        }} containerStyle={styles.button} title={inputRoom ? `${t("checkout_information")} ${moment(date).format('L')}` : t("date_checkout")} type="outline" />}
+                                        }} containerStyle={styles.button} title={inputRoom ? `${t("checkout_prevu")} ${moment(date).format('L')}` : t("date_checkout")} type="outline" />}
 
-                            {inputRoom && 
+                            {inputRoom &&
                              <Button 
                              raised={true} 
                              icon={<Ionicons name="bed-sharp" size={25} color="black" style={{marginRight: 5}} />}
@@ -335,23 +313,43 @@ const Information = ({ navigation }) => {
                 <ScrollView contentContainerStyle={styles.modalView}>
                     <View style={{
                         flexDirection: "row", 
-                        width: 1200, 
+                        width: "100%", 
                         alignItems: "center", 
-                        justifyContent: "center", 
-                        marginBottom: 10, 
+                        justifyContent: "center",
                         paddingTop: 10, 
                         paddingBottom: 10, 
                         backgroundColor: "lightblue"}}>
-                        <Text style={{fontSize: 20, marginRight: 20}}>{t("recherche_hotel")}</Text>
+                        <Text style={{fontSize: 15, marginRight: 20}}>{t("recherche_hotel")}</Text>
                         <TouchableOpacity>
                             <AntDesign name="closecircle" size={24} color="black" onPress={() => setShowModalHotel(false)} />
                         </TouchableOpacity>
                     </View>
-                    <View style={styles.barcodeBox}>
+                    <View style={{width: "100%", height: "100%", flex: 1}}>
                         <BarCodeScanner
                             onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
-                            style={StyleSheet.absoluteFillObject}
-                        />
+                            style={[StyleSheet.absoluteFill, styles.barcodeContainer]}
+                        >
+                            <View style={{borderRadius: 5, borderColor: "white", width: 300, height: 300, borderStyle: "dashed", borderWidth: 10, opacity: 0.3}} />
+                        </BarCodeScanner>
+                        {hotelId && <Button raised={true} onPress={() => {
+                            info.map(hotel => {
+                                setFormValue({
+                                    hotelId: hotelId,
+                                    departement: hotel.departement,
+                                    region: hotel.region,
+                                    city: hotel.city,
+                                    code_postal: hotel.code_postal,
+                                    country: hotel.country,
+                                    room: hotel.room,
+                                    standing: hotel.classement,
+                                    website: hotel.website,
+                                    phone: hotel.phone
+                                })
+                                setHotelName(hotel.hotelName)
+                                setUrl(hotel.website)
+                            })
+                            return setShowModalHotel(false)
+                        }} containerStyle={{width: "80%", position: "absolute", bottom: "10%", left: "10%", borderRadius: 20}} title={t("validation")} />}
                     </View>
                 </ScrollView>
             </Modal>
@@ -360,7 +358,7 @@ const Information = ({ navigation }) => {
             animationType="slide"
             transparent={true}
             visible={showModalRoom} 
-            style={styles.centeredView}>
+            style={styles.roomBoxView}>
                 <View style={styles.modalRoom}>
                 <Text style={{
                     width: "100%", 
@@ -436,7 +434,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         marginTop: 22,
+        height: "100%",
       },
+    roomBoxView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     modalView: {
         marginTop: 55,
         backgroundColor: 'white',
@@ -448,6 +452,8 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
+        height: "100%"
+
     },
     modalRoom: {
         margin: 20,
@@ -463,6 +469,7 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
+        width: "50%"
     },
     buttonView: {
         flexDirection: "column",
@@ -499,19 +506,16 @@ const styles = StyleSheet.create({
         backgroundColor: "white"
       },
     datePickerButton: {
-    width: 250,
-    marginTop: 50, 
-    marginBottom: 90,
-    borderColor: "white",
-    marginTop: 100
+        width: 250,
+        marginTop: 50, 
+        marginBottom: 90,
+        borderColor: "white",
+        marginTop: 100
     },
     barcodeContainer: {
         flex: 1,
-        flexDirection: "column",
+        flexDirection: 'column',
+        justifyContent: "center",
+        alignItems: "center"
     },
-    barcodeBox: {
-        width: 400,
-        height: 700,
-        padding: 0
-    }
 })
