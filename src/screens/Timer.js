@@ -273,7 +273,7 @@ const styles = StyleSheet.create({
         marginLeft: 100
     },
     inputContainer: {
-        width: 220,
+        width: "70%",
         marginTop: 10, 
         flexDirection: "row", 
         justifyContent: "center",

@@ -3,9 +3,9 @@
     "scheme": "mysweethotel",
     "name": "My Sweet Hotel",
     "slug": "mySweatHotel",
-    "version": "8.0.0",
+    "version": "2.0.0",
     "orientation": "portrait",
-    "icon": "./assets/appstore.png",
+    "icon": "./assets/playstore.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -29,7 +29,7 @@
       },
       "package": "com.dadou1885.mySweatHotel",
       "versionCode": 2,
-      "useNextNotificationsApi": true
+      "useNextNotificationsApi": false
     },
     "web": {
       "favicon": "./assets/icon.png"
