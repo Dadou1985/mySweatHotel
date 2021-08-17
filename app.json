@@ -1,10 +1,11 @@
 {
   "expo": {
+    "scheme": "mysweethotel",
     "name": "My Sweet Hotel",
     "slug": "mySweatHotel",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/playstore.png",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -19,18 +20,26 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.dadou1885.mySweatHotel",
-      "buildNumber": "1.0.0"
+      "buildNumber": "8.0.0"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.dadou1885.mySweatHotel"
+      "package": "com.dadou1885.mySweatHotel",
+      "versionCode": 2,
+      "useNextNotificationsApi": false
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/icon.png"
     },
-    "description": ""
+    "description": "",
+    "notification": {
+      "icon": "./assets/notification_icon.png",
+      "color": "#ffffff",
+      "androidMode": "default",
+      "iosDisplayInForeground": false
+    }
   }
 }

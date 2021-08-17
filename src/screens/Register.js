@@ -13,6 +13,8 @@ import { AntDesign } from '@expo/vector-icons';
 
 
 const Register = ({ navigation }) => {
+    const { t } = useTranslation()
+
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
@@ -21,8 +23,9 @@ const Register = ({ navigation }) => {
     const [img, setImg] = useState(null)
     const [url, setUrl] = useState("")
     const [language, setLanguage] = useState(i18next.language)
+    const [gender, setGender] = useState(t("male"))
+    const [guestCategory, setGuestCategory] = useState(t("tourisme"))
   
-    const { t } = useTranslation()
 
     useLayoutEffect(() => {
       navigation.setOptions({
@@ -54,7 +57,9 @@ const Register = ({ navigation }) => {
           lastTimeConnected: Date.now(),
           userId: userId,
           localLanguage: i18next.language,
-          checkoutDate: ""
+          checkoutDate: "",
+          gender: gender,
+          guestCategory: guestCategory
         })  
       }
 
@@ -155,7 +160,13 @@ const Register = ({ navigation }) => {
                 <Image source={require('../../img/new-mini-logo-msh.png')} style={{width: 150, height: 100}} />
                 <Text style={styles.text}>{t("creation_compte")}</Text>
             </View>    
-            <View style={styles.inputContainer}> 
+            <View style={styles.inputContainer}>
+            <View style={{marginBottom: 20, flexDirection: "column", alignItems: "center"}}>
+                <View style={{flexDirection: "row", width: 400, justifyContent: "center", marginTop: 15}}>
+                    <Button containerStyle={styles.typeButton} title={t("male")} type={gender === t("male") ? "solid" : "clear"} raised={true} onPress={() => setGender(t("male"))} />
+                    <Button containerStyle={styles.typeButton} title={t("female")} type={gender === t("female") ? "solid" : "clear"} raised={true} onPress={() => setGender(t("female"))} />
+                </View>
+              </View>
                 <Input placeholder={t("nom") + "*"} autofocus type="text" value={name} 
                 onChangeText={(text) => setName(text)} />
                 <Input placeholder={t("email") + "*"} type="email" value={email} 
@@ -163,10 +174,17 @@ const Register = ({ navigation }) => {
                 <Input placeholder={t("mot_de_passe") + "*"} secureTextEntry type="password" value={password} 
                 onChangeText={(text) => setPassword(text)} />
                 <Input placeholder={t("confirmation_mdp") + "*"} secureTextEntry type="password" value={confirmPassword} 
-                onChangeText={(text) => setConfirmPassword(text)}
-                onSubmitEditing={freeRegister}  />
+                onChangeText={(text) => setConfirmPassword(text)}  />
+                <View style={{marginBottom: 20, flexDirection: "column", alignItems: "center"}}>
+                  <View style={{flexDirection: "row", width: 400, justifyContent: "center", marginBottom: 25}}>
+                      <Button containerStyle={styles.typeButton} title={t("tourisme")} type={guestCategory === t("tourisme") ? "solid" : "clear"} raised={true} onPress={() => setGuestCategory(t("tourisme"))}
+                  onSubmitEditing={freeRegister} />
+                      <Button containerStyle={styles.typeButton} title={t("business")} type={guestCategory === t("business") ? "solid" : "clear"} raised={true} onPress={() => setGuestCategory(t("business"))}
+                  onSubmitEditing={freeRegister} />
+                  </View>
+                </View>
             </View>
-            <View style={{marginBottom: 15}}>
+            <View style={{marginBottom: 45}}>
                 <TouchableOpacity style={{flexDirection: "row", width: 300, alignItems: "center", justifyContent: "center"}} onPress={pickImage}>
                 <MaterialIcons name="add-a-photo" size={24} color="grey" />                    
                 <Text style={{fontSize: 20, color: "grey", marginLeft: 10}}>{t("ajout_photo_profil")}</Text>
@@ -229,5 +247,12 @@ const styles = StyleSheet.create({
         marginTop: 10,
         borderRadius: 30
 
-    }
+    },
+    typeButton: {
+      width: 125,
+      marginTop: 10,
+      borderColor: "white",
+      marginLeft: 5,
+      marginRight: 5 
+  }
 })

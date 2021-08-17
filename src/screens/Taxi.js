@@ -226,22 +226,18 @@ const Taxi = ({ navigation }) => {
         <KeyboardAvoidingView behavior="padding" style={styles.container}>
             <StatusBar style="light" />
             <View style={styles.containerText}>
-            <ImageBackground source={ require('../../img/pic_taxi2.png') } style={{
-                flex: 1,
-                resizeMode: "contain",
-                justifyContent: "center",
-                width: 460}}>
+            <ImageBackground source={ require('../../img/pic_taxi2.png') } style={styles.image}>
                 </ImageBackground>
             </View>
             <View style={styles.inputContainer}>
                 <View style={{flexDirection: "row", justifyContent: "space-around"}}>
                     <View style={{marginBottom: 20, flexDirection: "column", alignItems: "center"}}>
-                        <Text>{t('taxi_jour')}</Text>
+                        <Text>{t('jour')}</Text>
                         <Button type="clear" title={moment(date).format('L')} 
                         onPress={handleShowDate} />
                     </View>
                     <View style={{marginBottom: 20, flexDirection: "column", alignItems: "center"}}>
-                        <Text>{t('taxi_heure')}</Text>
+                        <Text>{t('heure')}</Text>
                         <Button type="clear" title={moment(hour).format('LT')} 
                             onPress={handleShowHour} />
                     </View>   
@@ -280,21 +276,23 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: "center",
         justifyContent: "space-between",
+        flexDirection: "column",
 
     },
     containerText: {
         flex: 2,
+        width: "100%",
     },
     text: {
         fontSize: 30,
         textAlign: "center",
         color:"white",
-        marginBottom: 50, 
+        marginBottom: 30, 
 
     },
     inputContainer: {
-        width: 300,
-        marginTop: 20, 
+        width: "80%",
+        marginTop: 50, 
 
     },
     typeButton: {
@@ -344,5 +342,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop: 55,
         backgroundColor: "white"
+      },
+      image: {
+        flex: 1,
+        resizeMode: 'cover',
+        justifyContent: 'center',
+        flexDirection: "row",
+        justifyContent: "flex-end",
+        alignItems: "flex-end"
       }
 })

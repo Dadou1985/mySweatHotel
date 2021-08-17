@@ -1,5 +1,5 @@
 import React, { useLayoutEffect, useState, useContext, useEffect, useRef } from 'react'
-import { KeyboardAvoidingView, StyleSheet, Text, View, Image, TouchableOpacity, ImageBackground, Animated, Modal, Platform } from 'react-native';
+import { KeyboardAvoidingView, StyleSheet, Text, View, Image, TouchableOpacity, ImageBackground, Animated, Modal, Platform, AppState } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { Entypo, MaterialIcons, SimpleLineIcons, Ionicons, AntDesign } from '@expo/vector-icons';
 import { auth, db, storage } from "../../firebase"
@@ -14,6 +14,9 @@ import ClickNwaitDrawer from '../components/ClickNwaitDrawer';
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ChatNotification from '../components/chatNotification'
+import * as Notifications from 'expo-notifications';
+import Constants from 'expo-constants';
 
 const UserProfile = ({navigation}) => {
     const [img, setImg] = useState(null)
@@ -29,9 +32,12 @@ const UserProfile = ({navigation}) => {
     const [room, setRoom] = useState(null)
     const [showDate, setShowDate] = useState(false)
     const [chatResponse, setChatResponse] = useState([])
+    const [reloadPhotoURLIos, setReloadPhotoURLIos] = useState(false)
+    const appState = useRef(AppState.currentState);
+    const [appStateVisible, setAppStateVisible] = useState(appState.current);
+    const [isForegrounding, setIsForegrounding] = useState(false)
 
     const Logout = () => {
-      navigation.replace('Connexion')
       auth.signOut()
   }
 
@@ -65,6 +71,16 @@ const UserProfile = ({navigation}) => {
           }} />)
       })
   }, [])
+
+  useEffect(() => {
+        
+    let unsubscribe = auth.onAuthStateChanged(function(user) {
+        if (!user) {
+          return navigation.replace('Connexion')
+        } 
+      });
+    return unsubscribe
+}, [])
 
 
     useEffect(() => {
@@ -288,7 +304,7 @@ const UserProfile = ({navigation}) => {
                         paddingTop: 10, 
                         paddingBottom: 10, 
                         backgroundColor: "lightblue"}}>
-                        <Text style={{fontSize: 25, marginRight: 20}}>{t('reveil_jour')}</Text>
+                        <Text style={{fontSize: 25, marginRight: 20}}>{t('date_checkout')}</Text>
                         <TouchableOpacity>
                             <AntDesign name="closecircle" size={24} color="black" onPress={() => setShowDate(false)} />
                         </TouchableOpacity>
@@ -328,126 +344,203 @@ const UserProfile = ({navigation}) => {
     }
 }
 
+useEffect(() => {
+  (() => registerForPushNotificationsAsync())()
+}, [])
 
-    console.log(moment(tomorrow).format('L'))
-    
-    return (
-        <KeyboardAvoidingView style={styles.container}>
-            <StatusBar style="light" />
-            <View style={{flex: 2, width: "100%"}}>
-              {user.photoURL ? <ImageBackground source={{uri: user.photoURL}} style={styles.image}>
-              <TouchableOpacity style={{padding: 15}} onPress={pickImage}>
-                    <MaterialIcons name="add-a-photo" size={35} color="grey" />                    
-                  </TouchableOpacity>
-              </ImageBackground> : 
-              <ImageBackground source={require('../../img/avatar-client.png')} style={styles.image}>
-                <TouchableOpacity style={{padding: 15}} onPress={pickImage}>
-                    <MaterialIcons name="add-a-photo" size={35} color="grey" />                    
-                  </TouchableOpacity>  
-              </ImageBackground>}
-            </View>
-            <View style={{flexDirection: "column", width: "100%", padding: 10, alignItems: "center"}}>
-              <Text style={{fontSize: 30, fontWeight: "bold"}}>{user.displayName}</Text>
-              <View style={{flexDirection: "row", justifyContent: "space-around", mawWidth: "90%", marginBottom: 20}}>
-                <Text style={{fontSize: 15, fontWeight: "bold"}}>{userDB.email}</Text>
-                <TouchableOpacity activeOpacity={0.5} onPress={() => setUpdateMail(true)}>
-                  <Ionicons name="pencil-outline" size={24} color="black" />
-                </TouchableOpacity>
-              </View>
-              <Text style={{fontSize: 20, marginBottom: 20}}>{userDB.hotelName}</Text>
-              <View style={{flexDirection: "row", justifyContent: "space-around", mawWidth: "90%"}}>
-              <Text style={{fontSize: 15, marginBottom: 10}}>{t('occupation_chbre')} {userDB.room}</Text>
-                <TouchableOpacity activeOpacity={0.5} onPress={() => setUpdateRoom(true)}>
-                  <Ionicons name="pencil-outline" size={24} color="black" />
-                </TouchableOpacity>
-              </View>
-              <View style={{flexDirection: "row", justifyContent: "space-around", mawWidth: "90%"}}>
-                <Text style={{fontSize: 14, marginBottom: 20}}>{t('checkout_prevu')} {userDB.checkoutDate}</Text>
-                <TouchableOpacity activeOpacity={0.5} onPress={() => {setShowDate(true)}}>
-                  <Ionicons name="pencil-outline" size={24} color="black" />
-                </TouchableOpacity>
-              </View>
-              <View style={{flexDirection: "row", justifyContent: "space-around", width: "100%", marginTop: 25, marginBottom: 40}}>
-                <TouchableOpacity style={{flexDirection: "row"}} activeOpacity={0.5} onPress={() => {
-                  navigation.navigate('Chat')
-                  updateAdminSpeakStatus()}}>
-                  <Entypo name="chat" size={40} color="black" /> 
-                  {chatResponse.map(response => {
-                    if(response.hotelResponding) {return <Text style={{fontWeight: "bold", color: "red", marginLeft: 5, fontSize: 20}}>!</Text>}
-                  })}                   
+const registerForPushNotificationsAsync = async() => {
+  let token;
+  if (Constants.isDevice) {
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== 'granted') {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== 'granted') {
+      alert('Failed to get push token for push notification!');
+      return;
+    }
+    token = (await Notifications.getExpoPushTokenAsync()).data;
+    console.log(token);
+  } else {
+    alert('Must use physical device for Push Notifications');
+  }
+
+  if (token) {
+      const res = await db.collection("guestUsers")
+          .doc(user.uid)
+          .update({token: token})
+      return handleLoadUserDB()
+  }
+
+  if (Platform.OS === 'android') {
+    Notifications.setNotificationChannelAsync('default', {
+      name: 'default',
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: '#FF231F7C',
+    });
+  }
+
+  return token;
+}
+
+useEffect(() => {
+  if(Platform.OS === 'ios') {
+    AppState.addEventListener('change', _handleAppStateChange);
+  }
+
+  return () => {
+    AppState.removeEventListener('change', _handleAppStateChange);
+  };
+}, []);
+
+const _handleAppStateChange = (nextAppState) => {
+  if (
+    appState.current.match(/inactive|background/) &&
+    nextAppState === 'active'
+  ) {
+    setTimeout(() => {
+      setIsForegrounding(false)
+    }, 3000);
+    navigation.replace('My Sweet Hotel')
+  }else{
+    setIsForegrounding(true)
+  }
+
+  appState.current = nextAppState;
+  setAppStateVisible(appState.current);
+  console.log('AppState', appState.current);
+};
+
+console.log("photoURL", reloadPhotoURLIos)
+   
+if(isForegrounding) {
+  return <View style={{width: '100%', height: '100%', flex: 1, flexDirection: "column", justifyContent: "center", alignItems: 'center'}}>
+    <Image id="flag" 
+    source={require('../../assets/playstore.png')} 
+    />
+  </View>
+}else{
+  return (
+    <KeyboardAvoidingView style={styles.container}>
+        <StatusBar style="light" />
+        <View style={{flex: 2, width: "100%"}}>
+          {user.photoURL ? <ImageBackground source={{uri: user.photoURL}} style={styles.image}>
+          <TouchableOpacity style={{padding: 15}} onPress={pickImage}>
+                <MaterialIcons name="add-a-photo" size={35} color="grey" />                    
               </TouchableOpacity>
-              <TouchableOpacity activeOpacity={0.5}  onPress={() => navigation.navigate('Délogement')}>
-                    <MaterialIcons name="room-preferences" size={45} color="black" />                
-                </TouchableOpacity>            
-                <TouchableOpacity activeOpacity={0.5}  onPress={() => navigation.navigate('Maintenance')}>
-                    <Image source={{uri: "https://static.thenounproject.com/png/41655-200.png"}} style={styles.img} />
-                </TouchableOpacity>
-                <TouchableOpacity activeOpacity={0.5}  onPress={() => navigation.navigate('Réveil')}>
-                    <Image source={{uri: "https://image.flaticon.com/icons/png/512/62/62834.png"}} style={styles.img} />
-                </TouchableOpacity>           
-                <TouchableOpacity activeOpacity={0.5}  onPress={() => navigation.navigate('Taxi')}>
-                    <Image source={{uri: "https://cdn2.iconfinder.com/data/icons/car-11/100/taxi3-512.png"}} style={styles.img} />
-                </TouchableOpacity>
-              </View>
-              <Button raised={true} title={t('conciergerie')} containerStyle={{width: 500, position: "absolute", bottom: 0}} onPress={fadeIn} /> 
-              <ClickNwaitDrawer fadeAnim={fadeAnim} fadeOut={fadeOut} navigation={navigation} />
+          </ImageBackground> : 
+          <ImageBackground source={require('../../img/avatar-client.png')} style={styles.image}>
+            <TouchableOpacity style={{padding: 15}} onPress={pickImage}>
+                <MaterialIcons name="add-a-photo" size={35} color="grey" />                    
+              </TouchableOpacity>  
+          </ImageBackground>}
+        </View>
+        <View style={{flexDirection: "column", width: "100%", padding: 10, alignItems: "center"}}>
+          <Text style={{fontSize: 30, fontWeight: "bold"}}>{user.displayName}</Text>
+          <View style={{flexDirection: "row", justifyContent: "space-around", mawWidth: "90%", marginBottom: 20}}>
+            <Text style={{fontSize: 15, fontWeight: "bold"}}>{userDB.email}</Text>
+            <TouchableOpacity activeOpacity={0.5} onPress={() => setUpdateMail(true)}>
+              <Ionicons name="pencil-outline" size={24} color="black" />
+            </TouchableOpacity>
+          </View>
+          <Text style={{fontSize: 20, marginBottom: 20}}>{userDB.hotelName}</Text>
+          <View style={{flexDirection: "row", justifyContent: "space-around", mawWidth: "90%"}}>
+          <Text style={{fontSize: 15, marginBottom: 10}}>{t('occupation_chbre')} {userDB.room}</Text>
+            <TouchableOpacity activeOpacity={0.5} onPress={() => setUpdateRoom(true)}>
+              <Ionicons name="pencil-outline" size={24} color="black" />
+            </TouchableOpacity>
+          </View>
+          <View style={{flexDirection: "row", justifyContent: "space-around", mawWidth: "90%"}}>
+            <Text style={{fontSize: 14, marginBottom: 20}}>{t('checkout_prevu')} {userDB.checkoutDate}</Text>
+            <TouchableOpacity activeOpacity={0.5} onPress={() => {setShowDate(true)}}>
+              <Ionicons name="pencil-outline" size={24} color="black" />
+            </TouchableOpacity>
+          </View>
+          <View style={{flexDirection: "row", justifyContent: "space-around", width: "100%", marginTop: 25, marginBottom: 40}}>
+            <TouchableOpacity style={{flexDirection: "row"}} activeOpacity={0.5} onPress={() => {
+              navigation.navigate('Chat')
+              updateAdminSpeakStatus()}}>
+              <Entypo name="chat" size={40} color="black" /> 
+              {chatResponse.map(response => {
+                if(response.hotelResponding) {
+                  return <ChatNotification userToken={userDB.token} />
+                } 
+              })}                   
+          </TouchableOpacity>
+          <TouchableOpacity activeOpacity={0.5}  onPress={() => navigation.navigate('Délogement')}>
+                <MaterialIcons name="room-preferences" size={45} color="black" />                
+            </TouchableOpacity>            
+            <TouchableOpacity activeOpacity={0.5}  onPress={() => navigation.navigate('Maintenance')}>
+                <Image source={{uri: "https://static.thenounproject.com/png/41655-200.png"}} style={styles.img} />
+            </TouchableOpacity>
+            <TouchableOpacity activeOpacity={0.5}  onPress={() => navigation.navigate('Réveil')}>
+                <Image source={{uri: "https://image.flaticon.com/icons/png/512/62/62834.png"}} style={styles.img} />
+            </TouchableOpacity>           
+            <TouchableOpacity activeOpacity={0.5}  onPress={() => navigation.navigate('Taxi')}>
+                <Image source={{uri: "https://cdn2.iconfinder.com/data/icons/car-11/100/taxi3-512.png"}} style={styles.img} />
+            </TouchableOpacity>
+          </View>
+          <Button raised={true} title={t('conciergerie')} containerStyle={{width: 2000, position: "absolute", bottom: 0}} onPress={fadeIn} /> 
+          <ClickNwaitDrawer fadeAnim={fadeAnim} fadeOut={fadeOut} navigation={navigation} />
+        </View>
+
+        <Overlay isVisible={updateMail} onBackdropPress={() => setUpdateMail(false)}>
+          <View style={{width: "100%", flexDirection: "column", alignItems: "center", padding: 10}}>
+            <Text style={{fontSize: 20, fontWeight: "bold", marginBottom: 20}}>{t('actualisation_email')}</Text>
+            <View style={styles.inputContainer}>
+              <Text>{t('email')}</Text>
+              <Input placeholder={t('email')} type="email" value={email} 
+              onChangeText={(text) => setEmail(text)} />
             </View>
+            <Button title={t('actualiser')} containerStyle={styles.button} onPress={handleChangeEmail} />
+          </View>
+        </Overlay>
 
-            <Overlay isVisible={updateMail} onBackdropPress={() => setUpdateMail(false)}>
-              <View style={{width: "100%", flexDirection: "column", alignItems: "center", padding: 10}}>
-                <Text style={{fontSize: 20, fontWeight: "bold", marginBottom: 20}}>{t('actualisation_email')}</Text>
-                <View style={styles.inputContainer}>
-                  <Text>{t('email')}</Text>
-                  <Input placeholder={t('email')} type="email" value={email} 
-                  onChangeText={(text) => setEmail(text)} />
-                </View>
-                <Button title={t('actualiser')} containerStyle={styles.button} onPress={handleChangeEmail} />
-              </View>
-            </Overlay>
+        <Overlay isVisible={updateRoom} onBackdropPress={() => setUpdateRoom(false)}>
+          <View style={{width: "100%", flexDirection: "column", alignItems: "center", padding: 10}}>
+            <Text style={{fontSize: 20, fontWeight: "bold", marginBottom: 20}}>{t('actualisation_chbre')}</Text>
+            <View style={styles.inputContainer}>
+              <Text>{t('num_chbre')}</Text>
+              <Input placeholder={t('num_chbre')} type="number" value={room} 
+              onChangeText={(text) => setRoom(text)} />
+            </View>
+            <Button title={t('actualiser')} containerStyle={styles.button} onPress={handleSubmit} />
+          </View>
+        </Overlay>
 
-            <Overlay isVisible={updateRoom} onBackdropPress={() => setUpdateRoom(false)}>
-              <View style={{width: "100%", flexDirection: "column", alignItems: "center", padding: 10}}>
-                <Text style={{fontSize: 20, fontWeight: "bold", marginBottom: 20}}>{t('actualisation_chbre')}</Text>
-                <View style={styles.inputContainer}>
-                  <Text>{t('num_chbre')}</Text>
-                  <Input placeholder={t('num_chbre')} type="number" value={room} 
-                  onChangeText={(text) => setRoom(text)} />
-                </View>
-                <Button title={t('actualiser')} containerStyle={styles.button} onPress={handleSubmit} />
-              </View>
-            </Overlay>
+        <Overlay isVisible={updatePhoto} onBackdropPress={() => setUpdatePhoto(false)}>
+          <View style={{width: "80%"}}>
+            <Text style={{textAlign: "center", fontWeight: "bold", fontSize: 18, marginBottom: 15}}>{t('message_confirmation_actualisation_photo')}</Text>
+            <Button title={t('confirmer')} style={{marginTop: 1, marginBottom: 1}} onPress={(event) => {
+              handleChangePhotoUrl(event)
+              setUpdatePhoto(false)
+              showMessage({
+                message: t('message_actualisation_photo'),
+                type: "success",
+              })
+            }} />
+          </View>
+        </Overlay>
 
-            <Overlay isVisible={updatePhoto} onBackdropPress={() => setUpdatePhoto(false)}>
-              <View style={{width: "80%"}}>
-                <Text style={{textAlign: "center", fontWeight: "bold", fontSize: 18, marginBottom: 15}}>{t('message_confirmation_actualisation_photo')}</Text>
-                <Button title={t('confirmer')} style={{marginTop: 1, marginBottom: 1}} onPress={(event) => {
-                  handleChangePhotoUrl(event)
-                  setUpdatePhoto(false)
-                  showMessage({
-                    message: t('message_actualisation_photo'),
-                    type: "success",
-                  })
-                }} />
-                <View>
-                  <Text style={{ fontSize: 10, textAlign: "center"}}>{t('message_redirection')}</Text>
-                </View>
-              </View>
-            </Overlay>
+        <Overlay isVisible={updateCheckout} onBackdropPress={() => setUpdateCheckout(false)}>
+          <View style={{width: "80%"}}>
+            <Text style={{textAlign: "center", fontWeight: "bold", fontSize: 18, marginBottom: 15}}>{t('message_confirmation_actualisation_checkout')}</Text>
+            <Button title={t('confirmer')} style={{marginTop: 1, marginBottom: 1}} onPress={() => {
+              handleCheckoutDateChange()
+              setUpdateCheckout(false)
+            }} />
+          </View>
+        </Overlay>
 
-            <Overlay isVisible={updateCheckout} onBackdropPress={() => setUpdateCheckout(false)}>
-              <View style={{width: "80%"}}>
-                <Text style={{textAlign: "center", fontWeight: "bold", fontSize: 18, marginBottom: 15}}>{t('message_confirmation_actualisation_checkout')}</Text>
-                <Button title={t('confirmer')} style={{marginTop: 1, marginBottom: 1}} onPress={() => {
-                  handleCheckoutDateChange()
-                  setUpdateCheckout(false)
-                }} />
-              </View>
-            </Overlay>
+        {showDate && handlePlatformDate()}
 
-            {showDate && handlePlatformDate()}
-
-        </KeyboardAvoidingView>
-    )
+    </KeyboardAvoidingView>
+  )
+}
+    
 }
 
 export default UserProfile
@@ -484,7 +577,6 @@ const styles = StyleSheet.create({
       },
       shadowOpacity: 0.25,
       shadowRadius: 3.84,
-      elevation: 5,
   },
   datePicker: {
     width: 350,

@@ -30,13 +30,12 @@ const ChatMessage = ({author, photo, text, translation, markup}) => {
                 source={{ uri: photo}} />
                 <Text>{translation || text}</Text>
                 <Text style={styles.time}>{moment(markup).startOf('hour').fromNow()}</Text>
-
             </View>
         }else{
             return <View style={{
                 padding: 15,
                 backgroundColor: "#ECECEC",
-                color: "gray",
+                color: "white",
                 alignSelf: 'flex-end',
                 borderRadius: 20,
                 marginRight: 15,
@@ -84,7 +83,7 @@ const ChatMessage = ({author, photo, text, translation, markup}) => {
             return <View style={{
                 padding: 15,
                 backgroundColor: "gray",
-                color: "black",
+                color: "white",
                 alignSelf: 'flex-start',
                 borderRadius: 20,
                 marginLeft: 15,

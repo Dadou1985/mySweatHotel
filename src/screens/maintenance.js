@@ -65,7 +65,7 @@ const Maintenance = ({ navigation }) => {
         if (!result.cancelled) {
           setImg(result.uri);
           showMessage({
-            message: t('maintenance_photo_message'),
+            message: t('photo_selectionnee_message'),
             type: "info",
           })
         }
@@ -149,7 +149,7 @@ const Maintenance = ({ navigation }) => {
                 flex: 1,
                 resizeMode: "contain",
                 justifyContent: "center",
-                width: 500}}>
+                width: "100%"}}>
               </ImageBackground>
             </View>
             <View style={styles.inputContainer}>
@@ -193,14 +193,15 @@ const styles = StyleSheet.create({
     },
     containerText: {
         flex: 2,
+        width: "100%"
     },
     text: {
         fontSize: 30,
         textAlign: "center",
     },
     inputContainer: {
-        width: 300,
-        marginTop: 30, 
+        width: "80%",
+        marginTop: 100, 
 
     },
     button: {

@@ -13,9 +13,7 @@ const Login = ({ navigation }) => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const {userDB, setUserDB} = useContext(UserContext)
-    const [language, setLanguage] = useState(userDB !== null ? userDB.language : i18next.language)
     const [showModalLanguage, setShowModalLanguage] = useState(false)
-    const [refresh, setRefresh] = useState([1])
 
     const { t } = useTranslation()
 
@@ -118,6 +116,8 @@ const Login = ({ navigation }) => {
             }
         })
     }
+
+    console.log("userDB", userDB)
 
 
     const internationalization = [

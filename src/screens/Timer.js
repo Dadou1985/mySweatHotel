@@ -20,6 +20,7 @@ const Timer = ({navigation}) => {
 
     const [showDate, setShowDate] = useState(false)
     const [showHour, setShowHour] = useState(false)
+    const [phoneNumber, setPhoneNumber] = useState("")
 
     const { t } = useTranslation()
 
@@ -64,6 +65,7 @@ const Timer = ({navigation}) => {
     }
 
     const handleSubmit = () => {
+        setPhoneNumber("")
         return db.collection("hotel")
         .doc(userDB.hotelId)
         .collection('clock')
@@ -74,6 +76,7 @@ const Timer = ({navigation}) => {
             markup: Date.now(),
             hour: moment(hour).format('LT'),
             date: moment(date).format('L'),
+            phoneNumber: phoneNumber,
             status: true
           }).then(function(docRef){
             console.log(docRef.id)
@@ -218,21 +221,25 @@ const Timer = ({navigation}) => {
                 flex: 1,
                 resizeMode: "contain",
                 justifyContent: "center",
-                width: 500}}>
+                width: "100%"}}>
                 </ImageBackground>
             </View>
-            <View style={{flexDirection: "column", justifyContent: "space-around", width: 300, marginTop: 60}}>
+            <View style={{width: 300, marginTop: 60}}>
                 <View style={{marginBottom: 20, flexDirection: "column", alignItems: "center"}}>
-                    <Text style={{fontSize: 20}}>{t('reveil_jour')}</Text>
+                    <Text style={{fontSize: 15}}>{t('jour')}</Text>
                     <Button type="clear" title={moment(date).format('L')} 
                     onPress={handleShowDate} />
                 </View>
                 <View style={{marginBottom: 20, flexDirection: "column", alignItems: "center"}}>
-                    <Text style={{fontSize: 20}}>{t('reveil_heure')}</Text>
+                    <Text style={{fontSize: 15}}>{t('heure')}</Text>
                     <Button type="clear" title={moment(hour).format('LT')} 
                         onPress={handleShowHour} />
-                </View>   
+                </View>
             </View> 
+            <View style={styles.inputContainer}>
+                <Input style={{textAlign: "center"}} placeholder={t("timer_num_tel")} type="text" value={phoneNumber} 
+                onChangeText={(text) => setPhoneNumber(text)} />
+            </View>
             <Button raised={true} onPress={() => {
                 handleSubmit()
                 showMessage({
@@ -258,6 +265,7 @@ const styles = StyleSheet.create({
     },
     containerText: {
         flex: 2,
+        width: "100%"
     },
     text: {
         fontSize: 30,
@@ -265,9 +273,10 @@ const styles = StyleSheet.create({
         marginLeft: 100
     },
     inputContainer: {
-        width: 300,
-        marginTop: 30, 
-
+        width: "70%",
+        marginTop: 10, 
+        flexDirection: "row", 
+        justifyContent: "center",
     },
     button: {
         width: 250,
